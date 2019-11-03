@@ -5,8 +5,10 @@ import { toJS } from '../../../utils/immutableToJs.jsx'
 import { connect } from 'react-redux'
 import { fetchConfig } from '../actions'
 import { getToken } from '../selectors'
-import { fetchScripts } from '../../scripts/actions.js'
-import { fetchSequences } from '../../sequences/actions.js'
+import { fetchScripts } from '../../scripts/actions'
+import { fetchSequences } from '../../sequences/actions'
+import { getSequenceList } from '../../sequences/selectors'
+import { getScriptList } from '../../scripts/selectors'
 
 const DataLoader = ({ children, token, scripts, sequences, fetchConfigData, fetchSequencesData, fetchScriptsData }) => {
   useEffect(() => {
@@ -22,9 +24,11 @@ const DataLoader = ({ children, token, scripts, sequences, fetchConfigData, fetc
     }
   }, [token, scripts, sequences])
 
+  console.log(token, sequences, scripts)
+
   return (
     <>
-      { token && children }
+      { token && sequences && sequences.length && scripts && children }
     </>
   )
 }
@@ -41,7 +45,9 @@ DataLoader.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    token: getToken(state)
+    token: getToken(state),
+    sequences: getSequenceList(state),
+    scripts: getScriptList(state)
   }
 }
 

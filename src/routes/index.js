@@ -26,7 +26,7 @@ const MainRouter = () => {
           component={ScriptCreate} />
         <Route
           exact
-          path="/scripts/:id"
+          path="/scripts/:id([0-9]*)"
           component={Script} />
         <Route 
           exact

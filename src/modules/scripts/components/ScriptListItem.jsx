@@ -8,11 +8,12 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 const ScriptListItem = ({ id, name, author }) => {
+  console.log(author)
   return (
     <ListItem>
       <ListItemText
         primary={`${name} - ${id}`}
-        secondary={author}
+        secondary={author.username}
       />
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="delete">
@@ -26,7 +27,7 @@ const ScriptListItem = ({ id, name, author }) => {
 ScriptListItem.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  author: PropTypes.string.isRequired
+  author: PropTypes.object.isRequired
 }
 
 export default ScriptListItem

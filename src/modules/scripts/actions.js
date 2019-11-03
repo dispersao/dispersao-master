@@ -24,8 +24,9 @@ export const fetchScriptsError = (error) => ({
   }
 })
 
-export const createScript = () => ({
-  type: CREATE_SCRIPT
+export const createScript = (payload) => ({
+  type: CREATE_SCRIPT,
+  payload
 })
 
 export const createScriptSuccess = (script) => ({

@@ -1,20 +1,108 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { toJS } from '../../../utils/immutableToJs.jsx'
 
-import Container from '@material-ui/core/Container'
-import Button from '@material-ui/core/Button'
+import clsx from 'clsx'
+
+import {
+  Container,
+  Button,
+  FormControl,
+  InputLabel,
+  Input,
+  List,
+  ListItem
+} from '@material-ui/core'
+
+import { makeStyles } from '@material-ui/core/styles'
+
+
+import Speed from './Speed.jsx'
 
 import { createScript } from '../actions'
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+  withoutLabel: {
+    marginTop: theme.spacing(3),
+  },
+  textField: {
+    width: 250,
+  },
+}))
+
 export const ScriptCreate = ({ createSession }) => {
+  const classes = useStyles()
+
+  const [speed, setSpeed] = useState('')
+  const [name, setName] = useState('')
+  const [avaragetime, setAvarageTime] = useState('')
+
+  const handleSpeedChange = (value) => {
+    setSpeed(value)
+  }
+
+  const handleCreateSession = () => {
+    createSession({
+      speed,
+      name,
+      avaragetime
+    })
+  }
+
   return (
     <Container fixed>
+      <List>
+        <ListItem>
+          <FormControl>
+            <InputLabel
+              htmlFor="name">
+              Name
+            </InputLabel>
+            <Input id="name"
+              className={clsx(classes.margin, classes.textField)}
+              aria-describedby="script name"
+              onChange={evt => setName(evt.target.value)} />
+          </FormControl>
+        </ListItem>
+        <ListItem>
+          <FormControl>
+            <InputLabel 
+              htmlFor="avgSize">
+              Duration in Minutes (aprox)
+            </InputLabel>
+            <Input
+              id="avgSize"
+              aria-describedby="script duration"
+              className={clsx(classes.margin, classes.textField)}
+              onChange={evt => setAvarageTime(evt.target.value)} 
+            />
+          </FormControl>
+        </ListItem>
+        <ListItem>
+          <FormControl>
+            <InputLabel 
+              htmlFor="speed">
+              Speed
+            </InputLabel>
+            <Speed 
+              className={clsx(classes.margin, classes.textField)}
+              onSelect={handleSpeedChange} 
+              value={speed} />
+          </FormControl>
+        </ListItem>
+      </List>
       <Button
         variant="contained"
-        onClick={createSession}>
-          create session
+        onClick={handleCreateSession}>
+        create session
       </Button>
     </Container>
   )
@@ -25,8 +113,11 @@ ScriptCreate.propTypes = {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  createSession: () => dispatch(createScript()),
-}) 
+  createSession: (options) => {
+    // console.log(options)
+    dispatch(createScript(options))
+  }
+})
 
 export default connect(
   null,

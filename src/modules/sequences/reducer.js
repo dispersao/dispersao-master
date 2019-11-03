@@ -6,13 +6,16 @@ import {
 } from './actions'
 
 const reducer = (state = fromJS({
-  data: [],
+  data: {},
   error: {}
 }), action) => {
-  switch (action.type){
+  console.log('this reducer is registred' + action.type)
+  switch (action.type) {
     case FETCH_SEQUENCES_SUCCESS:
+      console.log(action.payload.sequences)
       return state.mergeDeep(
         fromJS({
+          error: null,
           data: action.payload.sequences
         })
       )

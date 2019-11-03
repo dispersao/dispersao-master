@@ -3,20 +3,41 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 import { toJS } from '../../../utils/immutableToJs.jsx'
+import { getScriptById } from '../selectors.js'
 
-const Script = ({ id }) => {
+import { Redirect } from 'react-router-dom'
+
+const Script = (params) => {
+  console.log(params)
+  const { id, name, avaragetime, speed } = params.script
   return (
     <>
-      { id }
+      { id && 
+        <div>{`${id} ${name} ${avaragetime} ${speed}`}</div>
+      }
+      {!id  && 
+         <Redirect to='/scripts' />
+      }
     </>
   )
-} 
+}
 
 Script.propTypes = {
-  id: PropTypes.number.isRequired
+  script: PropTypes.object
+}
+
+const mapStateToProps = (state, { match }) => {
+  const { id } = match.params
+  let script = {}
+  if (id ) {
+    script = getScriptById(state, { id })
+  }
+  return {
+    script
+  }
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   null
 )(toJS(Script))

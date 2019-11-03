@@ -1,14 +1,8 @@
 import { schema, normalize } from 'normalizr'
-import characterSchema from '../characters/schema'
+import partSchema from '../parts/schema'
 import categorySchema from '../categories/schema'
-
-const locationSchema = new schema.Entity('locations')
-
-const typeSchema = new schema.Entity('types')
-
-const partSchema = new schema.Entity('parts', {
-  characters: [characterSchema]
-})
+import locationSchema from '../locations/schema'
+import typeSchema from '../types/schema'
 
 export const sequenceSchema = new schema.Entity('sequences', {
   location: locationSchema,

@@ -31,17 +31,18 @@ export function* watchCreateScript() {
 function* fetchScripts () {
   try {
     const scripts = yield call(fetchScriptsAPI)
-    yield put(fetchScriptsSuccess(scripts))
+    yield put(fetchScriptsSuccess(scripts.entities.scripts || []))
   } catch (e) {
     yield put(fetchScriptsError(e))
   }
 }
 
-function* createScript() {
+function* createScript(action) {
   try {
-    const script = yield call(createScriptAPI)
-    yield put(createScriptSuccess(script))
-    yield put(push(`/scripts/${script.id}`))
+    const script = yield call(createScriptAPI, action.payload)
+    const scriptData = script.entities.scripts
+    yield put(createScriptSuccess(scriptData))
+    yield put(push(`/scripts/${Object.values(scriptData)[0].id}`))
   } catch (e) {
     yield put(createScriptError(e))
   }
