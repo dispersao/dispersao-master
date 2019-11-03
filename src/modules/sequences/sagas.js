@@ -37,13 +37,16 @@ export function* watchFetchSequences() {
 function* fetchSequences () {
   try {
     const entities = yield call(fetchSequencesAPI)
-    yield put(fetchCategoriesSuccess(entities.entities.categories))
-    yield put(fetchTypesSuccess(entities.entities.types))
-    yield put(fetchLocationsSuccess(entities.entities.locations))
-    yield put(fetchCharactersSuccess(entities.entities.characters))
-    yield put(fetchPartsSuccess(entities.entities.parts))
-    yield put(fetchSequencesSuccess(entities.entities.sequences))
+    yield mapSuccess(entities.entities)
   } catch (e) {
     yield put(fetchSequencesError(e))
   }
+}
+
+function* mapSuccess (entities) {
+  function* map(key) {
+    const action = entitiesMap[key](entities[key])
+    yield put(action)
+  }
+  yield* Object.keys(entities).map(map)
 }

@@ -29,7 +29,6 @@ export const getScriptById = createCachedSelector(
       return
     }
     let script = list.get(id.toString())
-    console.log(formatScriptData(script))
     return formatScriptData(script)
   }
 )(getScriptId)
