@@ -6,6 +6,7 @@ import { toJS } from '../../../utils/immutableToJs.jsx'
 import { getScriptById } from '../selectors.js'
 
 import { Redirect } from 'react-router-dom'
+import UnplayedSequences from '../../sequences/components/UnplayedSequences.jsx'
 
 const Script = (params) => {
   console.log(params)
@@ -13,7 +14,7 @@ const Script = (params) => {
   return (
     <>
       { id && 
-        <div>{`${id} ${name} ${avaragetime} ${speed}`}</div>
+        <UnplayedSequences script={id} />
       }
       {!id  && 
          <Redirect to='/scripts' />

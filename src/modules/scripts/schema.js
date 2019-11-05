@@ -1,6 +1,8 @@
 import { schema, normalize } from 'normalizr'
+import { scriptsequenceSchema } from '../scriptsequences/schema'
 
 const scriptSchema = new schema.Entity('scripts', {
+  scriptsequences: [scriptsequenceSchema]
 })
 
 export const scriptsListSchema = [scriptSchema]

@@ -11,7 +11,8 @@ const reducer = (state = fromJS({
   switch (action.type) {
     case FETCH_LOCATIONS_SUCCESS:
       return state.mergeDeep(fromJS({
-        data: action.payload.locations
+        data: action.payload.locations,
+        error: null
       })
       )
     default:
