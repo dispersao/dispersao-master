@@ -43,7 +43,7 @@ export const ScriptCreate = ({ createSession }) => {
 
   const [speed, setSpeed] = useState('')
   const [name, setName] = useState('')
-  const [avaragetime, setAvarageTime] = useState('')
+  const [averagetime, setAverageTime] = useState('')
 
   const handleSpeedChange = (value) => {
     setSpeed(value)
@@ -53,7 +53,7 @@ export const ScriptCreate = ({ createSession }) => {
     createSession({
       speed,
       name,
-      avaragetime
+      averagetime
     })
   }
 
@@ -82,7 +82,7 @@ export const ScriptCreate = ({ createSession }) => {
               id="avgSize"
               aria-describedby="script duration"
               className={clsx(classes.margin, classes.textField)}
-              onChange={evt => setAvarageTime(evt.target.value)} 
+              onChange={evt => setAverageTime(evt.target.value)} 
             />
           </FormControl>
         </ListItem>

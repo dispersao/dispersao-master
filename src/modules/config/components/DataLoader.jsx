@@ -24,7 +24,7 @@ const DataLoader = ({ children, token, scripts, sequences, fetchConfigData, fetc
     }
   }, [token, scripts, sequences])
 
-  console.log(token, sequences, scripts)
+  // console.log(token, sequences, scripts)
 
   return (
     <>

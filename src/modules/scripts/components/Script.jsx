@@ -7,18 +7,31 @@ import { getScriptById } from '../selectors.js'
 
 import { Redirect } from 'react-router-dom'
 import UnplayedSequences from '../../sequences/components/UnplayedSequences.jsx'
+import ScriptHeader from './ScriptHeader.jsx'
+import ScriptActions from './ScriptActions.jsx'
 
-const Script = (params) => {
-  console.log(params)
-  const { id, name, avaragetime, speed } = params.script
+import Divider from '@material-ui/core/Divider'
+
+const Script = ({ script }) => {
+  if (!script) {
+    return <Redirect to='/scripts' />
+  }
+
+  const { id } = script
+  // const { id, name, averagetime, speed, synching } = script
+  
   return (
     <>
-      { id && 
-        <UnplayedSequences script={id} />
+      { id &&
+        <div>
+          <ScriptHeader {...script} />
+          <Divider />
+          <UnplayedSequences script={id} />
+          <Divider />
+          <ScriptActions {...script} />
+        </div>
       }
-      {!id  && 
-         <Redirect to='/scripts' />
-      }
+      
     </>
   )
 }

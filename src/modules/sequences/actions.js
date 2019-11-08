@@ -7,7 +7,6 @@ export const fetchSequences = () => ({
 })
 
 export const fetchSequencesSuccess = (sequences) => {
-  console.log(sequences)
   return {
     type: FETCH_SEQUENCES_SUCCESS,
     payload: {

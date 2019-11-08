@@ -1,28 +1,80 @@
 import { fromJS } from 'immutable'
 
 import {
+  FETCH_SCRIPTS,
   FETCH_SCRIPTS_SUCCESS,
   FETCH_SCRIPTS_ERROR,
+  CREATE_SCRIPT,
   CREATE_SCRIPT_SUCCESS,
   CREATE_SCRIPT_ERROR,
+  UPDATE_SCRIPT,
+  UPDATE_SCRIPT_SUCCESS,
+  UPDATE_SCRIPT_ERROR,
 } from './actions'
 
-let list
+let script
 
 const reducer = (state = fromJS({
   data: {},
+  synching: false,
   error: null
 }), action) => {
   switch (action.type) {
+    case FETCH_SCRIPTS: 
+    case  CREATE_SCRIPT:
+      return state.mergeDeep(fromJS({ 
+        synching: true 
+      }))
+
     case FETCH_SCRIPTS_SUCCESS:
-      return state.mergeDeep(fromJS({ error: null, data: action.payload.scripts }))
+      return state.mergeDeep(fromJS({ 
+        error: null, 
+        data: action.payload.scripts,
+        synching: false
+      }))
+
     case FETCH_SCRIPTS_ERROR:
-      return state.mergeDeep(fromJS({ error: action.payload.error }))
+      return state.mergeDeep(fromJS({ 
+        error: action.payload.error,
+        synching: false
+      }))
+
+    case UPDATE_SCRIPT:
+      console.log(state.mergeDeep(fromJS({
+        data: {
+          [`${action.payload.script.id}`]: {
+            synching: true
+          }
+        }
+      })))
+
+      return state.mergeDeep(fromJS({
+        data: {
+          [`${action.payload.script.id}`]: {
+            synching: true
+          }
+        }
+      }))
+    
     case CREATE_SCRIPT_SUCCESS:
-      console.log(state.mergeDeep(fromJS({ error: null, data: action.payload.script })))
-      return state.mergeDeep(fromJS({ error: null, data: action.payload.script }))
+    case UPDATE_SCRIPT_SUCCESS:
+      script = action.payload.script
+      Object.keys(script).forEach(sc => {
+        script[sc].synching = false
+      })
+
+      return state.mergeDeep(fromJS({ 
+        error: null, 
+        data: script,
+        synching: false
+      }))
+
     case CREATE_SCRIPT_ERROR:
-      return state.mergeDeep(fromJS({ error: action.payload.error }))
+    case UPDATE_SCRIPT_ERROR:
+      return state.mergeDeep(fromJS({ 
+        error: action.payload.error,
+        synching: false
+      }))
     default:
       return state
   }
