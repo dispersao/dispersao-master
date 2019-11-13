@@ -88,10 +88,6 @@ export const ScriptCreate = ({ createSession }) => {
         </ListItem>
         <ListItem>
           <FormControl>
-            <InputLabel 
-              htmlFor="speed">
-              Speed
-            </InputLabel>
             <Speed 
               className={clsx(classes.margin, classes.textField)}
               onSelect={handleSpeedChange} 

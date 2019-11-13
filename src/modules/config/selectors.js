@@ -19,12 +19,40 @@ export const getError = createSelector(
     return config.get('error')
   }
 )
+
 const getApiConfig = createSelector(
   [getData], (data) => {
     if (!data || !data.size) {
       return
     }
     return data.get('api')
+  }
+)
+
+const getOscConfig = createSelector(
+  [getData], (data) => {
+    if (!data || !data.size) {
+      return
+    }
+    return data.get('osc')
+  }
+)
+
+export const getOscUrl = createSelector(
+  [getOscConfig], (oscData) => {
+    if (!oscData || !oscData.size) {
+      return
+    }
+    return oscData.get('url')
+  }
+)
+
+export const getOscPort = createSelector(
+  [getOscConfig], (oscData) => {
+    if (!oscData || !oscData.size) {
+      return
+    }
+    return oscData.get('port')
   }
 )
 

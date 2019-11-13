@@ -1,6 +1,11 @@
 import { all } from 'redux-saga/effects'
 import { watchConfigFetch } from './modules/config/sagas'
-import { watchFetchScripts, watchCreateScript, watchUpdateScript } from './modules/scripts/sagas'
+import { 
+  watchFetchScripts, 
+  watchCreateScript, 
+  watchUpdateScript,
+  whatchScriptStart
+} from './modules/scripts/sagas'
 import { watchFetchSequences } from './modules/sequences/sagas'
 
 export default function* rootSaga() {
@@ -9,6 +14,7 @@ export default function* rootSaga() {
     watchCreateScript(),
     watchFetchScripts(),
     watchFetchSequences(),
-    watchUpdateScript()
+    watchUpdateScript(),
+    whatchScriptStart()
   ])
 }

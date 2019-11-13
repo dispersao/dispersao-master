@@ -17,27 +17,27 @@ const ScriptFieldUpdateComp = (WrappedComponent, field) => {
   const ScriptFieldUpdate = (props) => {
     const { save, synching, value } = props
 
-    const [edit, setEdit] = useState(false)
+    // const [edit, setEdit] = useState(false)
   
-    const clickTextHandler = () => {
-      if (!synching) {
-        setEdit(true)
-      }
-    }
+    // const clickTextHandler = () => {
+    //   if (!synching) {
+    //     // setEdit(true)
+    //   }
+    // }
 
     const saveField = (val) => {
-      if (val !== value && !synching) {
+      if (val !== value.toString() && !synching) {
         save(val)
       }
-      setEdit(false)
+      // setEdit(false)
     }
 
     return (
       <>
-        { edit && 
+        {/* { edit &&  */}
           <WrappedComponent {...props} save={saveField}/>
-        }
-        {!edit &&
+        {/* } */}
+        {/* {!edit &&
           <Typography 
             color={synching ? 'textSecondary' : 'initial'}
             variant="h5" 
@@ -45,7 +45,7 @@ const ScriptFieldUpdateComp = (WrappedComponent, field) => {
             onClick={clickTextHandler}>
             {value}
           </Typography>
-        }
+        } */}
       </>
     )
   } 

@@ -8,7 +8,7 @@ import {
   ClickAwayListener,
 } from '@material-ui/core'
 
-const ScriptInput = ({ value, save  }) => {
+const ScriptInput = ({ value, save, field }) => {
   const classes = useStyles()
 
   let inputRef
@@ -24,6 +24,7 @@ const ScriptInput = ({ value, save  }) => {
       <TextField
         autoFocus
         id="standard-required"
+        label={field}
         className={classes.textField}
         margin="normal"
         defaultValue={value}
@@ -36,7 +37,8 @@ const ScriptInput = ({ value, save  }) => {
 
 ScriptInput.propTypes = {
   value: PropTypes.any,
-  save: PropTypes.func
+  save: PropTypes.func,
+  field: PropTypes.string
 }
 
 export default ScriptInput

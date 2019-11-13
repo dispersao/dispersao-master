@@ -29,7 +29,7 @@ const ScriptPlayer = ({ id, isPlaying, startScript, pauseScript, scriptsequences
         onClick={onHandlePlayPause}>
         { isPlaying ? 'pause' : 'play'}
       </Button>
-      {scriptsequences.length && 
+      {(scriptsequences.length || '') && 
         <Button onClick={onHandleRestart}>restart</Button>
       }
     </>

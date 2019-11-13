@@ -9,9 +9,9 @@ import ScriptAveragetime from './ScriptAveragetime.jsx'
 
 const ScriptHeader = ({ name, averagetime, id, synching }) => {
   return (
-    <div>
-      <ScriptName name={name} id={id} synching={synching} />
-      <ScriptAveragetime id={id} synching={synching} averagetime={averagetime} />
+    <div >
+      <ScriptName name={name} id={id} synching={synching} field="name" />
+      {/* <ScriptAveragetime id={id} synching={synching} averagetime={averagetime} /> */}
     </div>
   )
 }

@@ -11,6 +11,13 @@ const reducer = (state = fromJS({
 }), action) => {
   switch (action.type) {
     case FETCH_SEQUENCES_SUCCESS:
+      console.log('FETCH_SEQUENCES_SUCCESS')
+      console.log(state.mergeDeep(
+        fromJS({
+          error: null,
+          data: action.payload.sequences
+        })
+      ))
       return state.mergeDeep(
         fromJS({
           error: null,
