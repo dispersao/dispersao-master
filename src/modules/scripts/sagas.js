@@ -27,6 +27,8 @@ import {
   // PAUSE_SCRIP
 } from './actions'
 
+import { fetchScriptsequencesSuccess } from '../scriptsequences/actions'
+
 import { 
   createScript as createScriptAPI,
   fetchScripts as fetchScriptsAPI,
@@ -55,6 +57,8 @@ export function* whatchScriptStart() {
 function* fetchScripts () {
   try {
     const scripts = yield call(fetchScriptsAPI)
+    console.log(scripts)
+    yield put(fetchScriptsequencesSuccess(scripts.entities.scriptsequences || []))
     yield put(fetchScriptsSuccess(scripts.entities.scripts || []))
   } catch (e) {
     yield put(fetchScriptsError(e))

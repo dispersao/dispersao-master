@@ -9,6 +9,7 @@ import categories from './modules/categories/reducer'
 import locations from './modules/locations/reducer'
 import parts from './modules/parts/reducer'
 import types from './modules/types/reducer'
+import scriptsequences from './modules/scriptsequences/reducer'
 
 const reducer = combineReducers({
   router,
@@ -19,7 +20,8 @@ const reducer = combineReducers({
   categories,
   locations,
   parts,
-  types
+  types,
+  scriptsequences
 })
 
 export default reducer

@@ -6,6 +6,8 @@ import ScriptCreate from '../modules/scripts/components/ScriptCreate.jsx'
 import ScriptList from '../modules/scripts/components/ScriptList.jsx'
 import Script from '../modules/scripts/components/Script.jsx'
 
+import NoMatch from './components/NoMatch.jsx'
+
 const MainRouter = () => {
   return (
     <ConnectedRouter history={history}>
@@ -34,6 +36,10 @@ const MainRouter = () => {
           render={() => {
             return <div>Login</div>
           }}  />
+        <Route 
+          path="*"
+          component={NoMatch}
+        />
       </Switch>
     </ConnectedRouter>
   )

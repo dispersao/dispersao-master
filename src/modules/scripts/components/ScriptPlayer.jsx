@@ -5,6 +5,8 @@ import { startScript, pauseScript } from '../actions'
 import useStyles from './styles'
 import Button from '@material-ui/core/Button'
 
+import WithSequenceManager from './HOC/SequencesManager.jsx'
+
 const ScriptPlayer = ({ id, isPlaying, startScript, pauseScript, scriptsequences, connected }) => {
   const classes = useStyles()
 
@@ -51,7 +53,7 @@ const mapDispatchToProps = (dispatch) => ({
   pauseScript: (id) => dispatch(pauseScript(id))
 })
 
-export default connect(
+export default WithSequenceManager(connect(
   null,
   mapDispatchToProps
-)(ScriptPlayer)
+)(ScriptPlayer))

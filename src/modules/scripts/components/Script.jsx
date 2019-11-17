@@ -19,20 +19,15 @@ const Script = ({ script }) => {
 
   const { id } = script
   // const { id, name, averagetime, speed, synching } = script
-  
   return (
-    <>
-      { id &&
-        <div>
-          <ScriptHeader {...script} />
-          <Divider />
-          <UnplayedSequences script={id} />
-          <Divider />
-          <ScriptActions {...script} />
-        </div>
-      }
-      
-    </>
+    
+    <div>
+      <ScriptHeader {...script} />
+      <Divider />
+      <UnplayedSequences script={id} scriptsequences={script.scriptsequences} />
+      <Divider />
+      <ScriptActions {...script} />
+    </div>
   )
 }
 

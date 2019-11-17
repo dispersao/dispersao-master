@@ -46,9 +46,12 @@ UnplayedSequences.propTypes = {
   sequences: PropTypes.array
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  sequences: getSequenceListNotInScript(state, ownProps)
-})
+const mapStateToProps = (state, ownProps) => {
+  let sequences = getSequenceListNotInScript(state, ownProps)
+  return {
+    sequences
+  }
+}
 
 export default connect(
   mapStateToProps,
