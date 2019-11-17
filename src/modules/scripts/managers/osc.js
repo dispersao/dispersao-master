@@ -7,6 +7,8 @@ import {
 import store from '../../../store'
 
 let oscPromise
+let promiseHash = {}
+const TIMEOUT = 3000
 
 const init = async () => {
   if (!oscPromise) {
@@ -40,18 +42,49 @@ const init = async () => {
 }
 
 const parseOscMessage = (oscMessage) => {
-  switch (oscMessage.address) {
-    case '/getScene':
-      return console.log('dispatch getSceneACtion')
-    default:
-      return
+  let callbacks = promiseHash[oscMessage.address]
+  if (callbacks) {
+    callbacks = callbacks
+      .map((el) => {
+        const { timeout, resolver, oneOff } = el
+        clearTimeout(timeout)
+        resolver(oscMessage.args)
+        return oneOff ? null : el
+      })
+      .filter(Boolean)
+    promiseHash[oscMessage.address] = [callbacks]
   }
 }
 
-export const sendOscMessage = async (address, args) => {
+export const sendOscMessagewithCallback = async (sender, messageCallback) => {
   let osc = await init()
-  osc.send({
-    address: `/${address}`,
-    args
+  const promise = createCallbackPromise(messageCallback)
+  osc.send(sender)
+  return promise
+}
+
+const createCallbackPromise = (hash) => {
+  promiseHash[hash.address] = promiseHash[hash.address] || []
+  let timeout
+  let resolver
+  const promise = new Promise((resolve, reject) => {
+    resolver = resolve
+    timeout = setTimeout(() => {
+      reject('timeout')
+      promiseHash[hash.address] = promiseHash[hash.address].filter((stored) => {
+        return stored.resolver !== resolve && stored.timeout !== timeout
+      })
+    }, TIMEOUT)
   })
+
+  promiseHash[hash.address].push({
+    promise,
+    timeout,
+    resolver,
+    oneOff: true
+  })
+
+  console.log(promiseHash)
+
+  return promise
 }

@@ -5,7 +5,7 @@ import { startScript, pauseScript } from '../actions'
 import useStyles from './styles'
 import Button from '@material-ui/core/Button'
 
-const ScriptPlayer = ({ id, isPlaying, startScript, pauseScript, scriptsequences }) => {
+const ScriptPlayer = ({ id, isPlaying, startScript, pauseScript, scriptsequences, connected }) => {
   const classes = useStyles()
 
   const onHandlePlayPause = () => {
@@ -26,6 +26,7 @@ const ScriptPlayer = ({ id, isPlaying, startScript, pauseScript, scriptsequences
         variant="contained" 
         className={classes.button}
         color='primary'
+        disabled={ connected !== 'connected' }
         onClick={onHandlePlayPause}>
         { isPlaying ? 'pause' : 'play'}
       </Button>
@@ -38,18 +39,17 @@ const ScriptPlayer = ({ id, isPlaying, startScript, pauseScript, scriptsequences
 
 ScriptPlayer.propTypes = {
   id: PropTypes.number,
+  connected: PropTypes.string,
   isPlaying: PropTypes.bool,
   startScript: PropTypes.func,
   pauseScript: PropTypes.func,
   scriptsequences: PropTypes.array
 }
 
-
 const mapDispatchToProps = (dispatch) => ({
   startScript: (id) => dispatch(startScript(id)),
   pauseScript: (id) => dispatch(pauseScript(id))
 })
-
 
 export default connect(
   null,

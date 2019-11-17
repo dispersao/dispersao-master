@@ -13,6 +13,10 @@ export const UPDATE_SCRIPT_ERROR = 'UPDATE_SCRIPT_ERROR'
 export const START_SCRIPT = 'START_SCRIPT'
 export const PAUSE_SCRIPT = 'PAUSE_SCRIPT'
 
+export const CONNECT_SCRIPT = 'CONNECT_SCRIPT'
+export const CONNECT_SCRIPT_SUCCESS = 'CONNECT_SCRIPT_SUCCESS'
+export const CONNECT_SCRIPT_ERROR = 'CONNECT_SCRIPT_ERROR'
+
 export const fetchScripts = () => ({
   type: FETCH_SCRIPTS
 })
@@ -89,3 +93,24 @@ export const pauseScript = (script) => ({
   }
 })
 
+export const connectScript = (script) => ({
+  type: CONNECT_SCRIPT,
+  payload: {
+    script
+  }
+})
+
+export const connectScriptSuccess = (script) => ({
+  type: CONNECT_SCRIPT_SUCCESS,
+  payload: {
+    script
+  }
+})
+
+
+export const connectScriptError = (script) => ({
+  type: CONNECT_SCRIPT_ERROR,
+  payload: {
+    script
+  }
+})

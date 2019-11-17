@@ -10,6 +10,9 @@ import {
   UPDATE_SCRIPT,
   UPDATE_SCRIPT_SUCCESS,
   UPDATE_SCRIPT_ERROR,
+  CONNECT_SCRIPT,
+  CONNECT_SCRIPT_SUCCESS,
+  CONNECT_SCRIPT_ERROR,
 } from './actions'
 
 let script
@@ -40,14 +43,6 @@ const reducer = (state = fromJS({
       }))
 
     case UPDATE_SCRIPT:
-      console.log(state.mergeDeep(fromJS({
-        data: {
-          [`${action.payload.script.id}`]: {
-            synching: true
-          }
-        }
-      })))
-
       return state.mergeDeep(fromJS({
         data: {
           [`${action.payload.script.id}`]: {
@@ -75,6 +70,34 @@ const reducer = (state = fromJS({
         error: action.payload.error,
         synching: false
       }))
+
+    case CONNECT_SCRIPT:
+      return state.mergeDeep(fromJS({
+        data: {
+          [`${action.payload.script.id}`]: {
+            connected: 'connecting'
+          }
+        }
+      }))
+    
+    case CONNECT_SCRIPT_SUCCESS:
+      return state.mergeDeep(fromJS({
+        data: {
+          [`${action.payload.script.id}`]: {
+            connected: 'connected'
+          }
+        }
+      })) 
+
+    case CONNECT_SCRIPT_ERROR:
+      return state.mergeDeep(fromJS({
+        data: {
+          [`${action.payload.script.id}`]: {
+            connected: 'failed'
+          }
+        }
+      })) 
+
     default:
       return state
   }

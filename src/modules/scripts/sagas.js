@@ -21,6 +21,9 @@ import {
   updateScriptSuccess,
   updateScriptError,
   START_SCRIPT,
+  CONNECT_SCRIPT,
+  connectScriptSuccess,
+  connectScriptError
   // PAUSE_SCRIP
 } from './actions'
 
@@ -30,7 +33,7 @@ import {
   updateScript as updateScriptAPI
 } from '../api/script'
 
-import { sendOscMessage } from './managers/osc'
+import { sendOscMessagewithCallback } from './managers/osc'
 
 export function* watchFetchScripts() {
   yield takeLeading(FETCH_SCRIPTS, fetchScripts)
@@ -45,6 +48,7 @@ export function* watchUpdateScript() {
 }
 
 export function* whatchScriptStart() {
+  yield takeEvery(CONNECT_SCRIPT, connectScript)
   yield takeEvery(START_SCRIPT, startScript)
 }
 
@@ -84,8 +88,26 @@ function* startScript(action) {
       id: action.payload.script, 
       isPlaying:true
     }))
-    yield call(sendOscMessage, 'start', [action.payload.script])
+    // yield call(sendOscMessage, 'start', [action.payload.script])
   } catch (e) {
     console.log(e)
+  }
+}
+
+function* connectScript(action) {
+  try {
+    yield call(sendOscMessagewithCallback, {
+      address: '/connect', 
+      args: [action.payload.script.id]
+    }, {
+      address: '/connected'
+    })
+    yield put(connectScriptSuccess(action.payload.script ))
+  } catch (e) {
+    console.log(e)
+    yield put(connectScriptError({
+      ...action.payload.script,
+      error: e
+    }))
   }
 }
