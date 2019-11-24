@@ -14,14 +14,14 @@ import scriptsequences from './modules/scriptsequences/reducer'
 const reducer = combineReducers({
   router,
   config,
+  scriptsequences,
   scripts,
   sequences,
   characters,
   categories,
   locations,
   parts,
-  types,
-  scriptsequences
+  types
 })
 
 export default reducer

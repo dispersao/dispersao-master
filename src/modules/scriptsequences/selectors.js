@@ -1,5 +1,4 @@
 import createCachedSelector from 're-reselect'
-// import { Map } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { getSequenceBySequenceId } from '../sequences/selectors'
@@ -10,7 +9,6 @@ const getId = (state, props) => props.id
 
 export const getScriptsequences = createSelector(
   [getState], (state) => {
-    console.log(state)
     if (!state) {
       return
     }

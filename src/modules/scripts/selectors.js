@@ -64,7 +64,7 @@ const formatScriptData = (script, scrList, seqList) => {
   const scriptsequences = script.get('scriptsequences').map( id => {
     return scrList.get(id.toString())
   }).map(scriptsequence => {
-    return formatScriptsequenceData(scriptsequences, seqList.get(scriptsequence.get('sequence')))
+    return formatScriptsequenceData(scriptsequence, seqList.get(scriptsequence.get('sequence').toString()))
   })
 
   let totalTime = scriptsequences
@@ -72,7 +72,7 @@ const formatScriptData = (script, scrList, seqList) => {
     .reduce((a, b) => a + b) || 0
 
   let elapsedTime = 0
-  const playingSequences = scriptsequences.filter(el => el.get('isPlaying'))
+  const playingSequences = scriptsequences.filter(el => el.get('state') === 'playing')
   if (playingSequences && playingSequences.length) {
     const playingSequence = playingSequences[playingSequences.length - 1]
     elapsedTime = scriptsequences
@@ -83,8 +83,9 @@ const formatScriptData = (script, scrList, seqList) => {
 
   const remainingTime = totalTime - elapsedTime
 
-  return script.mergeDeep({ 
-    scriptsequences,
+  script = script.set('scriptsequences', scriptsequences)
+
+  return script.mergeDeep({
     totalTime,
     elapsedTime,
     remainingTime

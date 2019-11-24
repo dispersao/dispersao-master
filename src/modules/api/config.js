@@ -2,7 +2,9 @@ import axios from 'axios'
 
 export const fetchConfig = async () => {
   try {
-    const config = await axios.get('/config.json')
+    const config = await axios.get('/config.json', {
+      crossDomain: true
+    })
     axios.defaults.baseURL = config.data.api.url
     axios.defaults.headers.post['Content-Type'] = 'json'
 

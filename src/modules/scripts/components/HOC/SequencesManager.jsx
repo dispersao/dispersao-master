@@ -9,13 +9,13 @@ const MIN_PLANNED_TIME = 120
 const WithSequenceManager = WrappedComponent => {
 
   const SequenceManager = (props) => {
-    const { id, scriptsequences, remainingTime, createRandomScriptsequence } = props
+    const { id, scriptsequences, remainingTime, createRandomScriptsequence, connected } = props
 
     useEffect(() => {
-      if (remainingTime < MIN_PLANNED_TIME) {
+      if (connected === 'connected' && remainingTime < MIN_PLANNED_TIME) {
         createRandomScriptsequence(id, scriptsequences.length)
       }
-    }, [remainingTime])
+    }, [remainingTime, connected])
 
     const wrappedProps = {
       ...props
@@ -34,6 +34,7 @@ const WithSequenceManager = WrappedComponent => {
     scriptsequences: PropTypes.array,
     remainingTime: PropTypes.number,
     createRandomScriptsequence: PropTypes.func.isRequired,
+    connected:PropTypes.string
   }
   
   const mapDispatchToProps = (dispatch) => ({

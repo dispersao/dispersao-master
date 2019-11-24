@@ -6,11 +6,11 @@ import { getTypeByTypeId } from '../types/selectors'
 import { getLocationByLocationId } from '../locations/selectors'
 
 const getState = (state) => state.sequences
-const getScriptSequencesState = (state) => state.scriptsequences
+// const getScriptSequencesState = (state) => state.scriptsequences
 const getId = (state, props) => props.id
 const getSequenceId = (state, props) => props.sequence
 
-const getScriptsequencesIds = (state, props) => props.scriptsequences
+const getScriptsequences = (state, props) =>  props.scriptsequences
 
 const getData = (state) => {
   if (!state) {
@@ -23,20 +23,20 @@ export const getSequences = createSelector(
   getData
 )
 
-const getScriptsequences = createSelector(
-  [getScriptSequencesState], 
-  getData
-)
+// const getScriptsequences = createSelector(
+//   [getScriptSequencesState], 
+//   getData
+// )
 
-export const getScriptSequencesByIds = createSelector(
-  [getScriptsequences, getScriptsequencesIds],
-  (scriptSequences, ids) => {
-    if (!scriptSequences || !ids) {
-      return
-    }
-    return ids.map(id => scriptSequences.get(id.toString()))
-  }
-)
+// export const getScriptSequencesByIds = createSelector(
+//   [getScriptsequences, getScriptsequencesIds],
+//   (scriptSequences, ids) => {
+//     if (!scriptSequences || !ids) {
+//       return
+//     }
+//     return ids.map(id => scriptSequences.get(id.toString()))
+//   }
+// )
 
 export const getSequenceList = createSelector(
   [getSequences], (sequences) => {
@@ -48,16 +48,16 @@ export const getSequenceList = createSelector(
 )
 
 export const getSequenceListNotInScript = createSelector(
-  [getSequences, getScriptSequencesByIds],
+  [getSequences, getScriptsequences],
   (sequences, scriptsequences) => {
     if (!sequences || !sequences.size || !scriptsequences) {
       return
     }
-    return sequences.filter(seq => {
-      return !scriptsequences
-        .map(el => el.get('sequence'))
-        .includes(seq.id)
-    }).valueSeq().sort(sortSequences)
+    const scriptSequencesIds = scriptsequences
+      .map(el => el.sequence.id)
+    return sequences
+      .filter(seq => !scriptSequencesIds.includes(seq.get('id')))
+      .valueSeq().sort(sortSequences)
   }
 )
 
@@ -78,7 +78,6 @@ export const getSequenceById = createCachedSelector(
 )(getId)
 
 const formatSequenceData = (seq, type, location) => {
-  // console.log(seq, type, location)
   return Map({
     id: seq.get('id'),
     sceneNumber : seq.get('sceneNumber'),

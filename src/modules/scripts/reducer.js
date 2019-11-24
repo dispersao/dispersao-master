@@ -15,6 +15,10 @@ import {
   CONNECT_SCRIPT_ERROR,
 } from './actions'
 
+import {
+  CREATE_SCRIPTSEQUENCE_SUCCESS
+} from '../scriptsequences/actions'
+
 let script
 
 const reducer = (state = fromJS({
@@ -96,7 +100,15 @@ const reducer = (state = fromJS({
             connected: 'failed'
           }
         }
-      })) 
+      }))
+
+    case CREATE_SCRIPTSEQUENCE_SUCCESS:
+      Object.values(action.payload.scriptsequence).forEach(scriptsequence => {
+        let scriptId = scriptsequence.script.id.toString()
+        let newList = state.getIn(['data', scriptId, 'scriptsequences']).push(scriptsequence.id)
+        state = state.setIn(['data', scriptId, 'scriptsequences'], newList)
+      })
+      return state 
 
     default:
       return state

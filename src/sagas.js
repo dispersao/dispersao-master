@@ -8,7 +8,10 @@ import {
 } from './modules/scripts/sagas'
 import { watchFetchSequences } from './modules/sequences/sagas'
 
-import { watchCreateRandomScript } from './modules/scriptsequences/sagas'
+import { 
+  watchCreateRandomScriptSequence,
+  watchCreateScriptSequence 
+} from './modules/scriptsequences/sagas'
 
 export default function* rootSaga() {
   yield all([
@@ -18,6 +21,7 @@ export default function* rootSaga() {
     watchFetchSequences(),
     watchUpdateScript(),
     whatchScriptStart(),
-    watchCreateRandomScript()
+    watchCreateRandomScriptSequence(),
+    watchCreateScriptSequence()
   ])
 }
