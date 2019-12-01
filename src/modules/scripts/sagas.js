@@ -3,7 +3,6 @@ import {
   put, 
   takeLeading,
   takeEvery,
-  select
 } from 'redux-saga/effects'
 
 import osc from 'osc/dist/osc-browser'
