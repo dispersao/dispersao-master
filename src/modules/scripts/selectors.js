@@ -72,14 +72,19 @@ const formatScriptData = (script, scrList, seqList) => {
     .reduce((a, b) => a + b) || 0
 
   let elapsedTime = 0
-  const playingSequences = scriptsequences.filter(el => el.get('state') === 'playing')
-  if (playingSequences && playingSequences.length) {
-    const playingSequence = playingSequences[playingSequences.length - 1]
+  const playingSequences = scriptsequences.filter(el => el.get('progress') && el.get('progress') > 0)
+  if (playingSequences && playingSequences.size) {
+    const playingSequence = playingSequences.get(playingSequences.size - 1)
     elapsedTime = scriptsequences
-      .slice(0, scriptsequences.indexOf(playingSequence))
-      .map(el => el.getIn(['sequence', 'duration']))
+      .slice(0, scriptsequences.indexOf(playingSequence) + 1)
+      .map(el => {
+        let progress  = el.get( 'progress') || 0
+        progress = progress / 100
+        return progress * el.getIn(['sequence', 'duration'])
+      })
       .reduce((a, b) => a + b)
   }
+  
 
   const remainingTime = totalTime - elapsedTime
 

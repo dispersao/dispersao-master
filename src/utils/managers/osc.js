@@ -2,12 +2,14 @@ import OSC from 'osc/dist/osc-browser'
 import {
   getOscUrl,
   getOscPort
-} from '../../config/selectors'
+} from '../../modules/config/selectors'
 
-import store from '../../../store'
+import store from '../../store'
 
 let oscPromise
 let promiseHash = {}
+let callbackHash = {}
+
 const TIMEOUT = 3000
 
 const init = async () => {
@@ -42,9 +44,11 @@ const init = async () => {
 }
 
 const parseOscMessage = (oscMessage) => {
-  let callbacks = promiseHash[oscMessage.address]
-  if (callbacks) {
-    callbacks = callbacks
+  let promises = promiseHash[oscMessage.address]
+  let callbacks = callbackHash[oscMessage.address]
+
+  if (promises) {
+    promises = promises
       .map((el) => {
         const { timeout, resolver, oneOff } = el
         clearTimeout(timeout)
@@ -52,15 +56,43 @@ const parseOscMessage = (oscMessage) => {
         return oneOff ? null : el
       })
       .filter(Boolean)
-    promiseHash[oscMessage.address] = [callbacks]
+    promiseHash[oscMessage.address] = [promises]
+  }
+
+  if (callbacks) {
+    callbacks.forEach(cbk => {
+      cbk(oscMessage.address, oscMessage.args)
+    })
   }
 }
 
-export const sendOscMessagewithCallback = async (sender, messageCallback) => {
+export const addListener = (address, callback) => {
+  callbackHash[address] = callbackHash[address] || []
+  const registered = callbackHash[address].filter(cbk => cbk === callback)
+  console.log('addListener', registered)
+  if (!registered.length) {
+    console.log('adding')
+    callbackHash[address].push(callback)
+  }
+}
+
+export const removeListener = (address, callback) => {
+  if (callbackHash[address]) {
+    callbackHash.filter(cbk => cbk !== callback)
+  }
+}
+
+export const sendMessage = async (message, messageCallback) => {
   let osc = await init()
   const promise = createCallbackPromise(messageCallback)
-  osc.send(sender)
+  osc.send(message)
   return promise
+}
+
+export const notify = async (message) => {
+  let osc = await init()
+  console.log('notify', message)
+  osc.send(message)
 }
 
 const createCallbackPromise = (hash) => {
@@ -83,8 +115,6 @@ const createCallbackPromise = (hash) => {
     resolver,
     oneOff: true
   })
-
-  console.log(promiseHash)
 
   return promise
 }

@@ -47,7 +47,6 @@ SequenceGridItem.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  // const seq = 
   return {
     sequence: getSequenceById(state, ownProps)
   }

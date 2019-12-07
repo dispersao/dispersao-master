@@ -10,7 +10,9 @@ import { watchFetchSequences } from './modules/sequences/sagas'
 
 import { 
   watchCreateRandomScriptSequence,
-  watchCreateScriptSequence 
+  watchCreateScriptSequence,
+  whatchScriptStart as whatchScriptStartFromScriptsequence,
+  watchSendScriptsequence
 } from './modules/scriptsequences/sagas'
 
 export default function* rootSaga() {
@@ -20,6 +22,8 @@ export default function* rootSaga() {
     watchFetchScripts(),
     watchFetchSequences(),
     watchUpdateScript(),
+    whatchScriptStartFromScriptsequence(),
+    watchSendScriptsequence(),
     whatchScriptStart(),
     watchCreateRandomScriptSequence(),
     watchCreateScriptSequence()

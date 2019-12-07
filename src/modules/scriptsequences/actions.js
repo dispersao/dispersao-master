@@ -9,6 +9,8 @@ export const CREATE_RANDOM_SCRIPTSEQUENCE = 'CREATE_RANDOM_SCRIPTSEQUENCE'
 export const CREATE_RANDOM_SCRIPTSEQUENCE_SUCCESS = 'CREATE_RANDOM_SCRIPTSEQUENCE_SUCCESS'
 export const CREATE_RANDOM_SCRIPTSEQUENCE_ERROR = 'CREATE_RANDOM_SCRIPTSEQUENCE_ERROR'
 
+export const SEND_SCRIPTSEQUENCE = 'SEND_SCRIPTSEQUENCE'
+export const UPDATE_PROGRESS_SCRIPTSEQUENCE = 'UPDATE_PROGRESS_SCRIPTSEQUENCE'
 
 export const fetchScriptsequencesSuccess = (scriptsequences) => ({
   type: FETCH_SCRIPTSEQUENCES_SUCCESS,
@@ -50,5 +52,19 @@ export const createRandomScriptsequence = (script) => ({
   type: CREATE_RANDOM_SCRIPTSEQUENCE,
   payload: {
     script
+  }
+})
+
+export const sendScriptsequence = (scriptsequence) => ({
+  type: SEND_SCRIPTSEQUENCE,
+  payload: {
+    scriptsequence
+  }
+})
+
+export const updateProgressScriptsequence = (scriptsequence) => ({
+  type: UPDATE_PROGRESS_SCRIPTSEQUENCE,
+  payload: {
+    scriptsequence
   }
 })

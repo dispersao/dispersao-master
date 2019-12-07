@@ -2,10 +2,9 @@ import {
   call, 
   put, 
   takeLeading,
-  takeEvery,
+  takeEvery
 } from 'redux-saga/effects'
 
-import osc from 'osc/dist/osc-browser'
 import { push } from 'connected-react-router'
 
 import {
@@ -16,7 +15,7 @@ import {
   createScriptSuccess,
   createScriptError,
   UPDATE_SCRIPT,
-  updateScript,
+  // updateScript,
   updateScriptSuccess,
   updateScriptError,
   START_SCRIPT,
@@ -26,7 +25,9 @@ import {
   // PAUSE_SCRIP
 } from './actions'
 
-import { fetchScriptsequencesSuccess } from '../scriptsequences/actions'
+import { 
+  fetchScriptsequencesSuccess,
+} from '../scriptsequences/actions'
 
 import { 
   createScript as createScriptAPI,
@@ -34,7 +35,11 @@ import {
   updateScript as updateScriptAPI
 } from '../api/script'
 
-import { sendOscMessagewithCallback } from './managers/osc'
+import { 
+  sendMessage,
+  notify
+} from '../../utils/managers/osc'
+
 
 export function* watchFetchScripts() {
   yield takeLeading(FETCH_SCRIPTS, fetchScripts)
@@ -86,11 +91,12 @@ function* updateScripts(action) {
 
 function* startScript(action) {
   try {
-    yield put(updateScript({
-      id: action.payload.script, 
-      isPlaying:true
-    }))
-    // yield call(sendOscMessage, 'start', [action.payload.script])
+    yield call(notify, {
+      address: '/start',
+      args: [
+        action.payload.script
+      ]
+    })
   } catch (e) {
     console.log(e)
   }
@@ -98,7 +104,7 @@ function* startScript(action) {
 
 function* connectScript(action) {
   try {
-    yield call(sendOscMessagewithCallback, {
+    yield call(sendMessage, {
       address: '/connect', 
       args: [action.payload.script.id]
     }, {

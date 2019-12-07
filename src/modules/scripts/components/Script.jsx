@@ -9,6 +9,7 @@ import { Redirect } from 'react-router-dom'
 import UnplayedSequences from '../../sequences/components/UnplayedSequences.jsx'
 import ScriptHeader from './ScriptHeader.jsx'
 import ScriptActions from './ScriptActions.jsx'
+import ScriptSequencesGrid from '../../scriptsequences/components/ScriptSequencesGrid.jsx'
 
 import Divider from '@material-ui/core/Divider'
 
@@ -27,6 +28,7 @@ const Script = ({ script }) => {
       <UnplayedSequences script={id} scriptsequences={script.scriptsequences} />
       <Divider />
       <ScriptActions {...script} />
+      <ScriptSequencesGrid scriptsequences={script.scriptsequences} /> 
     </div>
   )
 }
