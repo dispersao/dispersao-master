@@ -15,14 +15,14 @@ import {
   createScriptSuccess,
   createScriptError,
   UPDATE_SCRIPT,
-  // updateScript,
+  updateScriptPlayPause,
   updateScriptSuccess,
   updateScriptError,
   START_SCRIPT,
   CONNECT_SCRIPT,
   connectScriptSuccess,
-  connectScriptError
-  // PAUSE_SCRIP
+  connectScriptError,
+  PAUSE_SCRIPT
 } from './actions'
 
 import { 
@@ -56,6 +56,7 @@ export function* watchUpdateScript() {
 export function* whatchScriptStart() {
   yield takeEvery(CONNECT_SCRIPT, connectScript)
   yield takeEvery(START_SCRIPT, startScript)
+  yield takeEvery(PAUSE_SCRIPT, pauseScript)
 }
 
 function* fetchScripts () {
@@ -91,6 +92,10 @@ function* updateScripts(action) {
 
 function* startScript(action) {
   try {
+    yield put(updateScriptPlayPause({
+      id: action.payload.script,
+      isPlaying: true
+    }))
     yield call(notify, {
       address: '/start',
       args: [
@@ -101,6 +106,24 @@ function* startScript(action) {
     console.log(e)
   }
 }
+
+function* pauseScript(action) {
+  try {
+    yield put(updateScriptPlayPause({
+      id: action.payload.script,
+      isPlaying: false
+    }))
+    yield call(notify, {
+      address: '/pause',
+      args: [
+        action.payload.script
+      ]
+    })
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 
 function* connectScript(action) {
   try {

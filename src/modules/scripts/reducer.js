@@ -13,6 +13,7 @@ import {
   CONNECT_SCRIPT,
   CONNECT_SCRIPT_SUCCESS,
   CONNECT_SCRIPT_ERROR,
+  UPDATE_SCRIPT_PLAYPAUSE
 } from './actions'
 
 import {
@@ -68,6 +69,7 @@ const reducer = (state = fromJS({
       }))
 
     case UPDATE_SCRIPT_SUCCESS:
+      console.log('UPDATE_SCRIPT_SUCCESS')
       script = action.payload.script
       Object.keys(script).forEach(sc => {
         script[sc].synching = false
@@ -77,6 +79,15 @@ const reducer = (state = fromJS({
         error: null,
         synching: false
       }))
+
+    case UPDATE_SCRIPT_PLAYPAUSE:
+      return state.setIn(
+        [
+          'data', 
+          action.payload.script.id.toString(), 
+          'isPlaying'
+        ], action.payload.script.isPlaying)
+
     case CREATE_SCRIPT_ERROR:
     case UPDATE_SCRIPT_ERROR:
       return state.mergeDeep(fromJS({ 

@@ -15,12 +15,14 @@ const ScriptConnecter = ({ connected, connect, id }) => {
     connect(id)
   }
 
-  if (!connected) {
+  const text = !connected ? 'connect' : 're-try connect'
+
+  if (!connected || connected === 'failed') {
     return (
       <Button 
         onClick={onClick}
         className={classes.connectButton}>
-        connect
+        {text}
       </Button>
     )
   } else {
