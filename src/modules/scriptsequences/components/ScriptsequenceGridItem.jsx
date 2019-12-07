@@ -1,5 +1,5 @@
 import React, { 
-  useEffect, 
+  // useEffect, 
   // useState 
 } from 'react'
 import PropTypes from 'prop-types'
@@ -40,13 +40,12 @@ const ScriptsequenceGridItem = ({ sequence, progress }) => {
         cellHeight="auto" 
         cols={1}>
         <SequenceGridItem {...sequence} />
-        { progress > 0 && 
+        { progress > 0 && progress < 100 && 
           <div
             className={classes.progressDiv}
             style={{ width: `${progress}%`, height: '100%' }}
           />
         }
-        
       </GridList>
     </GridListTile>
   )

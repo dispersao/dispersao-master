@@ -10,12 +10,12 @@ const useStyles = makeStyles(theme => {
     },
     item: {
       width: 120,
-      height: 150,
+      height: 120,
       padding: 2,
     },
     "item-played": {
       width: 120,
-      height: 150,
+      height: 120,
       padding: 2,
       opacity: 0.3
     },

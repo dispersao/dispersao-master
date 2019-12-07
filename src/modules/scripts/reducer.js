@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable'
+import { fromJS, List } from 'immutable'
 
 import {
   FETCH_SCRIPTS,
@@ -56,7 +56,6 @@ const reducer = (state = fromJS({
       }))
     
     case CREATE_SCRIPT_SUCCESS:
-    case UPDATE_SCRIPT_SUCCESS:
       script = action.payload.script
       Object.keys(script).forEach(sc => {
         script[sc].synching = false
@@ -68,6 +67,16 @@ const reducer = (state = fromJS({
         synching: false
       }))
 
+    case UPDATE_SCRIPT_SUCCESS:
+      script = action.payload.script
+      Object.keys(script).forEach(sc => {
+        script[sc].synching = false
+      })
+      return state.mergeWith(merger, fromJS({
+        data: script,
+        error: null,
+        synching: false
+      }))
     case CREATE_SCRIPT_ERROR:
     case UPDATE_SCRIPT_ERROR:
       return state.mergeDeep(fromJS({ 
@@ -116,3 +125,11 @@ const reducer = (state = fromJS({
 }
 
 export default reducer
+
+const isList = List.isList
+const merger = (a, b) => {
+  if (a && a.mergeWith && !isList(a) && !isList(b)) {
+    return a.mergeWith(merger, b)
+  }
+  return b
+}
