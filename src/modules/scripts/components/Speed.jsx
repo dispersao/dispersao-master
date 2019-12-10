@@ -9,7 +9,8 @@ import {
 
 
 
-const Speed = ({ value, onSelect, className }) => {
+const Speed = ({ value, onSelect, className, disabled }) => {
+  const val = value || 1
   return (
     <>
       <InputLabel 
@@ -22,21 +23,23 @@ const Speed = ({ value, onSelect, className }) => {
         className={className}
         label='speed'
         onChange={evt => onSelect(evt.target.value)}
-        value={value}>
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
+        disabled={disabled}
+        value={val}>
         <MenuItem 
-          value='normal'>
+          value='1'>
             normal (1x)
         </MenuItem>
         <MenuItem 
-          value='ff'>
-            fast-forward (2x)
+          value='2'>
+            ff (2x)
         </MenuItem>
         <MenuItem 
-          value='sff'>
-            super-fast-forward (4x)
+          value='4'>
+            ff (4x)
+        </MenuItem>
+        <MenuItem 
+          value='8'>
+            ff (8x)
         </MenuItem>
       </Select>
     </>
@@ -46,7 +49,8 @@ const Speed = ({ value, onSelect, className }) => {
 Speed.propTypes = {
   value: PropTypes.string,
   className: PropTypes.string,
-  onSelect: PropTypes.func
+  onSelect: PropTypes.func,
+  disabled: PropTypes.bool
 }
 
 export default Speed

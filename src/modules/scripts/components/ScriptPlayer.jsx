@@ -7,14 +7,14 @@ import Button from '@material-ui/core/Button'
 
 import WithSequenceManager from './HOC/SequencesManager.jsx'
 
-const ScriptPlayer = ({ id, isPlaying, startScript, pauseScript, scriptsequences, connected }) => {
+const ScriptPlayer = ({ id, isPlaying, speed, startScript, pauseScript, scriptsequences, connected }) => {
   const classes = useStyles()
 
   const onHandlePlayPause = () => {
     if (isPlaying) {
       pauseScript(id)
     } else {
-      startScript(id)
+      startScript(id, parseInt(speed))
     }
   }
 
@@ -43,14 +43,18 @@ ScriptPlayer.propTypes = {
   id: PropTypes.number,
   connected: PropTypes.string,
   isPlaying: PropTypes.bool,
+  speed: PropTypes.string,
   startScript: PropTypes.func,
   pauseScript: PropTypes.func,
   scriptsequences: PropTypes.array
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  startScript: (id) => dispatch(startScript(id)),
-  pauseScript: (id) => dispatch(pauseScript(id))
+  startScript: (id, speed) => dispatch(startScript({
+    id,
+    speed
+  })),
+  pauseScript: (id) => dispatch(pauseScript({ id }))
 })
 
 export default WithSequenceManager(connect(

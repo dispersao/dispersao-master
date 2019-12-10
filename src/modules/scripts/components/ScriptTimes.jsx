@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ScriptAveragetime from './ScriptAveragetime.jsx'
 import ScriptSpeed from './ScriptSpeed.jsx'
 import ScriptTime from './ScriptTime.jsx'
 
@@ -19,9 +18,6 @@ const ScriptTimes = ({ script }) => {
         </Grid>
         <Grid item xs>
           <ScriptTime field='remaining' value={script.remainingTime} />
-        </Grid>
-        <Grid item xs>
-          <ScriptAveragetime {...script} field="averagetime" />
         </Grid>
         <Grid item xs>
           <ScriptSpeed {...script} />

@@ -15,7 +15,7 @@ import {
   createScriptSuccess,
   createScriptError,
   UPDATE_SCRIPT,
-  updateScriptPlayPause,
+  updateScriptLocalState,
   updateScriptSuccess,
   updateScriptError,
   START_SCRIPT,
@@ -92,14 +92,15 @@ function* updateScripts(action) {
 
 function* startScript(action) {
   try {
-    yield put(updateScriptPlayPause({
-      id: action.payload.script,
+    yield put(updateScriptLocalState({
+      id: action.payload.script.id,
       isPlaying: true
     }))
     yield call(notify, {
       address: '/start',
       args: [
-        action.payload.script
+        action.payload.script.id,
+        action.payload.script.speed
       ]
     })
   } catch (e) {
@@ -109,14 +110,14 @@ function* startScript(action) {
 
 function* pauseScript(action) {
   try {
-    yield put(updateScriptPlayPause({
-      id: action.payload.script,
+    yield put(updateScriptLocalState({
+      id: action.payload.script.id,
       isPlaying: false
     }))
     yield call(notify, {
       address: '/pause',
       args: [
-        action.payload.script
+        action.payload.script.id
       ]
     })
   } catch (e) {

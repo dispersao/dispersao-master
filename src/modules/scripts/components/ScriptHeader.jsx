@@ -7,12 +7,26 @@ import ScriptAveragetime from './ScriptAveragetime.jsx'
 
 // import { toJS } from '../../../utils/immutableToJs'
 
+import Grid from '@material-ui/core/Grid'
+
 const ScriptHeader = ({ name, averagetime, id, synching }) => {
   return (
-    <div >
-      <ScriptName name={name} id={id} synching={synching} field="name" />
-      {/* <ScriptAveragetime id={id} synching={synching} averagetime={averagetime} /> */}
-    </div>
+    <Grid container spacing={2}>
+      <Grid item xs>
+        <ScriptName 
+          name={name} 
+          id={id} 
+          synching={synching} 
+          field="name" />
+      </Grid>
+      <Grid item>
+        <ScriptAveragetime 
+          id={id} 
+          synching={synching} 
+          averagetime={averagetime} 
+          field="averagetime" />
+      </Grid>
+    </Grid>
   )
 }
 

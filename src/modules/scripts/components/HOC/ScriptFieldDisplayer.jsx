@@ -1,18 +1,21 @@
-import React, { useState } from 'react'
+import React/*, { useState }*/ from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { updateScript } from '../../actions'
+import { 
+  updateScript,
+  updateScriptLocalState
+} from '../../actions'
 
-import {
-  Typography
-} from '@material-ui/core'
+// import {
+//   Typography
+// } from '@material-ui/core'
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component'
 }
 
-const ScriptFieldUpdateComp = (WrappedComponent, field) => {
+const ScriptFieldUpdateComp = (WrappedComponent, field, isSynch = true) => {
   
   const ScriptFieldUpdate = (props) => {
     const { save, synching, value } = props
@@ -53,17 +56,22 @@ const ScriptFieldUpdateComp = (WrappedComponent, field) => {
     field: PropTypes.string,
     save: PropTypes.func,
     synching: PropTypes.bool,
-    value: PropTypes.any
+    value: PropTypes.any,
+    isSynch: PropTypes.bool
   }
 
   ScriptFieldUpdate.displayName = `ScriptFieldUpdate(${getDisplayName(WrappedComponent)})`
 
   const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-      save: (value) => dispatch(updateScript({
-        id: ownProps.id,
-        [field]: value
-      })),
+      save: (value) => {
+        const action = isSynch ? updateScript : updateScriptLocalState
+        dispatch(action({
+          id: ownProps.id,
+          [field]: value
+        })
+        )
+      },
       value: ownProps[field]
     }
   }

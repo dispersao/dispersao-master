@@ -10,7 +10,7 @@ export const UPDATE_SCRIPT = 'UPDATE_SCRIPT'
 export const UPDATE_SCRIPT_SUCCESS = 'UPDATE_SCRIPT_SUCCESS'
 export const UPDATE_SCRIPT_ERROR = 'UPDATE_SCRIPT_ERROR'
 
-export const UPDATE_SCRIPT_PLAYPAUSE = 'UPDATE_SCRIPT_PLAYPAUSE'
+export const UPDATE_SCRIPT_LOCAL_STATE = 'UPDATE_SCRIPT_LOCAL_STATE'
 
 export const START_SCRIPT = 'START_SCRIPT'
 export const PAUSE_SCRIPT = 'PAUSE_SCRIPT'
@@ -83,8 +83,8 @@ export const updateScriptError = (error) => ({
   }
 })
 
-export const updateScriptPlayPause = (script) => ({
-  type: UPDATE_SCRIPT_PLAYPAUSE,
+export const updateScriptLocalState = (script) => ({
+  type: UPDATE_SCRIPT_LOCAL_STATE,
   payload: {
     script
   }
