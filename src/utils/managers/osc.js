@@ -69,7 +69,7 @@ const parseOscMessage = (oscMessage) => {
 export const addListener = (address, callback) => {
   callbackHash[address] = callbackHash[address] || []
   const registered = callbackHash[address].filter(cbk => cbk === callback)
-  console.log('addListener', registered)
+  // console.log('addListener', registered)
   if (!registered.length) {
     console.log('adding')
     callbackHash[address].push(callback)
@@ -91,7 +91,7 @@ export const sendMessage = async (message, messageCallback) => {
 
 export const notify = async (message) => {
   let osc = await init()
-  console.log('notify', message)
+  // console.log('notify', message)
   osc.send(message)
 }
 

@@ -88,7 +88,6 @@ function* createScriptsequence(action) {
 function* sendScriptsequence(action) {
   const scriptsequence = action.payload.scriptsequence
   const sequence = scriptsequence.sequence
-  console.log(scriptsequence)
   yield call(notify, {
     address: '/scene',
     args: [

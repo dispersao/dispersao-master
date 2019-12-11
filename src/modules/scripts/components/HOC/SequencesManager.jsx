@@ -14,16 +14,16 @@ const WithSequenceManager = WrappedComponent => {
       scriptsequences, 
       remainingTime,
       totalTime,
-      averageTime,
+      averageSeconds,
       createRandomScriptsequence, 
       connected
     } = props
 
     useEffect(() => {
-      if (connected === 'connected' && remainingTime < MIN_PLANNED_TIME && totalTime < averageTime) {
+      if (connected === 'connected' && remainingTime < MIN_PLANNED_TIME && totalTime < averageSeconds) {
         createRandomScriptsequence(id, scriptsequences.length)
       }
-    }, [remainingTime, connected, totalTime, averageTime])
+    }, [remainingTime, connected, totalTime, averageSeconds])
 
     const wrappedProps = {
       ...props
@@ -42,7 +42,7 @@ const WithSequenceManager = WrappedComponent => {
     scriptsequences: PropTypes.array,
     remainingTime: PropTypes.number,
     totalTime: PropTypes.number,
-    averageTime: PropTypes.number,
+    averageSeconds: PropTypes.number,
     createRandomScriptsequence: PropTypes.func.isRequired,
     connected:PropTypes.string
   }

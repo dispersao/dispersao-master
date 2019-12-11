@@ -1,37 +1,36 @@
-import React, { 
-  // useEffect, 
-  // useState 
-} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
+import ProgressBar from './ProgressBar.jsx'
 import SequenceGridItem from '../../sequences/components/SequenceGridItem.jsx'
 
 import {
+  updateScriptLocalState
+} from '../../scripts/actions'
+
+import {
   GridListTile,
-  // LinearProgress,
   GridList,
-  // withStyles
 } from '@material-ui/core'
 
-// import * as styles from '@material-ui/core/styles'
 
 import useStyles from './styles/'
 
-// const BorderLinearProgress = withStyles({
-//   root: {
-//     height: 10,
-//     backgroundColor: '#f8bbd0',
-//     marginTop: 5,
-//   },
-//   bar: {
-//     backgroundColor: '#ff6c5c',
-//   },
-// })(LinearProgress)
+const ScriptsequenceGridItem = ({ 
+  sequence, 
+  progress, 
+  isLast,
+  script,
+  pauseScript
 
-
-const ScriptsequenceGridItem = ({ sequence, progress }) => {
+}) => {
   const classes = useStyles()
   const classname = progress >= 100 ? 'item-played' : 'item'
+
+  if (progress >= 100 && isLast) {
+    pauseScript(script)
+  }
  
   return (
     <GridListTile 
@@ -40,12 +39,11 @@ const ScriptsequenceGridItem = ({ sequence, progress }) => {
         cellHeight="auto" 
         cols={1}>
         <SequenceGridItem {...sequence} />
-        { progress > 0 && progress < 100 && 
-          <div
-            className={classes.progressDiv}
-            style={{ width: `${progress}%`, height: '100%' }}
-          />
-        }
+        <ProgressBar 
+          value={progress} 
+          enabled={progress > 0 && progress < 100}
+          direction='r-l'
+        />
       </GridList>
     </GridListTile>
   )
@@ -53,7 +51,20 @@ const ScriptsequenceGridItem = ({ sequence, progress }) => {
 
 ScriptsequenceGridItem.propTypes = {
   sequence: PropTypes.object.isRequired,
-  progress: PropTypes.number
+  progress: PropTypes.number,
+  isLast: PropTypes.bool,
+  pauseScript: PropTypes.func,
+  script: PropTypes.number
 }
 
-export default ScriptsequenceGridItem
+const mapDispatchToProps = (dispatch) => ({
+  pauseScript: (id) => dispatch(updateScriptLocalState({
+    id,
+    isPlaying: false
+  }))
+})
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(ScriptsequenceGridItem)

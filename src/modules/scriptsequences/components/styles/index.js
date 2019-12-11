@@ -19,11 +19,19 @@ const useStyles = makeStyles(theme => {
       padding: 2,
       opacity: 0.3
     },
-    progressDiv: {
+    progressDivRL: {
       height: '100%',
       position: 'absolute',
       top: 0,
       right: 0,
+      backgroundColor: 'red',
+      opacity: 0.5
+    },
+    progressDivLR: {
+      height: '100%',
+      position: 'absolute',
+      top: 0,
+      left: 0,
       backgroundColor: 'red',
       opacity: 0.5
     },
