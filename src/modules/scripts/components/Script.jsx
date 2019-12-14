@@ -19,9 +19,8 @@ const Script = ({ script }) => {
   }
 
   const { id } = script
-  // const { id, name, averagetime, speed, synching } = script
+
   return (
-    
     <div>
       <ScriptHeader {...script} />
       <Divider />

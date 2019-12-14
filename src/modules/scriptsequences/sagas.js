@@ -91,7 +91,7 @@ function* sendScriptsequence(action) {
   yield call(notify, {
     address: '/scene',
     args: [
-      scriptsequence.script.id || scriptsequence.script,
+      scriptsequence.script,
       sequence.id,
       sequence.sceneNumber, 
       scriptsequence.index, 

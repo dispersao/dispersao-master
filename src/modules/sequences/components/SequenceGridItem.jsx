@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import { toHHMMSS } from '../../../utils/stringUtils'
+
 import useStyles from './styles/'
 
 import {
@@ -10,17 +12,15 @@ import {
   // IconButton
 } from '@material-ui/core'
 
-// import InfoIcon from '@material-ui/icons/Info'
 
 import { toJS } from '../../../utils/immutableToJs.jsx'
 import { getSequenceById } from '../selectors'
-
 
 const padStart = require('lodash/padStart')
 
 const SequenceGridItem = ({ sequence }) => {
   const classes = useStyles()
-  const { sceneNumber, location, type } = sequence
+  const { sceneNumber, location, duration, type } = sequence
   
   let padCount = isNaN(Number(sceneNumber.slice(-1))) ? 4 : 3
   let fileName = padStart(sceneNumber, padCount, '0')
@@ -29,8 +29,8 @@ const SequenceGridItem = ({ sequence }) => {
     <GridListTile className={classes.item}>
       <img src={`/photos/${fileName}_0_1.jpg`} alt={sceneNumber} />
       <GridListTileBar
-        title={fileName}
-        subtitle={<span>{`${location} - ${type}`}</span>}
+        title={`${fileName} (${toHHMMSS(duration)})`}
+        subtitle={<span>{`${location}-${type}`}</span>}
         className={classes.tilebar}
         /*actionIcon={
           <IconButton aria-label={`info about ${sceneNumber}`} className={classes.icon}>

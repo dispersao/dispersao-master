@@ -38,7 +38,10 @@ const ScriptsequenceGridItem = ({
       <GridList 
         cellHeight="auto" 
         cols={1}>
-        <SequenceGridItem {...sequence} />
+        <SequenceGridItem 
+          {...sequence} 
+          subtitleField={'duration'} 
+        />
         <ProgressBar 
           value={progress} 
           enabled={progress > 0 && progress < 100}

@@ -24,7 +24,7 @@ const ScriptSequencesGrid = ({ scriptsequences }) => {
     <div >
       <Typography variant="h4" component="h2">Timeline</Typography>
       <div className={classes.root}>
-        <GridList cellHeight={180}>
+        <GridList cellHeight={120}>
           { sequencesComps }
         </GridList>
       </div>

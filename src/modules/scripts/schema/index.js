@@ -1,10 +1,11 @@
-import { schema, normalize } from 'normalizr'
-import { scriptsequenceSchema } from '../scriptsequences/schema'
+import { normalize } from 'normalizr'
+import { scriptsequenceSchema } from '../../scriptsequences/schema/scriptsequence'
 
-const scriptSchema = new schema.Entity('scripts', {
+import { scriptSchema } from './script'
+
+scriptSchema.define({
   scriptsequences: [scriptsequenceSchema]
 })
-
 export const scriptsListSchema = [scriptSchema]
 
 export const normalizeScriptList = (data) => {

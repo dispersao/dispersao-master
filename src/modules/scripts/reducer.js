@@ -125,9 +125,9 @@ const reducer = (state = fromJS({
 
     case CREATE_SCRIPTSEQUENCE_SUCCESS:
       Object.values(action.payload.scriptsequence).forEach(scriptsequence => {
-        let scriptId = scriptsequence.script.id.toString()
-        let newList = state.getIn(['data', scriptId, 'scriptsequences']).push(scriptsequence.id)
-        state = state.setIn(['data', scriptId, 'scriptsequences'], newList)
+        let scriptId = scriptsequence.script
+        let newList = state.getIn(['data', scriptId.toString(), 'scriptsequences']).push(scriptsequence.id)
+        state = state.setIn(['data', scriptId.toString(), 'scriptsequences'], newList)
       })
       return state 
 
