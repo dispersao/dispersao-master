@@ -2,7 +2,9 @@ import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 
 const getState = (state) => state.categories
-const getCategorieId = (state, props) => props.id
+const getCategoryId = (state, props) => props.id
+
+const getCategoriesIds = (state, props) => props.categories.sort()
 
 export const getCategoriesList = createSelector(
   [getState], (state) => {
@@ -13,8 +15,8 @@ export const getCategoriesList = createSelector(
   }
 )
 
-export const getCategorieById = createCachedSelector(
-  [getCategoriesList, getCategorieId], 
+export const getCategoryById = createCachedSelector(
+  [getCategoriesList, getCategoryId], 
   (list, id) => {
     if (!list || !list.size || !id) {
       return
@@ -22,4 +24,14 @@ export const getCategorieById = createCachedSelector(
     return list.get(id.toString())
  
   }
-)(getCategorieId)
+)(getCategoryId)
+
+export const getCategoriesByCategoriesIds = createCachedSelector(
+  [getCategoriesList, getCategoriesIds],
+  (list, ids) => {
+    if (!list || !list.size || !ids || !ids.length) {
+      return
+    }
+    return list.filter(cat => ids.includes(cat.get('id')))
+  }
+)(JSON.stringify(getCategoriesIds))

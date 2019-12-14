@@ -10,9 +10,10 @@ const reducer = (state = fromJS({
 }), action) => {
   switch (action.type) {
     case FETCH_CATEGORIES_SUCCESS:
-      return state.mergeDeep(fromJS({
-        data: action.payload.locations
-      })
+      return state.mergeDeep(fromJS(
+        {
+          data: action.payload.categories
+        })
       )
     default:
       return state
