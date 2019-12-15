@@ -1,22 +1,29 @@
 import { 
   getPlayedUnplayedSequencesFormated
-} from './formatSequences'
+} from './formatData'
+
+import {
+  filterSequences
+} from './filterSequences'
 
 export const getNextRandomSequence = (script, sequences) => {
 
-  const {
-    scriptSequence, 
+  let {
+    scriptSequences, 
     availableSequences
   } = getPlayedUnplayedSequencesFormated(script, sequences)
 
- 
+  availableSequences = filterSequences(scriptSequences, availableSequences)
 
-  console.log(scriptSequence)
-  // console.log(sequences.toJS())
-  const seed = Math.floor(Math.random() * sequences.size)
+  let seed =  Math.floor(Math.random() * availableSequences.length)
+  let seq = availableSequences[seed]
+
+  // let seq = availableSequences.find(s => s.sceneNumber === '2' || s.sceneNumber === '64')
+  // let seq = availableSequences.find(s => s.sceneNumber === '3' || s.sceneNumber === '31' || s.sceneNumber === '86')
+  if (!seq) seq = availableSequences[0]
   return {
-    index: script.get('scriptsequences').size,
-    sequence: sequences.valueSeq().get(seed).get('id'),
+    index: scriptSequences.length,
+    sequence: seq,
     script: script.get('id')
   }
 }

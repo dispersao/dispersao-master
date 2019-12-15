@@ -1,5 +1,5 @@
 import createCachedSelector from 're-reselect'
-import { Map, fromJS } from 'immutable'
+import { Map, fromJS, List } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { getTypeByTypeId, getTypesList } from '../types/selectors'
@@ -106,8 +106,8 @@ const sortSequences = (a, b) => {
 
 const formatSequenceForAlgorithm = (seq, typesList, locationsList, partsList, charactersList, categoriesList) => {
   
-  const type = typesList.get(seq.get('type'))
-  const location = locationsList.get(seq.get('location'))
+  const type = typesList.get(seq.get('type').toString())
+  const location = locationsList.get(seq.get('location').toString())
 
   const parts = seq.get('parts').map(partId => {
     return partsList.get(partId.toString())
@@ -126,12 +126,15 @@ const formatSequenceForAlgorithm = (seq, typesList, locationsList, partsList, ch
   const categories = seq.get('categories').map(catId => {
     return categoriesList.get(catId.toString())
   })
-  
-  return seq.mergeDeep(fromJS({
+
+  let mergedSeq = seq.mergeDeep(fromJS({
     type,
     location,
-    categories,
-    parts,
     characters
   }))
+
+  mergedSeq = mergedSeq.setIn(['categories'], List(categories))
+  mergedSeq = mergedSeq.setIn(['parts'], List(parts))
+
+  return mergedSeq
 }
