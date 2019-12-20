@@ -20,12 +20,12 @@ const categories = {
 export const filterSequences = (scriptSequences, unselectedSequences) => {
   let availableSequences = filterByBlock(scriptSequences, unselectedSequences)
   availableSequences = filterByRequire(scriptSequences, availableSequences)
-  availableSequences = filterByBlocksNextAndBlocks2ndNext(scriptSequences, availableSequences)
+  availableSequences = filterByBlockGroups(scriptSequences, availableSequences)
   availableSequences = filterByCharsAndLocation(scriptSequences, availableSequences)
   return availableSequences
 }
 
-/*-- FILTER OUT BLOCKED SEQUENCES BY SCRIPT SEQUENCES --*/
+/*-- FILTER OUT BLOCKED SEQUENCES BY SCRIPT SEQUENCES --*/    
 const filterByBlock = (scriptSequences, availableSequences) => {
   let blockCategories = scriptSequences.map(seq => {
     return getSeqCategoriesByType(seq, categories.block)
@@ -48,7 +48,7 @@ const filterByRequire = (scriptSequences, availableSequences) => {
 }
 
 /*-- FILTER OUT SEQUENCES BELONGING TO SAME BLOCK-NEXT OR BLOCK-2ND-NEXT GROUPS --*/
-const filterByBlocksNextAndBlocks2ndNext = (scriptSequences, availableSequences) => {
+const filterByBlockGroups = (scriptSequences, availableSequences) => {
   const lastSeq = getSequenceInPosition(scriptSequences, -1)
   const secondLastSeq = getSequenceInPosition(scriptSequences, -2)
 
@@ -68,7 +68,7 @@ const filterByBlockGroup = (checkSequences, field, availableSequences) => {
     .flatten()
 
   return availableSequences.filter(seq => {
-    const seqCheckValue = map(getSeqCategoriesByType(seq, field),'id')
+    const seqCheckValue = map(getSeqCategoriesByType(seq, field), 'id')
     return !intersection(seqCheckValue, checkValues).length
   })
 }

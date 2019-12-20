@@ -65,10 +65,6 @@ export function* whatchScriptStart() {
 function* createRandomScriptSequence(action) {
   try {
     const script = yield select(getScriptById, { id: action.payload.script.script })
-    // const unplayedSequences = yield select(getSequenceListNotInScript, {
-    //   script: action.payload.script.script,
-    //   scriptsequences: script.get('scriptsequences').toJS()
-    // })
     const formatedSequences = yield select(getSequenceListFormatted)
     const nextScriptSequence = yield getNextRandomSequence(script, formatedSequences)
     yield put(createScriptsequenceAction(nextScriptSequence))

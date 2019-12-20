@@ -1,5 +1,4 @@
 import map from 'lodash/map'
-// import find from 'lodash/find'
 
 export const getPlayedUnplayedSequencesFormated = (scriptMap, sequencesList) => {
   const script = scriptMap.toJS()
@@ -17,13 +16,11 @@ export const getPlayedUnplayedSequencesFormated = (scriptMap, sequencesList) => 
 }
 
 export const getCategoriesByType = (categoriesList, type) => {
-  // console.log(categoriesList, type, categoriesList.filter(cat => cat.type === type))
   return categoriesList.filter(cat => cat.type === type)
 }
 
 export const getSeqCategoriesByType = (seq, type) => {
   if (!seq || !seq.categories) {
-    console.log('no categories')
     return
   }
   return getCategoriesByType(seq.categories, type)

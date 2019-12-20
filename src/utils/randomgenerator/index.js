@@ -6,6 +6,11 @@ import {
   filterSequences
 } from './filterSequences'
 
+import {
+  calculateSequencesProbability,
+  getRandomSequenceBasedonProbability
+} from './probabilities'
+
 export const getNextRandomSequence = (script, sequences) => {
 
   let {
@@ -14,16 +19,17 @@ export const getNextRandomSequence = (script, sequences) => {
   } = getPlayedUnplayedSequencesFormated(script, sequences)
 
   availableSequences = filterSequences(scriptSequences, availableSequences)
+  availableSequences = calculateSequencesProbability(scriptSequences.length + 1, availableSequences)
+  const selectedSequence = getRandomSequenceBasedonProbability(availableSequences)
 
-  let seed =  Math.floor(Math.random() * availableSequences.length)
-  let seq = availableSequences[seed]
+  console.log(`%c pos ${scriptSequences.length + 1}: 
+  selected sequence: ${selectedSequence.sceneNumber} 
+  with probability:${selectedSequence.probability * 100}
+  with closest position: ${selectedSequence.closestPosition} (distance: ${selectedSequence.positionDistance})`, 'color:#00bada')
 
-  // let seq = availableSequences.find(s => s.sceneNumber === '2' || s.sceneNumber === '64')
-  // let seq = availableSequences.find(s => s.sceneNumber === '3' || s.sceneNumber === '31' || s.sceneNumber === '86')
-  if (!seq) seq = availableSequences[0]
   return {
     index: scriptSequences.length,
-    sequence: seq,
+    sequence: selectedSequence,
     script: script.get('id')
   }
 }
