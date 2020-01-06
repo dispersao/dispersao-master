@@ -6,7 +6,7 @@ import ProgressBar from './ProgressBar.jsx'
 import SequenceGridItem from '../../sequences/components/SequenceGridItem.jsx'
 
 import {
-  updateScriptLocalState
+  finishScript
 } from '../../scripts/actions'
 
 import {
@@ -22,14 +22,14 @@ const ScriptsequenceGridItem = ({
   progress, 
   isLast,
   script,
-  pauseScript
+  endScript
 
 }) => {
   const classes = useStyles()
   const classname = progress >= 100 ? 'item-played' : 'item'
 
   if (progress >= 100 && isLast) {
-    pauseScript(script)
+    endScript(script)
   }
  
   return (
@@ -56,14 +56,13 @@ ScriptsequenceGridItem.propTypes = {
   sequence: PropTypes.object.isRequired,
   progress: PropTypes.number,
   isLast: PropTypes.bool,
-  pauseScript: PropTypes.func,
+  endScript: PropTypes.func,
   script: PropTypes.number
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  pauseScript: (id) => dispatch(updateScriptLocalState({
-    id,
-    isPlaying: false
+  endScript: (id) => dispatch(finishScript({
+    id
   }))
 })
 

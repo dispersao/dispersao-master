@@ -16,7 +16,7 @@ import {
 } from './actions'
 
 import {
-  START_SCRIPT
+  PLAY_SCRIPT
 } from '../scripts/actions'
 
 import {
@@ -59,7 +59,7 @@ export function* watchSendScriptsequence() {
 }
 
 export function* whatchScriptStart() {
-  yield takeLeading(START_SCRIPT, createScriptsequencesListeners)
+  yield takeLeading(PLAY_SCRIPT, createScriptsequencesListeners)
 }
 
 function* createRandomScriptSequence(action) {

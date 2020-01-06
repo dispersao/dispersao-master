@@ -12,12 +12,18 @@ export const UPDATE_SCRIPT_ERROR = 'UPDATE_SCRIPT_ERROR'
 
 export const UPDATE_SCRIPT_LOCAL_STATE = 'UPDATE_SCRIPT_LOCAL_STATE'
 
-export const START_SCRIPT = 'START_SCRIPT'
+export const START_SESSION = 'START_SESSION'
+export const RESET_SESSION = 'RESET_SESSION'
+export const END_SESSION = 'END_SESSION'
+export const PLAY_SCRIPT = 'PLAY_SCRIPT'
 export const PAUSE_SCRIPT = 'PAUSE_SCRIPT'
+export const FINISH_SCRIPT = 'FINISH_SCRIPT'
 
 export const CONNECT_SCRIPT = 'CONNECT_SCRIPT'
 export const CONNECT_SCRIPT_SUCCESS = 'CONNECT_SCRIPT_SUCCESS'
 export const CONNECT_SCRIPT_ERROR = 'CONNECT_SCRIPT_ERROR'
+
+import states from './utils/stateConstants'
 
 // export const CREATE_RANDOM_SCRIPTSEQUENCE = 'CREATE_RANDOM_SCRIPTSEQUENCE'
 // export const CREATE_RANDOM_SCRIPTSEQUENCE_SUCCESS = 'CREATE_RANDOM_SCRIPTSEQUENCE_SUCCESS'
@@ -91,18 +97,64 @@ export const updateScriptLocalState = (script) => ({
 })
 
 
-export const startScript = (script) => ({
-  type: START_SCRIPT,
+export const startSession = (script) => ({
+  type: START_SESSION,
   payload: {
-    script
+    script: {
+      ...script,
+      state: states.STARTED
+    }
   }
 })
 
+export const resetSession = (script) => ({
+  type: RESET_SESSION,
+  payload: {
+    script: {
+      ...script,
+      scriptsequences: [],
+      state: states.IDLE
+    }
+  }
+})
+
+export const playScript = (script) => ({
+  type: PLAY_SCRIPT,
+  payload: {
+    script: {
+      ...script,
+      state: "playing"
+    }
+  }
+})
 
 export const pauseScript = (script) => ({
   type: PAUSE_SCRIPT,
   payload: {
-    script
+    script: {
+      ...script,
+      state: "paused"
+    }
+  }
+})
+
+export const finishScript = (script) => ({
+  type: FINISH_SCRIPT,
+  payload: {
+    script: {
+      ...script,
+      state: "finish"
+    }
+  }
+})
+
+export const endSession = (script) => ({
+  type: END_SESSION,
+  payload: {
+    script: {
+      ...script,
+      state: "ended"
+    }
   }
 })
 

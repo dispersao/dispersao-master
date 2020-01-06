@@ -12,7 +12,6 @@ import {
 } from './probabilities'
 
 export const getNextRandomSequence = (script, sequences) => {
-
   let {
     scriptSequences, 
     availableSequences

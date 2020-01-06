@@ -18,11 +18,14 @@ import {
   updateScriptLocalState,
   updateScriptSuccess,
   updateScriptError,
-  START_SCRIPT,
+  START_SESSION,
+  RESET_SESSION,
+  PLAY_SCRIPT,
   CONNECT_SCRIPT,
   connectScriptSuccess,
   connectScriptError,
-  PAUSE_SCRIPT
+  PAUSE_SCRIPT,
+  FINISH_SCRIPT
 } from './actions'
 
 import { 
@@ -55,8 +58,11 @@ export function* watchUpdateScript() {
 
 export function* whatchScriptStart() {
   yield takeEvery(CONNECT_SCRIPT, connectScript)
-  yield takeEvery(START_SCRIPT, startScript)
+  yield takeEvery(START_SESSION, startSession)
+  yield takeEvery(RESET_SESSION, resetSession)
+  yield takeEvery(PLAY_SCRIPT, playScript)
   yield takeEvery(PAUSE_SCRIPT, pauseScript)
+  yield takeEvery(FINISH_SCRIPT, finishScript)
 }
 
 function* fetchScripts () {
@@ -90,14 +96,41 @@ function* updateScripts(action) {
   }
 }
 
-function* startScript(action) {
+function* resetSession(action) {
   try {
-    yield put(updateScriptLocalState({
-      id: action.payload.script.id,
-      isPlaying: true
-    }))
+    yield updateScripts(action)
     yield call(notify, {
-      address: '/start',
+      address: '/resetsession',
+      args: [
+        action.payload.script.id
+      ]
+    })
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+function* startSession(action) {
+  try {
+    yield updateScripts(action)
+    yield call(notify, {
+      address: '/session',
+      args: [
+        action.payload.script.id,
+        action.payload.script.token
+      ]
+    })
+  } catch (e) {
+    console.log(e)
+  }
+  
+}
+
+function* playScript(action) {
+  try {
+    yield updateScripts(action)
+    yield call(notify, {
+      address: '/play',
       args: [
         action.payload.script.id,
         action.payload.script.speed
@@ -110,12 +143,23 @@ function* startScript(action) {
 
 function* pauseScript(action) {
   try {
-    yield put(updateScriptLocalState({
-      id: action.payload.script.id,
-      isPlaying: false
-    }))
+    yield updateScripts(action)
     yield call(notify, {
       address: '/pause',
+      args: [
+        action.payload.script.id
+      ]
+    })
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+function* finishScript(action) {
+  try {
+    yield updateScripts(action)
+    yield call(notify, {
+      address: "/finish",
       args: [
         action.payload.script.id
       ]

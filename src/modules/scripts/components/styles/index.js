@@ -32,6 +32,12 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     display: 'contents',
     color: '#33ee33'
+  },
+  startedText: {
+    ...theme.typography.button,
+    padding: theme.spacing(1),
+    display: 'contents',
+    color: '#ccc'
   }
 }))
 

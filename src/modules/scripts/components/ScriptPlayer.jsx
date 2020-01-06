@@ -1,19 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { startScript, pauseScript } from '../actions'
+import { playScript, pauseScript } from '../actions'
 import useStyles from './styles'
 import Button from '@material-ui/core/Button'
 
+import states from '../utils/stateConstants'
+
 import WithSequenceManager from './HOC/SequencesManager.jsx'
 
-const ScriptPlayer = ({ id, isPlaying, speed, startScript, pauseScript, scriptsequences, connected }) => {
+const ScriptPlayer = ({ id, state, speed, startScript, pauseScript, scriptsequences, connected }) => {
   const classes = useStyles()
 
   const onHandlePlayPause = () => {
-    if (isPlaying) {
+    if (state === states.PLAYING) {
       pauseScript(id)
-    } else {
+    } else if (state === states.PAUSED || state === states.STARTED) {
       startScript(id, parseInt(speed))
     }
   }
@@ -22,19 +24,26 @@ const ScriptPlayer = ({ id, isPlaying, speed, startScript, pauseScript, scriptse
     console.log('will restart script')
   }
 
+  const acceptedStates = [
+    states.PLAYING, 
+    states.PAUSED,
+    states.STARTED
+  ]
+  const enabled = acceptedStates.includes(state) && connected
+
   return (
     <>
       <Button 
         variant="contained" 
         className={classes.button}
         color='primary'
-        disabled={ connected !== 'connected' }
+        disabled={ !enabled }
         onClick={onHandlePlayPause}>
-        { isPlaying ? 'pause' : 'play'}
+        { state === states.PLAYING ? 'pause' : 'play'}
       </Button>
-      {(scriptsequences.length || '') && 
+      {/* {(scriptsequences.length || '') && 
         <Button onClick={onHandleRestart}>restart</Button>
-      }
+      } */}
     </>
   )
 }
@@ -42,15 +51,15 @@ const ScriptPlayer = ({ id, isPlaying, speed, startScript, pauseScript, scriptse
 ScriptPlayer.propTypes = {
   id: PropTypes.number,
   connected: PropTypes.string,
-  isPlaying: PropTypes.bool,
   speed: PropTypes.string,
   startScript: PropTypes.func,
   pauseScript: PropTypes.func,
-  scriptsequences: PropTypes.array
+  scriptsequences: PropTypes.array,
+  state: PropTypes.string
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  startScript: (id, speed) => dispatch(startScript({
+  startScript: (id, speed) => dispatch(playScript({
     id,
     speed
   })),

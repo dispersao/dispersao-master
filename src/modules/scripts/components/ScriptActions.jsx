@@ -1,5 +1,6 @@
 import React from 'react'
 import ScriptPlayer from './ScriptPlayer.jsx'
+import ScriptStarter from './ScriptStarter.jsx'
 // import ScriptAveragetime from './ScriptAveragetime.jsx'
 // import ScriptSpeed from './ScriptSpeed.jsx'
 import ScriptConnecter from './ScriptConnecter.jsx'
@@ -12,6 +13,7 @@ const ScriptActions = (script) => {
     <Grid container spacing={3}>
       <Grid item xs>
         <ScriptConnecter {...script} />
+        <ScriptStarter {...script} />
         <ScriptPlayer {...script} />
       </Grid>
       <ScriptTimes script={script} />
