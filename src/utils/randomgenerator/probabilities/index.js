@@ -255,5 +255,5 @@ const logPositionProbabilities = (index, positions) => {
     }
   })
 
-  console.log(`position ${index}, percentage per positions `, percentageByPosition)
+  console.log(`percentage per positions `, percentageByPosition)
 }

@@ -7,6 +7,10 @@ import {
 } from './filterSequences'
 
 import {
+  calculateNextPosition
+} from './positionCalculator'
+
+import {
   calculateSequencesProbability,
   getRandomSequenceBasedonProbability
 } from './probabilities'
@@ -17,11 +21,14 @@ export const getNextRandomSequence = (script, sequences) => {
     availableSequences
   } = getPlayedUnplayedSequencesFormated(script, sequences)
 
+  const position = calculateNextPosition(scriptSequences, availableSequences, script)
+
   availableSequences = filterSequences(scriptSequences, availableSequences)
-  availableSequences = calculateSequencesProbability(scriptSequences.length + 1, availableSequences)
+  availableSequences = calculateSequencesProbability(position, availableSequences)
   const selectedSequence = getRandomSequenceBasedonProbability(availableSequences)
 
-  console.log(`%c pos ${scriptSequences.length + 1}: 
+  console.log(`%c index ${scriptSequences.length + 1}
+  cat pos: ${position}
   selected sequence: ${selectedSequence.sceneNumber} 
   with probability:${selectedSequence.probability * 100}
   with closest position: ${selectedSequence.closestPosition} (distance: ${selectedSequence.positionDistance})`, 'color:#00bada')
