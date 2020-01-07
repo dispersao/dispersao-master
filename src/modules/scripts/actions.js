@@ -123,7 +123,7 @@ export const playScript = (script) => ({
   payload: {
     script: {
       ...script,
-      state: "playing"
+      state: states.PLAYING
     }
   }
 })
@@ -133,7 +133,7 @@ export const pauseScript = (script) => ({
   payload: {
     script: {
       ...script,
-      state: "paused"
+      state: states.PAUSED
     }
   }
 })
@@ -143,7 +143,7 @@ export const finishScript = (script) => ({
   payload: {
     script: {
       ...script,
-      state: "finish"
+      state: states.FINISHED
     }
   }
 })
