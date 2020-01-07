@@ -15,7 +15,7 @@ import {
   createScriptSuccess,
   createScriptError,
   UPDATE_SCRIPT,
-  updateScriptLocalState,
+  // updateScriptLocalState,
   updateScriptSuccess,
   updateScriptError,
   START_SESSION,

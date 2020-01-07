@@ -16,10 +16,6 @@ import {
 } from '@material-ui/core'
 
 import { makeStyles } from '@material-ui/core/styles'
-
-
-import Speed from './Speed.jsx'
-
 import { createScript } from '../actions'
 
 const useStyles = makeStyles(theme => ({
@@ -41,17 +37,13 @@ const useStyles = makeStyles(theme => ({
 export const ScriptCreate = ({ createSession }) => {
   const classes = useStyles()
 
-  const [speed, setSpeed] = useState('')
   const [name, setName] = useState('')
   const [averagetime, setAverageTime] = useState('')
 
-  const handleSpeedChange = (value) => {
-    setSpeed(value)
-  }
+  
 
   const handleCreateSession = () => {
     createSession({
-      speed,
       name,
       averagetime
     })
@@ -86,14 +78,6 @@ export const ScriptCreate = ({ createSession }) => {
             />
           </FormControl>
         </ListItem>
-        <ListItem>
-          <FormControl>
-            <Speed 
-              className={clsx(classes.margin, classes.textField)}
-              onSelect={handleSpeedChange} 
-              value={speed} />
-          </FormControl>
-        </ListItem>
       </List>
       <Button
         variant="contained"
@@ -110,7 +94,6 @@ ScriptCreate.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   createSession: (options) => {
-    // console.log(options)
     dispatch(createScript(options))
   }
 })

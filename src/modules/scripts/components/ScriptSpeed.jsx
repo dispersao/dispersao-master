@@ -17,7 +17,6 @@ ScriptSpeed.propTypes = {
   save: PropTypes.func,
   speed: PropTypes.string,
   state: PropTypes.string
-  // isPlaying: PropTypes.bool
 }
 
 export default ScriptFieldUpdateComp(ScriptSpeed, 'speed', false)

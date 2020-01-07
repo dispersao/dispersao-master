@@ -95,12 +95,15 @@ const formatScriptData = (script, scrList, seqList) => {
 
   const remainingTime = totalTime - elapsedTime
 
+  const speed = script.get('speed') || "1"
+
   script = script.set('scriptsequences', scriptsequences)
 
   return script.mergeDeep({
     totalTime,
     elapsedTime,
     remainingTime,
-    averageSeconds
+    averageSeconds,
+    speed
   })
 }

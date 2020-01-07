@@ -33,6 +33,12 @@ const ScriptPlayer = ({
 
   const enabled = state === states.IDLE && connected
 
+  const resetAcceptedValues = [
+    states.PAUSED,
+    states.STARTED,
+    states.FINISHED
+  ]
+
   return (
     <>
       {state === states.IDLE && 
@@ -51,7 +57,7 @@ const ScriptPlayer = ({
           {token}
         </Typography>
       }
-      { (state === states.IDLE && scriptsequences.length || state === states.STARTED || state === states.PAUSED) && connected &&
+      { (resetAcceptedValues.includes(state) || state === states.STARTED && scriptsequences.length) && connected &&
         <Button 
           variant="contained" 
           className={classes.button}
