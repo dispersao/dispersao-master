@@ -64,3 +64,12 @@ export const getToken = createSelector(
     return apiData.get('token')
   }
 )
+
+export const getApiUrl = createSelector(
+  [getApiConfig], (apiData) => {
+    if (!apiData || !apiData.size) {
+      return
+    }
+    return apiData.get('url')
+  }
+)
