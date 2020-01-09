@@ -12,6 +12,9 @@ export const CREATE_RANDOM_SCRIPTSEQUENCE_ERROR = 'CREATE_RANDOM_SCRIPTSEQUENCE_
 export const SEND_SCRIPTSEQUENCE = 'SEND_SCRIPTSEQUENCE'
 export const UPDATE_PROGRESS_SCRIPTSEQUENCE = 'UPDATE_PROGRESS_SCRIPTSEQUENCE'
 
+export const UPDATE_SCRIPTSEQUENCE_LOCAL_STATE = 'UPDATE_SCRIPTSEQUENCE_LOCAL_STATE'
+
+
 export const fetchScriptsequencesSuccess = (scriptsequences) => ({
   type: FETCH_SCRIPTSEQUENCES_SUCCESS,
   payload: {
@@ -33,16 +36,18 @@ export const createScriptsequence = (scriptsequence) => ({
   }
 })
 
-export const createScriptsequenceSuccess = (scriptsequence) => ({
-  type: CREATE_SCRIPTSEQUENCE_SUCCESS,
-  payload: {
-    scriptsequence
+export const createScriptsequenceSuccess = (scriptsequence) => {
+  return {
+    type: CREATE_SCRIPTSEQUENCE_SUCCESS,
+    payload: {
+      scriptsequence
+    }
   }
-})
+}
 
 
 export const createScriptsequenceError = (error) => ({
-  type: CREATE_SCRIPTSEQUENCE_SUCCESS,
+  type: CREATE_SCRIPTSEQUENCE_ERROR,
   payload: {
     error
   }
@@ -64,6 +69,13 @@ export const sendScriptsequence = (scriptsequence) => ({
 
 export const updateProgressScriptsequence = (scriptsequence) => ({
   type: UPDATE_PROGRESS_SCRIPTSEQUENCE,
+  payload: {
+    scriptsequence
+  }
+})
+
+export const updateScriptsequenceLocalState = (scriptsequence) => ({
+  type: UPDATE_SCRIPTSEQUENCE_LOCAL_STATE,
   payload: {
     scriptsequence
   }

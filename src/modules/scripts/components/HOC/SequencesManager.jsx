@@ -11,7 +11,6 @@ const WithSequenceManager = WrappedComponent => {
   const SequenceManager = (props) => {
     const { 
       id, 
-      scriptsequences, 
       remainingTime,
       totalTime,
       averageSeconds,
@@ -22,7 +21,7 @@ const WithSequenceManager = WrappedComponent => {
 
     useEffect(() => {
       if (connected === 'connected' && state !== states.IDLE && remainingTime < MIN_PLANNED_TIME && totalTime < averageSeconds) {
-        createRandomScriptsequence(id, scriptsequences.length)
+        createRandomScriptsequence(id)
       }
     }, [remainingTime, connected, totalTime, averageSeconds, state])
 

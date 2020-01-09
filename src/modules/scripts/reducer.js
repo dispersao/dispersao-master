@@ -80,7 +80,6 @@ const reducer = (state = fromJS({
       }))
 
     case UPDATE_SCRIPT_LOCAL_STATE:
-
       return state.mergeDeep(fromJS({
         data:{
           [action.payload.script.id.toString()]: {

@@ -2,6 +2,9 @@ import createCachedSelector from 're-reselect'
 import { Map, fromJS, List } from 'immutable'
 import { createSelector } from 'reselect'
 
+import { sortEntity } from '../../utils/listUtils'
+
+
 import { getTypeByTypeId, getTypesList } from '../types/selectors'
 import { getLocationByLocationId, getLocationsList } from '../locations/selectors'
 import { getCategoriesList } from '../categories/selectors'
@@ -29,7 +32,7 @@ export const getSequenceList = createSelector(
     if (!sequences) {
       return 
     }
-    return sequences.valueSeq().sort(sortSequences)
+    return sequences.valueSeq().sort(sortEntity)
   }
 )
 
@@ -46,7 +49,7 @@ export const getSequenceListFormatted = createSelector(
     }
     return sequences
       .valueSeq()
-      .sort(sortSequences)
+      .sort(sortEntity)
       .map(seq => formatSequenceForAlgorithm(
         seq, 
         types, 
@@ -69,7 +72,7 @@ export const getSequenceListNotInScript = createSelector(
     return sequences
       .filter(seq => !scriptSequencesIds.includes(seq.get('id')))
       .valueSeq()
-      .sort(sortSequences)
+      .sort(sortEntity)
   }
 )
 
@@ -98,10 +101,6 @@ const formatSequenceData = (seq, type, location) => {
     type: type.get('name'),
     location: location.get('name')
   })
-}
-
-const sortSequences = (a, b) => {
-  return a.get('id') < b.get('id') ? -1 : (a.get('id') > b.get('id') ? 1 : 0)
 }
 
 const formatSequenceForAlgorithm = (seq, typesList, locationsList, partsList, charactersList, categoriesList) => {

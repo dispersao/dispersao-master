@@ -1,7 +1,11 @@
 import { createSelector } from 'reselect'
+import { fromJS, List } from 'immutable'
+
+import { sortEntity } from '../../utils/listUtils'
 
 import { getContentcreatorsList } from '../contentcreators/selectors'
 import { getCommentsList } from '../comments/selectors'
+import { getCategoriesList } from '../categories/selectors'
 
 import { getApiUrl } from '../config/selectors'
 
@@ -25,6 +29,28 @@ export const getPostList = createSelector(
   }
 )
 
+export const getPostsListFormatted = createSelector(
+  [getPosts, getCategoriesList, getContentcreatorsList],
+  (posts, categories, contentcreators) => {
+  
+    const lists = [posts, categories, contentcreators]
+    const anyEmpty = lists.some(list => !list || !list.size)
+
+    if (anyEmpty) {
+      return
+    }
+
+    return posts
+      .valueSeq()
+      .sort(sortEntity)
+      .map(post => formatPostForAlgorithm(
+        post, 
+        contentcreators, 
+        categories
+      ))
+  }
+)
+
 export const getPostsListNotInSession = createSelector(
   [getPosts, getCommentsList, getContentcreatorsList, getApiUrl],
   (posts, comments, contentcreators, url) => {
@@ -33,14 +59,12 @@ export const getPostsListNotInSession = createSelector(
     }
     return posts
       .valueSeq()
-      .sort(sortPosts)
+      .sort(sortEntity)
       .map(post => formatPost(post, comments, contentcreators, url))
   }
 )
 
-const sortPosts = (a, b) => {
-  return a.get('id') < b.get('id') ? -1 : (a.get('id') > b.get('id') ? 1 : 0)
-}
+
 
 const formatPost = (post, commentsList, contentcreatorsList, url) => {
   const contentcreator = contentcreatorsList.get(
@@ -58,10 +82,23 @@ const formatPost = (post, commentsList, contentcreatorsList, url) => {
       contentcreator: contentcreatorsList.get(comment.get('contentcreator').toString())
     })
   })
-  // console.log(comments.toJS(), post.get('comments').toJS(), commentsList.toJS())
   return post.setIn(['comments'], comments)
-    .mergeDeep({
+    .mergeDeep(fromJS({
       contentcreator,
       media
-    })
+    }))
+}
+
+const formatPostForAlgorithm = (post, contentcreatorsList, categoriesList) => {
+  const contentcreator = contentcreatorsList.get(
+    post.get('contentcreator').toString()
+  )
+
+  const categories = post.get('categories').map(catId => {
+    return categoriesList.get(catId.toString())
+  })
+
+  return post
+    .setIn(['categories'], List(categories))
+    .setIn(['contentcrator'], fromJS(contentcreator))
 }

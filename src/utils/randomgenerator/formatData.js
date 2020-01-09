@@ -15,6 +15,33 @@ export const getPlayedUnplayedSequencesFormated = (scriptMap, sequencesList) => 
   }
 }
 
+export const getPublishedUnpublishedContentFormated = (scriptMap, postsList, comentsList) => {
+  const script = scriptMap.toJS()
+  const posts = postsList.toJS()
+  const comments = comentsList.toJS()
+
+  const publishedPostsIds = script.sessioncontent.filter(sescon => sescon.post).map(sescon => sescon.post.id)
+  const publishedCommentsIds = script.sessioncontent.filter(sescon => sescon.comment).map(sescon => sescon.comment.id)
+
+  const scriptPosts = posts.filter(post => publishedPostsIds.includes(post.id))
+  const unpublishedPosts = posts.filter(post => !publishedPostsIds.includes(post.id))
+
+  const scriptComments = comments.filter(comm => publishedCommentsIds.includes(comm.id))
+  const unpublishedComments = comments.filter(comm => !publishedCommentsIds.includes(comm.id))
+
+  return {
+    scriptContent: {
+      posts: scriptPosts,
+      comments: scriptComments
+    },
+    availableContent: {
+      posts: unpublishedPosts,
+      comments: unpublishedComments
+    }
+  }
+
+}
+
 export const getCategoriesByType = (categoriesList, type) => {
   return categoriesList.filter(cat => cat.type === type)
 }

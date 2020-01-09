@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button'
 import states from '../utils/stateConstants'
 
 import WithSequenceManager from './HOC/SequencesManager.jsx'
+import WithAppContentManager from './HOC/AppContentManager.jsx'
 
 const ScriptPlayer = ({ id, state, speed, startScript, pauseScript, scriptsequences, connected }) => {
   const classes = useStyles()
@@ -18,10 +19,6 @@ const ScriptPlayer = ({ id, state, speed, startScript, pauseScript, scriptsequen
     } else if (state === states.PAUSED || state === states.STARTED) {
       startScript(id, parseInt(speed))
     }
-  }
-
-  const onHandleRestart = () => {
-    console.log('will restart script')
   }
 
   const acceptedStates = [
@@ -66,7 +63,11 @@ const mapDispatchToProps = (dispatch) => ({
   pauseScript: (id) => dispatch(pauseScript({ id }))
 })
 
-export default WithSequenceManager(connect(
-  null,
-  mapDispatchToProps
-)(ScriptPlayer))
+export default WithAppContentManager(
+  WithSequenceManager(
+    connect(
+      null,
+      mapDispatchToProps
+    )(ScriptPlayer)
+  )
+)

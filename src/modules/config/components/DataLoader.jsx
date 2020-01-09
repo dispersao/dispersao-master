@@ -45,10 +45,10 @@ const DataLoader = ({
       { 
         token && 
         sequences && 
-        sequences.length && 
+        (sequences.length || '') && 
         scripts && 
         posts && 
-        posts.length && 
+        (posts.length || '') && 
         children 
       }
     </>

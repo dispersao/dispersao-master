@@ -12,7 +12,6 @@ import {
 const CommentListItem = ({ contentcreator, content }) => {
   const classes = useStyles()
 
-
   return (
     <GridListTile className={classes.item}>
       <Grid container direction="column" spacing={2}>

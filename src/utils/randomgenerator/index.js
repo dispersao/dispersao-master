@@ -1,5 +1,6 @@
 import { 
-  getPlayedUnplayedSequencesFormated
+  getPlayedUnplayedSequencesFormated,
+  getPublishedUnpublishedContentFormated
 } from './formatData'
 
 import {
@@ -35,9 +36,17 @@ export const getNextRandomSequence = (script, sequences) => {
 
   return {
     index: scriptSequences.length,
+    position,
     sequence: selectedSequence,
     script: script.get('id')
   }
+}
+
+export const getNextRandomContent = (script, posts) => {
+  let {
+    scriptContent,
+    availableContent
+  } = getPublishedUnpublishedContentFormated(script, posts)
 }
 
 

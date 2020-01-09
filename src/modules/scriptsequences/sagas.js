@@ -12,7 +12,8 @@ import {
   createScriptsequence as createScriptsequenceAction,
   createScriptsequenceSuccess,
   createScriptsequenceError,
-  SEND_SCRIPTSEQUENCE
+  SEND_SCRIPTSEQUENCE,
+  updateScriptsequenceLocalState
 } from './actions'
 
 import {
@@ -68,6 +69,7 @@ function* createRandomScriptSequence(action) {
     const formatedSequences = yield select(getSequenceListFormatted)
     const nextScriptSequence = yield getNextRandomSequence(script, formatedSequences)
     yield put(createScriptsequenceAction(nextScriptSequence))
+
   } catch (e) {
     console.log(e)
   }
@@ -78,6 +80,10 @@ function* createScriptsequence(action) {
     const scriptsequence = yield createScriptsequenceAPI(action.payload.scriptsequence)
     const scriptsequenceData = scriptsequence.entities.scriptsequences
     yield put(createScriptsequenceSuccess(scriptsequenceData))
+    yield put(updateScriptsequenceLocalState({
+      id: Object.values(scriptsequenceData)[0].id,
+      position: action.payload.scriptsequence.position
+    }))
   } catch  (e) {
     yield put(createScriptsequenceError(e))
   }

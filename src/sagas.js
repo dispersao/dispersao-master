@@ -19,6 +19,10 @@ import {
   watchFetchPosts
 } from './modules/posts/sagas'
 
+import {
+  watchCreateRandomsessioncontent
+} from './modules/sessioncontents/sagas'
+
 export default function* rootSaga() {
   yield all([
     watchConfigFetch(),
@@ -31,6 +35,7 @@ export default function* rootSaga() {
     whatchScriptStart(),
     watchCreateRandomScriptSequence(),
     watchCreateScriptSequence(),
-    watchFetchPosts()
+    watchFetchPosts(),
+    watchCreateRandomsessioncontent()
   ])
 }
