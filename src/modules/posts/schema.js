@@ -3,7 +3,7 @@ import categorySchema from '../categories/schema'
 import contentcreatorSchema from '../contentcreators/schema'
 import commentSchema from '../comments/schema'
 
-const postSchema = new schema.Entity('posts', {
+export const postSchema = new schema.Entity('posts', {
   categories: [categorySchema],
   contentcreator: contentcreatorSchema,
   comments: [commentSchema]

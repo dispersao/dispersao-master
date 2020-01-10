@@ -12,23 +12,29 @@ export const getRandomSessiontontents = (script, scriptContent, availableContent
   if (!contentList.length) {
     return []
   }
+  console.log('getRandomSessiontontents', contentList)
+
   const totalTime = script.totalTime
   // const position = script.lastPosition
   // const fullLength = script.averageSeconds
   const currentSequence = script.currentSequence
 
-  const seed = Math.floor(Math.random() * contentList.length)
-  const content = contentList[seed]
+  const withComment = availableContent.posts.filter(post => post.comments.length)
+  // const seed = Math.floor(Math.random() * contentList.length)
+  const seed = Math.floor(Math.random() * withComment.length)
+
+  const content = withComment[seed]
+  // const content = contentList[seed]
   const post = availableContent.posts.includes(content) ? content.id : null
   const comment = availableContent.comments.includes(content) ? content.id : null
 
-  console.log(script)
   return [
     {
       programmed_at: Math.floor(totalTime - (currentSequence.duration / 2)),
       script: script.id,
       post,
-      comment
+      comment,
+      state: 'pending'
     }
   ]
 

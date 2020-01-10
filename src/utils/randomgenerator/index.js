@@ -60,6 +60,5 @@ export const getNextRandomContent = (scriptData, posts, comments) => {
   availableContent = filterSessioncontent(scriptContent, availableContent)
 
   let pendingContent = getRandomSessiontontents(script, scriptContent, availableContent)
-  console.log(pendingContent)
   return pendingContent
 }

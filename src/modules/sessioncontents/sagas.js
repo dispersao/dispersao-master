@@ -49,7 +49,7 @@ function* createRandomSessioncontent(action) {
     const formatedComents = yield select(getCommentsListFormatted)
     const nextContent = yield getNextRandomContent(script, formatedPosts, formatedComents)
     if (nextContent.length) {
-      console.log(nextContent)
+      console.log('nextContent', nextContent)
       yield put (createSessioncontentAction(nextContent))
     }
   } catch (e) {
@@ -63,6 +63,7 @@ function* createSessioncontent(action) {
     const sessioncontentsData = sessioncontents.entities.sessioncontents
     yield put(createSessioncontentSuccess(sessioncontentsData))
   } catch (e) {
+    console.log(e)
     yield put(createSessioncontentError(e))
   }
    

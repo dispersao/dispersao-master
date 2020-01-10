@@ -26,7 +26,7 @@ const WithAppContentManager = WrappedComponent => {
       if (scriptsequences && scriptsequences.length && scriptsequences[scriptsequences.length - 1].position) {
         createRandomAppContent(id)
       }
-    }, [scriptsequences])
+    }, [scriptsequences.length])
 
     // const afterAppContentStart = totalTime > CONTENT_MARGIN_START
     // const beforeAppContentEnd = totalTime - elapsedTime - CONTENT_MARGIN_END >= 0

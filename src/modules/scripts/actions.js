@@ -113,6 +113,7 @@ export const resetSession = (script) => ({
     script: {
       ...script,
       scriptsequences: [],
+      sessioncontents: [],
       state: states.IDLE
     }
   }

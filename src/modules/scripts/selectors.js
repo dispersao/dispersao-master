@@ -74,9 +74,15 @@ const formatScriptData = (script, scrList, seqList, sesconList) => {
       )
     })
 
+  
+
   const sessioncontents = script
     .get('sessioncontents')
     .map(id => sesconList.get(id.toString()))
+
+    console.log("script.get('sessioncontents')", script.get('sessioncontents').toJS())
+    console.log('sesconList', sesconList.toJS())
+    console.log('sessioncontents', sessioncontents.toJS())
 
   const totalTime = scriptsequences
     .map(el => parseInt(el.getIn(['sequence', 'duration'])))
@@ -111,7 +117,7 @@ const formatScriptData = (script, scrList, seqList, sesconList) => {
 
   script = script
     .setIn(['scriptsequences'], scriptsequences)
-    .setIn(['sesioncontents'], sessioncontents)
+    .setIn(['sessioncontents'], sessioncontents)
 
   return script.mergeDeep({
     totalTime,

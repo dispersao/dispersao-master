@@ -80,10 +80,6 @@ function* createScriptsequence(action) {
     const scriptsequence = yield createScriptsequenceAPI(action.payload.scriptsequence)
     const scriptsequenceData = scriptsequence.entities.scriptsequences
     yield put(createScriptsequenceSuccess(scriptsequenceData))
-    yield put(updateScriptsequenceLocalState({
-      id: Object.values(scriptsequenceData)[0].id,
-      position: action.payload.scriptsequence.position
-    }))
   } catch  (e) {
     yield put(createScriptsequenceError(e))
   }
