@@ -1,4 +1,5 @@
 import map from 'lodash/map'
+import last from 'lodash/last'
 
 export const getPlayedUnplayedSequencesFormated = (scriptMap, sequencesList) => {
   const script = scriptMap.toJS()
@@ -20,8 +21,15 @@ export const getPublishedUnpublishedContentFormated = (scriptMap, postsList, com
   const posts = postsList.toJS()
   const comments = comentsList.toJS()
 
-  const publishedPostsIds = script.sessioncontent.filter(sescon => sescon.post).map(sescon => sescon.post.id)
-  const publishedCommentsIds = script.sessioncontent.filter(sescon => sescon.comment).map(sescon => sescon.comment.id)
+  const currentSequence = script.scriptsequences.length && last(script.scriptsequences).sequence
+
+  const publishedPostsIds = script.sessioncontents
+    .map(sescon => sescon.post)
+    .filter(Boolean)
+
+  const publishedCommentsIds = script.sessioncontents
+    .map(sescon => sescon.comment)
+    .filter(Boolean)
 
   const scriptPosts = posts.filter(post => publishedPostsIds.includes(post.id))
   const unpublishedPosts = posts.filter(post => !publishedPostsIds.includes(post.id))
@@ -30,27 +38,33 @@ export const getPublishedUnpublishedContentFormated = (scriptMap, postsList, com
   const unpublishedComments = comments.filter(comm => !publishedCommentsIds.includes(comm.id))
 
   return {
+    script: {
+      id: script.id,
+      totalTime: script.totalTime,
+      averageSeconds: script.averageSeconds,
+      lastPosition: script.scriptsequences[script.scriptsequences.length - 1].position,
+      currentSequence
+    },
     scriptContent: {
       posts: scriptPosts,
-      comments: scriptComments
+      comments: scriptComments,
     },
     availableContent: {
       posts: unpublishedPosts,
       comments: unpublishedComments
     }
   }
-
 }
 
 export const getCategoriesByType = (categoriesList, type) => {
   return categoriesList.filter(cat => cat.type === type)
 }
 
-export const getSeqCategoriesByType = (seq, type) => {
-  if (!seq || !seq.categories) {
+export const getEntityCategoriesByType = (entity, type) => {
+  if (!entity || !entity.categories) {
     return
   }
-  return getCategoriesByType(seq.categories, type)
+  return getCategoriesByType(entity.categories, type)
 }
 
 export const mapCategoryToText = (categoriesList) => {

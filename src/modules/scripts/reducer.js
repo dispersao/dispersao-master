@@ -20,6 +20,10 @@ import {
   CREATE_SCRIPTSEQUENCE_SUCCESS
 } from '../scriptsequences/actions'
 
+import {
+  CREATE_SESSIONCONTENT_SUCCESS
+} from '../sessioncontents/actions'
+
 let script
 
 const reducer = (state = fromJS({
@@ -127,6 +131,14 @@ const reducer = (state = fromJS({
         let scriptId = scriptsequence.script
         let newList = state.getIn(['data', scriptId.toString(), 'scriptsequences']).push(scriptsequence.id)
         state = state.setIn(['data', scriptId.toString(), 'scriptsequences'], newList)
+      })
+      return state 
+
+    case CREATE_SESSIONCONTENT_SUCCESS:
+      Object.values(action.payload.sessioncontents).forEach(sessioncontent => {
+        let scriptId = sessioncontent.script
+        let newList = state.getIn(['data', scriptId.toString(), 'sessioncontents']).push(sessioncontent.id)
+        state = state.setIn(['data', scriptId.toString(), 'sessioncontents'], newList)
       })
       return state 
 

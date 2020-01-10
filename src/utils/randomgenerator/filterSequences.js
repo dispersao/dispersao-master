@@ -5,7 +5,7 @@ import {
 } from 'lodash'
 
 import {
-  getSeqCategoriesByType,
+  getEntityCategoriesByType,
   mapCategoryToText,
   getSequenceInPosition
 } from './formatData'
@@ -28,7 +28,7 @@ export const filterSequences = (scriptSequences, unselectedSequences) => {
 /*-- FILTER OUT BLOCKED SEQUENCES BY SCRIPT SEQUENCES --*/    
 const filterByBlock = (scriptSequences, availableSequences) => {
   let blockCategories = scriptSequences.map(seq => {
-    return getSeqCategoriesByType(seq, categories.block)
+    return getEntityCategoriesByType(seq, categories.block)
   }).flatten()
   blockCategories = uniq(mapCategoryToText(blockCategories))
 
@@ -40,7 +40,7 @@ const filterByRequire = (scriptSequences, availableSequences) => {
   let scriptSequencesSceneNumbers = map(scriptSequences, 'sceneNumber')
 
   return availableSequences.filter(seq => {
-    let required = getSeqCategoriesByType(seq, categories.require)
+    let required = getEntityCategoriesByType(seq, categories.require)
     required = mapCategoryToText(required)
 
     return required.every(reqId => scriptSequencesSceneNumbers.includes(reqId))
@@ -63,12 +63,12 @@ const filterByBlockGroup = (checkSequences, field, availableSequences) => {
   }
 
   let checkValues = checkSequences
-    .map(seq => getSeqCategoriesByType(seq, field))
+    .map(seq => getEntityCategoriesByType(seq, field))
     .map(cats => map(cats, 'id'))
     .flatten()
 
   return availableSequences.filter(seq => {
-    const seqCheckValue = map(getSeqCategoriesByType(seq, field), 'id')
+    const seqCheckValue = map(getEntityCategoriesByType(seq, field), 'id')
     return !intersection(seqCheckValue, checkValues).length
   })
 }

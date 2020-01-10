@@ -13,6 +13,7 @@ import scriptsequences from './modules/scriptsequences/reducer'
 import posts from './modules/posts/reducer'
 import comments from './modules/comments/reducer'
 import contentcreators from './modules/contentcreators/reducer'
+import sessioncontents from './modules/sessioncontents/reducer'
 
 const reducer = combineReducers({
   router,
@@ -27,7 +28,8 @@ const reducer = combineReducers({
   types,
   posts,
   comments,
-  contentcreators
+  contentcreators,
+  sessioncontents
 })
 
 export default reducer

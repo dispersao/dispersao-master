@@ -7,8 +7,16 @@ import {
 } from 'redux-saga/effects'
 
 import {
-  CREATE_RANDOM_SESSIONCONTENT
+  CREATE_RANDOM_SESSIONCONTENT,
+  CREATE_SESSIONCONTENT,
+  createSessioncontent as createSessioncontentAction,
+  createSessioncontentSuccess,
+  createSessioncontentError
 } from './actions'
+
+import {
+  createSessioncontent as createSessioncontentAPI
+} from '../api/sessioncontent'
 
 import {
   getScriptById
@@ -22,8 +30,16 @@ import {
   getCommentsListFormatted
 } from '../comments/selectors'
 
-export function* watchCreateRandomsessioncontent() {
+import {
+  getNextRandomContent
+} from '../../utils/randomgenerator/'
+
+export function* watchCreateRandomSessioncontent() {
   yield takeEvery(CREATE_RANDOM_SESSIONCONTENT, createRandomSessioncontent)
+}
+
+export function* watchCreateSessioncontent() {
+  yield takeEvery(CREATE_SESSIONCONTENT, createSessioncontent)
 }
 
 function* createRandomSessioncontent(action) {
@@ -31,11 +47,23 @@ function* createRandomSessioncontent(action) {
     const script = yield select(getScriptById, { id: action.payload.script.script })
     const formatedPosts = yield select(getPostsListFormatted)
     const formatedComents = yield select(getCommentsListFormatted)
-    console.log(script, formatedPosts, formatedComents, script.getIn(['scriptsequences', script.get('scriptsequences').size - 1, 'position']))
-    // const nextScriptSequence = yield getNextRandomSequence(script, formatedSequences)
-    // yield put(createScriptsequenceAction(nextScriptSequence))
-
+    const nextContent = yield getNextRandomContent(script, formatedPosts, formatedComents)
+    if (nextContent.length) {
+      console.log(nextContent)
+      yield put (createSessioncontentAction(nextContent))
+    }
   } catch (e) {
     console.log(e)
   }
+}
+
+function* createSessioncontent(action) {
+  try {
+    const sessioncontents = yield createSessioncontentAPI(action.payload.sessioncontents)
+    const sessioncontentsData = sessioncontents.entities.sessioncontents
+    yield put(createSessioncontentSuccess(sessioncontentsData))
+  } catch (e) {
+    yield put(createSessioncontentError(e))
+  }
+   
 }

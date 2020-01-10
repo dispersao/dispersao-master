@@ -20,7 +20,8 @@ import {
 } from './modules/posts/sagas'
 
 import {
-  watchCreateRandomsessioncontent
+  watchCreateRandomSessioncontent,
+  watchCreateSessioncontent
 } from './modules/sessioncontents/sagas'
 
 export default function* rootSaga() {
@@ -36,6 +37,7 @@ export default function* rootSaga() {
     watchCreateRandomScriptSequence(),
     watchCreateScriptSequence(),
     watchFetchPosts(),
-    watchCreateRandomsessioncontent()
+    watchCreateRandomSessioncontent(),
+    watchCreateSessioncontent()
   ])
 }

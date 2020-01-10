@@ -1,4 +1,6 @@
 import { createSelector } from 'reselect'
+import createCachedSelector from 're-reselect'
+
 import { fromJS, List } from 'immutable'
 
 import { sortEntity } from '../../utils/listUtils'
@@ -10,8 +12,10 @@ import { getCategoriesList } from '../categories/selectors'
 import { getApiUrl } from '../config/selectors'
 
 const getState = (state) => state.posts
+const getId = (state, props) => props.id
+const getPostId = (state, props) => props.post
 
-const getPosts = createSelector(
+export const getPosts = createSelector(
   [getState], (state) => {
     if (!state) {
       return 
@@ -64,24 +68,50 @@ export const getPostsListNotInSession = createSelector(
   }
 )
 
+const fetchPostById = (list, id) => {
+  if (!list || !list.size || !id) {
+    return
+  }
+  return list.get(id.toString())
+}
+
+export const getPostById = createCachedSelector(
+  [getPostList, getId], fetchPostById
+)(getId)
+
+export const getPostByPostId = createCachedSelector(
+  [getPostList, getPostId], fetchPostById
+)(getPostId)
+
+export const getPostByPostIdFormatted = createCachedSelector(
+  [getPostId, getPosts, getCommentsList, getContentcreatorsList, getApiUrl], 
+  (id, posts, comments, contentcreators, url) => {
+    if (!id || !posts || !posts.size || !comments || !comments.size || !contentcreators || !contentcreators.size || !url) {
+      return
+    }
+    return formatPost()
+  }
+)(getPostId)
 
 
-const formatPost = (post, commentsList, contentcreatorsList, url) => {
+export const formatPost = (post, commentsList, contentcreatorsList, url) => {
   const contentcreator = contentcreatorsList.get(
     post.get('contentcreator').toString()
   )
 
   let media = post.get('media')
-  if (media) {
+  if (media && url) {
     media = media.setIn(['url'], `${url}/${media.get('url')}`)
   }
 
-  const comments = post.get('comments').map(com => {
-    const comment = commentsList.get(com.toString())
-    return comment.mergeDeep({
-      contentcreator: contentcreatorsList.get(comment.get('contentcreator').toString())
+  const comments = post.get('comments')
+    .map(com => commentsList.get(com.toString()))
+    .filter(Boolean)
+    .map(comment => {
+      return comment.mergeDeep({
+        contentcreator: contentcreatorsList.get(comment.get('contentcreator').toString())
+      })
     })
-  })
   return post.setIn(['comments'], comments)
     .mergeDeep(fromJS({
       contentcreator,

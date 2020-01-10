@@ -32,6 +32,10 @@ import {
   fetchScriptsequencesSuccess,
 } from '../scriptsequences/actions'
 
+import {
+  fetchSessioncontentsSuccess
+} from '../sessioncontents/actions'
+
 import { 
   createScript as createScriptAPI,
   fetchScripts as fetchScriptsAPI,
@@ -67,9 +71,12 @@ export function* whatchScriptStart() {
 
 function* fetchScripts () {
   try {
-    const scripts = yield call(fetchScriptsAPI)
-    yield put(fetchScriptsequencesSuccess(scripts.entities.scriptsequences || []))
-    yield put(fetchScriptsSuccess(scripts.entities.scripts || []))
+    const entities = yield call(fetchScriptsAPI)
+
+    let { scripts, scriptsequences, sessioncontents } = { ...entities.entities }
+    yield put(fetchScriptsequencesSuccess(scriptsequences || []))
+    yield put(fetchScriptsSuccess(scripts || []))
+    yield put(fetchSessioncontentsSuccess(sessioncontents || []))
   } catch (e) {
     yield put(fetchScriptsError(e))
   }

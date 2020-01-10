@@ -5,8 +5,9 @@ import {
   uniq
 } from 'lodash'
 
-import { Decimal } from 'decimal.js';
- 
+import { Decimal } from 'decimal.js'
+
+import { setEntityClosestPosition } from './utils'
 
 import {
   integer, 
@@ -23,15 +24,6 @@ const NON_ZERO_PROB_ADDEND = 1
 const FORMULA_FACTOR = 2
 const FORMULA_ADDEND = 0.5
 
-import {
-  getSeqCategoriesByType,
-  mapCategoryToText
-} from '../formatData'
-
-
-const categories = {
-  position: 'pos'
-}
 
 /**
  * Sets a probability to each sequence
@@ -39,40 +31,11 @@ const categories = {
  * @param {Array} availableSequences 
  */
 export const calculateSequencesProbability = (position, availableSequences) => {
-  let sequencesWithPosAndDist = setSequencesClosestPosition(position, availableSequences)
+  let sequencesWithPosAndDist = setEntityClosestPosition(position, availableSequences)
   const positionsWithProbability = getPositionsProbability(sequencesWithPosAndDist)
 
   logPositionProbabilities(position, positionsWithProbability)
   return setSequenceProbability(positionsWithProbability, sequencesWithPosAndDist)
-}
-
-/**
- * SETS CLOSEST category "position" VALUE TO CURRENT POSITION
- * @param {Array} position 
- * @param {Array} sequences 
- */
-const setSequencesClosestPosition = (position, sequences) => {
-  return sequences.map(seq => {
-
-    let positionCategories = getSeqCategoriesByType(seq, categories.position)
-    positionCategories = mapCategoryToText(positionCategories)
-    
-    positionCategories = positionCategories
-      .map(cat => parseInt(cat))
-      .map(cat => ({
-        closestPosition: cat,
-        positionDistance: Math.abs(position - cat)
-      }))
-    
-    positionCategories = orderBy(positionCategories, 'positionDistance')
-
-    const closestPosition = positionCategories[0]
-
-    return {
-      ...seq,
-      ...closestPosition
-    }
-  })
 }
 
 /**
@@ -202,6 +165,7 @@ export const getRandomSequenceBasedonProbability = (sequences) => {
   return selectedSequence
 }
 
+
 /**
  * adds ranges to the sequences
  * @param {*} sequences 
@@ -231,9 +195,6 @@ const setRangesForSequences = (sequences) => {
 
   return [randomSequences, limit]
 }
-
-
-
 
 const logPositionProbabilities = (index, positions) => {
 

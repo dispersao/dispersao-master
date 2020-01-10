@@ -57,7 +57,7 @@ const ScriptPlayer = ({
           {token}
         </Typography>
       }
-      { (resetAcceptedValues.includes(state) || state === states.STARTED && scriptsequences.length) && connected &&
+      { (resetAcceptedValues.includes(state) || state === states.IDLE && (scriptsequences.length || '')) && connected &&
         <Button 
           variant="contained" 
           className={classes.button}

@@ -8,6 +8,10 @@ import {
 } from './filterSequences'
 
 import {
+  filterSessioncontent
+} from './filterSessioncontent'
+
+import {
   calculateNextPosition
 } from './positionCalculator'
 
@@ -15,6 +19,10 @@ import {
   calculateSequencesProbability,
   getRandomSequenceBasedonProbability
 } from './probabilities'
+
+import {
+  getRandomSessiontontents
+} from './probabilities/sessioncontent'
 
 export const getNextRandomSequence = (script, sequences) => {
   let {
@@ -42,11 +50,16 @@ export const getNextRandomSequence = (script, sequences) => {
   }
 }
 
-export const getNextRandomContent = (script, posts) => {
+export const getNextRandomContent = (scriptData, posts, comments) => {
   let {
+    script,
     scriptContent,
     availableContent
-  } = getPublishedUnpublishedContentFormated(script, posts)
+  } = getPublishedUnpublishedContentFormated(scriptData, posts, comments)
+  
+  availableContent = filterSessioncontent(scriptContent, availableContent)
+
+  let pendingContent = getRandomSessiontontents(script, scriptContent, availableContent)
+  console.log(pendingContent)
+  return pendingContent
 }
-
-

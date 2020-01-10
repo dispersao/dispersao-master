@@ -11,7 +11,7 @@ const getState = (state) => state.comments
 const getId = (state, props) => props.id
 const getCommentId = (state, props) => props.comment
 
-const getComments = createSelector(
+export const getComments = createSelector(
   [getState], (state) => {
     if (!state) {
       return 
@@ -44,7 +44,7 @@ export const getCommentsListFormatted = createSelector(
       .sort(sortEntity)
       .map(comment => formatCommentForAlgorithm(
         comment,
-        getContentcreatorsList
+        contentcreators
       ))
   }
 )

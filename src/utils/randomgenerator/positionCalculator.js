@@ -1,5 +1,5 @@
 import { 
-  getSeqCategoriesByType,
+  getEntityCategoriesByType,
   mapCategoryToText
 } from './formatData'
 
@@ -8,7 +8,7 @@ import uniq from 'lodash/uniq'
 export const calculateNextPosition = (scriptequences, availablesequences, script) => {
   const highestPosition = Math.max(...uniq(
     scriptequences.concat(availablesequences)
-      .map(seq => getSeqCategoriesByType(seq, 'pos'))
+      .map(seq => getEntityCategoriesByType(seq, 'pos'))
       .map(mapCategoryToText)
       .flatten()
   ).map(Number))

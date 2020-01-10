@@ -1,10 +1,12 @@
 import { normalize } from 'normalizr'
 import { scriptsequenceSchema } from '../../scriptsequences/schema/scriptsequence'
+import { sessioncontentSchema } from '../../sessioncontents/schema/sessioncontent'
 
 import { scriptSchema } from './script'
 
 scriptSchema.define({
-  scriptsequences: [scriptsequenceSchema]
+  scriptsequences: [scriptsequenceSchema],
+  sessioncontents: [sessioncontentSchema]
 })
 export const scriptsListSchema = [scriptSchema]
 
