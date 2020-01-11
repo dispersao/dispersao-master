@@ -1,7 +1,5 @@
 import {
-  call,
   put,
-  takeLeading,
   takeEvery,
   select
 } from 'redux-saga/effects'
@@ -49,7 +47,7 @@ function* createRandomSessioncontent(action) {
     const formatedComents = yield select(getCommentsListFormatted)
     const nextContent = yield getNextRandomContent(script, formatedPosts, formatedComents)
     if (nextContent.length) {
-      console.log('nextContent', nextContent)
+      console.log('next App Content', nextContent)
       yield put (createSessioncontentAction(nextContent))
     }
   } catch (e) {

@@ -17,13 +17,13 @@ const WithAppContentManager = WrappedComponent => {
       // elapsedTime,
       // averageSeconds,
       createRandomAppContent, 
-      // connected,
+      connected,
       // state,
       scriptsequences
     } = props
 
     useEffect(() => {
-      if (scriptsequences && scriptsequences.length && scriptsequences[scriptsequences.length - 1].position) {
+      if (scriptsequences && scriptsequences.length && connected === 'connected') {
         createRandomAppContent(id)
       }
     }, [scriptsequences.length])
@@ -53,7 +53,7 @@ const WithAppContentManager = WrappedComponent => {
     createRandomAppContent: PropTypes.func.isRequired,
     connected:PropTypes.string,
     state: PropTypes.string,
-    scriptsequences: PropTypes.array
+    scriptsequences: PropTypes.array,
   }
   
   const mapDispatchToProps = (dispatch) => ({

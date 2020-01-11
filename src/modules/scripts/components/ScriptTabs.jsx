@@ -14,10 +14,11 @@ import UnplayedSequences from '../../sequences/components/UnplayedSequences.jsx'
 import ScriptSequencesGrid from '../../scriptsequences/components/ScriptSequencesGrid.jsx'
 
 import UnpublishedPosts from '../../posts/components/UnpublishedPosts.jsx'
+import SessioncontentsGrid from '../../sessioncontents/componentes/SessioncontentsGrid.jsx'
 
 const ScriptTabs = ({ script }) => {
 
-  const [value, setValue] = useState(0)
+  const [value, setValue] = useState(1)
 
   const handleChange = (evt, val) => {
     setValue(val)
@@ -39,11 +40,21 @@ const ScriptTabs = ({ script }) => {
         <Tab label="Posts & Comments" />
       </Tabs>
       <ScriptTab index={0} value={value} >
-        <UnplayedSequences script={id} scriptsequences={script.scriptsequences} />
-        <ScriptSequencesGrid scriptsequences={script.scriptsequences} />
+        <UnplayedSequences 
+          script={id} 
+          scriptsequences={script.scriptsequences} 
+        />
+        <ScriptSequencesGrid 
+          scriptsequences={script.scriptsequences}
+        />
       </ScriptTab>
       <ScriptTab index={1} value={value} >
-        <UnpublishedPosts script={id} />
+        <UnpublishedPosts 
+          script={id} 
+        />
+        <SessioncontentsGrid 
+          sessioncontents={script.sessioncontents} 
+        />
       </ScriptTab>
     </Paper>
   )

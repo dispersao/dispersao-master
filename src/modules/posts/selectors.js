@@ -14,6 +14,7 @@ import { getApiUrl } from '../config/selectors'
 const getState = (state) => state.posts
 const getId = (state, props) => props.id
 const getPostId = (state, props) => props.post
+const getSessioncontents = (state, props) => props.sessioncontents
 
 export const getPosts = createSelector(
   [getState], (state) => {
@@ -57,8 +58,8 @@ export const getPostsListFormatted = createSelector(
 
 export const getPostsListNotInSession = createSelector(
   [getPosts, getCommentsList, getContentcreatorsList, getApiUrl],
-  (posts, comments, contentcreators, url) => {
-    if (!posts || !posts.size || !comments || !comments.size || !contentcreators || !contentcreators.size || !url) {
+  ( posts, comments, contentcreators, url) => {
+    if ( !posts || !posts.size || !comments || !comments.size || !contentcreators || !contentcreators.size || !url) {
       return
     }
     return posts
@@ -86,10 +87,15 @@ export const getPostByPostId = createCachedSelector(
 export const getPostByPostIdFormatted = createCachedSelector(
   [getPostId, getPosts, getCommentsList, getContentcreatorsList, getApiUrl], 
   (id, posts, comments, contentcreators, url) => {
-    if (!id || !posts || !posts.size || !comments || !comments.size || !contentcreators || !contentcreators.size || !url) {
+    if (!id || !posts || !posts.size || !comments || !contentcreators || !contentcreators.size || !url) {
       return
     }
-    return formatPost()
+    return formatPost(
+      posts.get(id.toString()), 
+      comments,
+      contentcreators,
+      url
+    )
   }
 )(getPostId)
 

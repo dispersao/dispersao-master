@@ -1,13 +1,14 @@
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
+import { List } from 'immutable'
 
 import { getPostByPostIdFormatted } from '../posts/selectors'
 
 const getCleanState = (state) => state
 const getState = (state) => state.sessioncontents
-const getIds = (state, props) => props.statecontents
+const getIds = (state, props) => props.sessioncontents.map(sescon => sescon.id)
 
-const getIdsAsJson = (state, props) => JSON.stringify(props.statecontents)
+const getIdsAsJson = (state, props) => JSON.stringify(props.sessioncontents)
 
 export const getSessioncontents = createSelector(
   [getState], (state) => {
@@ -28,7 +29,7 @@ export const getSessioncontentsList = createSelector(
 )
 
 export const getSessioncontentsListAsPosts = createCachedSelector(
-  [getIds,  getSessioncontentsList, getCleanState], 
+  [getIds,  getSessioncontents, getCleanState], 
   (ids, sessioncontents, state) => {
     if (!ids || !sessioncontents || !sessioncontents.size) {
       return
@@ -40,7 +41,7 @@ export const getSessioncontentsListAsPosts = createCachedSelector(
       .map(sescon => sescon.get('comment'))
       .filter(Boolean)
 
-    return list
+    const ret = list
       .filter(sescon => sescon.get('post'))
       .map(sescon => {
         const post = sescon.get('post')
@@ -49,12 +50,13 @@ export const getSessioncontentsListAsPosts = createCachedSelector(
         })
       })
       .map(sescon => {
-        const comments = sescon.get('comments')
+        const comments = sescon.get('post').get('comments')
           .filter(comment => {
             return publishedComents.includes(comment.get('id'))
           })
-        return sescon.setIn(['comments'], comments)
+        return sescon.setIn(['post', 'comments'], comments)
       })
+    return List(ret)
   }
 )(getIdsAsJson)
 
