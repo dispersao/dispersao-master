@@ -19,7 +19,7 @@ import SessioncontentsGrid from '../../sessioncontents/componentes/Sessionconten
 
 const ScriptTabs = ({ script }) => {
 
-  const [value, setValue] = useState(1)
+  const [value, setValue] = useState(0)
 
   const handleChange = (evt, val) => {
     setValue(val)

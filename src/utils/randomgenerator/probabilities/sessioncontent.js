@@ -19,12 +19,12 @@ export const getRandomSessiontontents = (script, scriptContent, availableContent
   // const fullLength = script.averageSeconds
   const currentSequence = script.currentSequence
 
-  const withComment = availableContent.posts.filter(post => post.comments.length)
-  // const seed = Math.floor(Math.random() * contentList.length)
-  const seed = Math.floor(Math.random() * withComment.length)
+  // const withComment = availableContent.posts.filter(post => post.comments.length)
+  const seed = Math.floor(Math.random() * contentList.length)
+  // const seed = Math.floor(Math.random() * withComment.length)
 
-  const content = withComment[seed]
-  // const content = contentList[seed]
+  // const content = withComment[seed]
+  const content = contentList[seed]
   const post = availableContent.posts.includes(content) ? content.id : null
   const comment = availableContent.comments.includes(content) ? content.id : null
 
