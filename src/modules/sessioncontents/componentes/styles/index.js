@@ -20,6 +20,14 @@ const useStyles = makeStyles(theme => {
       minWidth: 400,
       maxWidth: 500,
       padding: 2
+    },
+    "item-pending": {
+      flexGrow: 1,
+      flex:1,
+      minWidth: 400,
+      maxWidth: 500,
+      padding: 2,
+      opacity: 0.7
     }
   }
 })

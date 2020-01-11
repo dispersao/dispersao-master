@@ -5,6 +5,8 @@ import { fromJS, List } from 'immutable'
 
 import { sortEntity } from '../../utils/listUtils'
 
+import { getSessioncontentsIdsByType } from '../sessioncontents/utils/listUtils'
+
 import { getContentcreatorsList } from '../contentcreators/selectors'
 import { getCommentsList } from '../comments/selectors'
 import { getCategoriesList } from '../categories/selectors'
@@ -37,7 +39,7 @@ export const getPostList = createSelector(
 export const getPostsListFormatted = createSelector(
   [getPosts, getCategoriesList, getContentcreatorsList],
   (posts, categories, contentcreators) => {
-  
+    
     const lists = [posts, categories, contentcreators]
     const anyEmpty = lists.some(list => !list || !list.size)
 
@@ -57,17 +59,42 @@ export const getPostsListFormatted = createSelector(
 )
 
 export const getPostsListNotInSession = createSelector(
-  [getPosts, getCommentsList, getContentcreatorsList, getApiUrl],
-  ( posts, comments, contentcreators, url) => {
-    if ( !posts || !posts.size || !comments || !comments.size || !contentcreators || !contentcreators.size || !url) {
+  [getPosts, getSessioncontents, getCommentsList, getContentcreatorsList, getApiUrl],
+  ( posts, sessioncontents, comments, contentcreators, url) => {
+    if ( !posts || !posts.size || !comments || !sessioncontents || !comments.size || !contentcreators || !contentcreators.size || !url) {
       return
     }
-    return posts
+    let formattedPosts = posts
       .valueSeq()
       .sort(sortEntity)
       .map(post => formatPost(post, comments, contentcreators, url))
+
+    return formattedPosts
+      .map(post => addPublishedValue(post, sessioncontents))
+      .filter(post => {
+        return !(post.get('disabled') && post.get('comments').every(com => com.get('disabled')))
+      })
   }
 )
+
+const addPublishedValue = (post, publishedcontent) => {
+  // return post
+
+  const publishedComments = getSessioncontentsIdsByType(publishedcontent, 'comment')
+  const publishedPosts = getSessioncontentsIdsByType(publishedcontent, 'post')
+
+  const comments = post.get('comments').map(com => {
+    const published = publishedComments.includes(com.get('id'))
+    return com.setIn(['disabled'], published)
+  })
+
+  const published = publishedPosts.includes(post.get('id'))
+
+  return post
+    .setIn(['comments', comments])
+    .setIn(['disabled'], published)
+  
+}
 
 const fetchPostById = (list, id) => {
   if (!list || !list.size || !id) {
@@ -115,7 +142,7 @@ export const formatPost = (post, commentsList, contentcreatorsList, url) => {
     .filter(Boolean)
     .map(comment => {
       return comment.mergeDeep({
-        contentcreator: contentcreatorsList.get(comment.get('contentcreator').toString())
+        contentcreator: contentcreatorsList.get(comment.get('contentcreator').toString()),
       })
     })
   return post.setIn(['comments'], comments)

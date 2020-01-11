@@ -8,6 +8,9 @@ import { getPostsListNotInSession } from '../selectors'
 import PostListItem from './PostListItem.jsx'
 import useStyles from './styles/'
 
+import CommentListItem from '../../comments/components/CommentListItem.jsx'
+
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {
   GridList,
@@ -34,7 +37,7 @@ const UnpublishedPosts = ({ posts }) => {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <GridList cellHeight={180}>
-                {posts.map((post, key) => <PostListItem key={key} {...post} />) }
+                {posts.map((post, key) => <PostListItem key={key} {...post} CommentComp={CommentListItem} />) }
               </GridList>
             </ExpansionPanelDetails>
           </ExpansionPanel>

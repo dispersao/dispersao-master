@@ -54,6 +54,13 @@ export const getSessioncontentsListAsPosts = createCachedSelector(
           .filter(comment => {
             return publishedComents.includes(comment.get('id'))
           })
+          .map(comment => {
+            const sesconCom = list.find(ssco => ssco.get('comment') === comment.get('id'))
+            return sesconCom.mergeDeep({
+              comment
+            })
+          })
+
         return sescon.setIn(['post', 'comments'], comments)
       })
     return List(ret)

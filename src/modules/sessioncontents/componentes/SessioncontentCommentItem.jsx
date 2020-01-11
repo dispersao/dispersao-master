@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import PostListItem from '../../posts/components/PostListItem.jsx'
-import SessioncontentCommentItem from './SessioncontentCommentItem.jsx'
+import CommentListItem from '../../comments/components/CommentListItem.jsx'
+
+import { toHHMMSS } from '../../../utils/stringUtils'
+import useStyles from './styles/'
 
 import {
   GridListTile,
@@ -11,11 +13,8 @@ import {
   Grid
 } from '@material-ui/core'
 
-import { toHHMMSS } from '../../../utils/stringUtils'
-import useStyles from './styles/'
-
-const SessioncontentGridItem = ({ 
-  post,
+const SessioncontentCommentItem = ({
+  comment,
   state,
   programmed_at
 }) => {
@@ -32,6 +31,7 @@ const SessioncontentGridItem = ({
     text = `published at: ${toHHMMSS(programmed_at)}`
     classname = 'item'
   }
+  
   return (
     <GridListTile className={classes[classname]}>
       <Grid container direction="column">
@@ -46,9 +46,8 @@ const SessioncontentGridItem = ({
         <GridList 
           cellHeight="auto" 
           cols={1}>
-          <PostListItem 
-            {...post} 
-            CommentComp={SessioncontentCommentItem}
+          <CommentListItem 
+            {...comment} 
           />
         </GridList>
       </Grid>
@@ -56,12 +55,11 @@ const SessioncontentGridItem = ({
   )
 }
 
-SessioncontentGridItem.propTypes = {
-  post: PropTypes.object.isRequired,
+SessioncontentCommentItem.propTypes = {
+  comment: PropTypes.object,
   state: PropTypes.string,
-  programmed_at: PropTypes.number,
-  script: PropTypes.number
+  programmed_at: PropTypes.number
 }
 
+export default SessioncontentCommentItem
 
-export default SessioncontentGridItem

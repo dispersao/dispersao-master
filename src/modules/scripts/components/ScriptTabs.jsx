@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 import {
   Paper,
   Tabs,
-  Tab
+  Tab,
+  Divider
 } from '@material-ui/core'
 
 import useStyles from './styles'
@@ -24,7 +25,7 @@ const ScriptTabs = ({ script }) => {
     setValue(val)
   }
 
-  const { id } = script
+  const { id, sessioncontents, scriptsequences } = script
 
   const classes = useStyles()
 
@@ -42,18 +43,21 @@ const ScriptTabs = ({ script }) => {
       <ScriptTab index={0} value={value} >
         <UnplayedSequences 
           script={id} 
-          scriptsequences={script.scriptsequences} 
+          scriptsequences={scriptsequences} 
         />
+        <Divider/>
         <ScriptSequencesGrid 
-          scriptsequences={script.scriptsequences}
+          scriptsequences={scriptsequences}
         />
       </ScriptTab>
       <ScriptTab index={1} value={value} >
         <UnpublishedPosts 
           script={id} 
+          sessioncontents={sessioncontents}
         />
+        <Divider />
         <SessioncontentsGrid 
-          sessioncontents={script.sessioncontents} 
+          sessioncontents={sessioncontents} 
         />
       </ScriptTab>
     </Paper>

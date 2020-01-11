@@ -16,6 +16,10 @@ const useStyles = makeStyles(theme => ({
     minWidth: 400,
     padding: 2
   },
+
+  disabled: {
+    opacity: 0.2
+  },
   
   tabsRoot: {
     flexGrow: 1,
