@@ -40,12 +40,11 @@ export const ScriptCreate = ({ createSession }) => {
   const [name, setName] = useState('')
   const [averagetime, setAverageTime] = useState('')
 
-  
-
   const handleCreateSession = () => {
     createSession({
       name,
-      averagetime
+      averagetime,
+      state: 'idle'
     })
   }
 
