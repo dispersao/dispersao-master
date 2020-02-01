@@ -85,7 +85,7 @@ export const getScriptTimes = createCachedSelector(
     const averageSeconds = parseInt(script.get('averagetime')) * 60
 
     let elapsedTime = 0
-    const playingSequences = scriptsequences.filter(el => el.get('progress') && el.get('progress') > 0)
+    const playingSequences = scriptsequences.filter(el => el.get('elapsedTime') && el.get('elapsedTime') > 0)
     
     if (playingSequences && playingSequences.size) {
       const playingSequence = playingSequences.get(playingSequences.size - 1)
@@ -93,9 +93,10 @@ export const getScriptTimes = createCachedSelector(
       elapsedTime = scriptsequences
         .slice(0, scriptsequences.indexOf(playingSequence) + 1)
         .map(el => {
-          let progress  = el.get( 'progress') || 0
-          progress = progress / 100
-          return progress * el.getIn(['sequence', 'duration'])
+          return el.get( 'elapsedTime') || 0
+          // let progress  = el.get( 'elapsedTime') || 0
+          // progress = progress / 100
+          // return progress * el.getIn(['sequence', 'duration'])
         })
         .reduce((a, b) => a + b)
     }

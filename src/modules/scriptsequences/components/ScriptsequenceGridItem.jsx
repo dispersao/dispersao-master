@@ -41,9 +41,6 @@ const ScriptsequenceGridItem = ({
       <GridList 
         cellHeight="auto" 
         cols={1}>
-        <Typography>
-          {progress} - {pgr}
-        </Typography>
         <SequenceGridItem 
           {...sequence} 
           subtitleField={'duration'} 

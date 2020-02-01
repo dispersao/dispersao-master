@@ -27,7 +27,6 @@ const ScriptsequenceTimer = ({
   const elapsedTimeRef = useRef(elapsedTime)
   elapsedTimeRef.current = elapsedTime
 
-  const [savedState, setSavedState] = useState(0)
   const stateRef = useRef(0)
 
   
@@ -66,49 +65,56 @@ const ScriptsequenceTimer = ({
 
   const updateTick = () => {
     const now = performance.now()
-    const passedInterval = Math.round((now - stateVars.lastTickAt.ref.current) / 1000)
-    const passedFromInit =  Math.round((now - stateVars.initAt.ref.current) / 1000)
+    const lasttickref = lastTickAt.ref.current || now
+    const passedInterval = Math.round((now - lasttickref) / SEC_INTERVAL)
+    // const passedFromInit =  Math.round((now - initAt.ref.current) / 1000)
     
     let elapsed = 0
-    if (stateVars.pausedAt.ref.current) {
-      elapsed = stateVars.pausedAt.ref.current - stateVars.lastTickAt.ref.current
+    if (pausedAt.ref.current && lastTickAt.ref.current) {
+      elapsed = pausedAt.ref.current - lastTickAt.ref.current
     }
-    console.log(`passedInterval: ${passedInterval}, 
-      fromStart: ${(now - stateVars.initAt.ref.current - stateVars.pausedCount.ref.current)/1000},
-      elapsed: ${elapsed}, 
-      lastTick: ${stateVars.lastTickAt.ref.current}, 
-      pausedAt:${stateVars.pausedAt.ref.current},
-      elapsedTime: ${elapsedTimeRef.current},
-      passedFromInit: ${passedFromInit}`)
+
+    // console.log(`passedInterval: ${passedInterval}, 
+    //   fromStart: ${(now - initAt.ref.current - pausedCount.ref.current) / 1000},
+    //   elapsed: ${elapsed}, 
+    //   lastTick: ${lastTickAt.ref.current}, 
+    //   pausedAt:${pausedAt.ref.current},
+    //   elapsedTime: ${elapsedTimeRef.current},
+    //   passedFromInit: ${passedFromInit}`)
 
     let interval = SEC_INTERVAL - elapsed
-    stateVars.lastTickAt.set(() => now)
+    lastTickAt.set(() => now)
 
     clearTimeout(ticker)
     let tick = setTimeout(updateTick, interval)
     setTicker(tick)
 
-    updateProgress(id, Number(elapsedTimeRef.current) + passedInterval)
+    if (passedInterval) {
+      updateProgress(id, Math.min(duration, Number(elapsedTimeRef.current) + passedInterval))
+    }
   }
 
-  const endTimeout = () => {
+  const endTimeout = (clearLastTick = false) => {
     setTicker(t => {
       clearTimeout(t)
       return null
     })
-    stateVars.lastTickAt.set(() => 0)
+    if (clearLastTick) {
+      lastTickAt.set(() => 0)
+    }
   }
  
   useEffect(() => {
-    // setSavedState(oldstate => {
     const now = performance.now()
     switch (state) {
       case "play":
         if (stateRef.current) {
-          if (stateRef.current === 'idle') {
+          if (stateRef.current === 'idle' || stateRef.current == 'finished') {
             initAt.set(now)
+            updateTick()
           } else if (stateRef.current === 'pause') {
             pausedCount.set(pausedCount.value + (now - pausedAt.value))
+            updateTick()
             pausedAt.set(0)
           }
         }
@@ -116,10 +122,14 @@ const ScriptsequenceTimer = ({
 
       case "pause":
         pausedAt.set(now)
+        endTimeout(false)
         break
 
       case "finished":
         finishedAt.set(now)
+        endTimeout(true)
+        updateProgress(id, duration)
+
         console.log(`finished ${sceneNumber} after ${Math.round((now - initAt.value - pausedCount.value) / SEC_INTERVAL )}`)
         console.log(`finished ${sceneNumber} after ${now - initAt.value - pausedCount.value} miliseconds`)
         break
