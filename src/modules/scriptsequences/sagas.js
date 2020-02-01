@@ -13,7 +13,7 @@ import {
   createScriptsequenceSuccess,
   createScriptsequenceError,
   SEND_SCRIPTSEQUENCE,
-  updateScriptsequenceLocalState
+  // updateScriptsequenceLocalState,
 } from './actions'
 
 import {
@@ -44,15 +44,16 @@ import {
 
 import {
   onGetScene as getSceneCallback,
-  onSceneProgress as sceneProgressCallback
+  onSceneProgress as sceneProgressCallback,
+  onSceneUpdateState as sceneUpdateCallback
 } from '../scriptsequences/utils/index'
 
 export function* watchCreateRandomScriptSequence() {
-  yield takeEvery(CREATE_RANDOM_SCRIPTSEQUENCE, createRandomScriptSequence)
+  yield takeLeading(CREATE_RANDOM_SCRIPTSEQUENCE, createRandomScriptSequence)
 }
 
 export function* watchCreateScriptSequence() {
-  yield takeEvery(CREATE_SCRIPTSEQUENCE, createScriptsequence)
+  yield takeLeading(CREATE_SCRIPTSEQUENCE, createScriptsequence)
 }
 
 export function* watchSendScriptsequence() {
@@ -66,10 +67,16 @@ export function* whatchScriptStart() {
 function* createRandomScriptSequence(action) {
   try {
     const script = yield select(getScriptById, { id: action.payload.script.script })
+    console.log('aaa entering createRandomScript ' + script.get('scriptsequences').size)
+
     const formatedSequences = yield select(getSequenceListFormatted)
     const nextScriptSequence = yield getNextRandomSequence(script, formatedSequences)
-    yield put(createScriptsequenceAction(nextScriptSequence))
-
+     
+    const scriptsequence = yield createScriptsequenceAPI(nextScriptSequence)
+    const scriptsequenceData = scriptsequence.entities.scriptsequences
+    yield put(createScriptsequenceSuccess(scriptsequenceData))
+    // yield put(createScriptsequenceAction(nextScriptSequence))
+    console.log('aaa leaving createRandomScript ' + script.get('scriptsequences').size)
   } catch (e) {
     console.log(e)
   }
@@ -103,12 +110,16 @@ function* sendScriptsequence(action) {
 function* createScriptsequencesListeners() {
   yield call(addListener, '/getScene', onMessageCallback)
   yield call(addListener, '/sceneProgress', onMessageCallback)
+  yield call(addListener, '/updateScene', onMessageCallback)
 }
 
 function onMessageCallback(address, message) {
-  if (address === '/getScene') {
-    getSceneCallback(message[0], message[1])
-  } else if (address === '/sceneProgress') {
-    sceneProgressCallback(message[0], message[2], message[3])
+  switch (address) {
+    case '/getScene':
+      return getSceneCallback(message[0], message[1])
+    case '/sceneProgress':
+      return sceneProgressCallback(message[0], message[2], message[3])
+    case '/updateScene':
+      return sceneUpdateCallback(message[0], message[2], message[3], message[4])
   }
 }

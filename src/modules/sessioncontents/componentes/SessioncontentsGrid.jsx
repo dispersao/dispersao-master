@@ -44,11 +44,11 @@ const SessioncontentsGrid = ({ contents }) => {
 }
 
 SessioncontentsGrid.propTypes = {
-  contents: PropTypes.array
+  contents: PropTypes.array,
 }
 
 const mapStateToProps = (state, ownprops) => ({
-  contents: getSessioncontentsListAsPosts(state, ownprops)
+  contents: getSessioncontentsListAsPosts(state, ownprops),
 })
 
 export default connect(

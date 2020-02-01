@@ -6,10 +6,12 @@ import {
 
 import { 
   sendScriptsequence,
-  updateProgressScriptsequence
+  updateProgressScriptsequence,
+  updateScriptsequenceLocalState
 } from '../actions'
 
 export const onGetScene = (script, index) => {
+  console.log('onGetScene: ', script, index)
   const scriptsequence = getScriptSequenceByIndex(script, index)
   store.dispatch(sendScriptsequence(scriptsequence))
 }
@@ -21,6 +23,15 @@ export const onSceneProgress = (script, index, progress) => {
     progress
   }))
 }
+
+export const onSceneUpdateState = (script, index, state, prog) => {
+  const scriptequence = getScriptSequenceByIndex(script, index)
+  store.dispatch(updateScriptsequenceLocalState({
+    id: scriptequence.id,
+    state
+  }))
+}
+
 
 const getScriptSequenceByIndex = (id, index) => {
   let script = getScriptById(store.getState(), { id })
@@ -37,3 +48,4 @@ const getScriptSequenceByIndex = (id, index) => {
     throw Error(`no script with id ${script}`)
   }
 }
+

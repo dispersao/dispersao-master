@@ -12,6 +12,7 @@ import {
 import {
   GridListTile,
   GridList,
+  Typography
 } from '@material-ui/core'
 
 
@@ -19,14 +20,16 @@ import useStyles from './styles/'
 
 const ScriptsequenceGridItem = ({ 
   sequence, 
-  progress, 
+  elapsedTime, 
   isLast,
   script,
-  endScript
-
+  endScript,
+  progress
 }) => {
   const classes = useStyles()
-  const classname = progress >= 100 ? 'item-played' : 'item'
+  const { duration } = sequence
+  const pgr = Math.round((elapsedTime * 100) / duration)
+  const classname = pgr >= 100 ? 'item-played' : 'item'
 
   if (progress >= 100 && isLast) {
     endScript(script)
@@ -38,13 +41,16 @@ const ScriptsequenceGridItem = ({
       <GridList 
         cellHeight="auto" 
         cols={1}>
+        <Typography>
+          {progress} - {pgr}
+        </Typography>
         <SequenceGridItem 
           {...sequence} 
           subtitleField={'duration'} 
         />
         <ProgressBar 
-          value={progress} 
-          enabled={progress > 0 && progress < 100}
+          value={pgr} 
+          enabled={pgr > 0 && pgr < 100}
           direction='r-l'
         />
       </GridList>
@@ -54,10 +60,11 @@ const ScriptsequenceGridItem = ({
 
 ScriptsequenceGridItem.propTypes = {
   sequence: PropTypes.object.isRequired,
-  progress: PropTypes.number,
+  elapsedTime: PropTypes.number,
   isLast: PropTypes.bool,
   endScript: PropTypes.func,
-  script: PropTypes.number
+  script: PropTypes.number,
+  progress: PropTypes.number,
 }
 
 const mapDispatchToProps = (dispatch) => ({

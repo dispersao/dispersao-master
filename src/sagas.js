@@ -21,7 +21,8 @@ import {
 
 import {
   watchCreateRandomSessioncontent,
-  watchCreateSessioncontent
+  watchCreateSessioncontent,
+  watchUpdateSessioncontent
 } from './modules/sessioncontents/sagas'
 
 export default function* rootSaga() {
@@ -38,6 +39,7 @@ export default function* rootSaga() {
     watchCreateScriptSequence(),
     watchFetchPosts(),
     watchCreateRandomSessioncontent(),
-    watchCreateSessioncontent()
+    watchCreateSessioncontent(),
+    watchUpdateSessioncontent()
   ])
 }

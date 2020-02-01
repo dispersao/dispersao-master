@@ -31,7 +31,9 @@ const init = async () => {
           reject(e)
         })
   
-        osc.on('message', (oscMessage) => {
+        osc.on('message', (oscMessage, timetag, info) => {
+          // console.log(Date.now() - timetag.native)
+          // console.log(oscMessage, timetag, info)
           parseOscMessage(oscMessage)
         })
         osc.open()

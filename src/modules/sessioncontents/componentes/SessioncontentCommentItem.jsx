@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 
 import CommentListItem from '../../comments/components/CommentListItem.jsx'
 
+import SessioncontentPublisher from './HOC/SessioncontentPublisher.jsx'
+
 import { toHHMMSS } from '../../../utils/stringUtils'
 import useStyles from './styles/'
 
@@ -61,5 +63,5 @@ SessioncontentCommentItem.propTypes = {
   programmed_at: PropTypes.number
 }
 
-export default SessioncontentCommentItem
+export default SessioncontentPublisher(SessioncontentCommentItem)
 

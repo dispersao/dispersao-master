@@ -42,5 +42,11 @@ export const getScriptsequenceByIdNoFormat = createCachedSelector(
 )(getId)
 
 export const formatScriptsequenceData = (scriptsequence, sequence) => {
-  return scriptsequence.mergeDeep({ sequence })
+  const elapsedTime = scriptsequence.get('elapsedTime') || 0
+  const state = scriptsequence.get('state') || 'idle'
+  return scriptsequence.mergeDeep({ 
+    sequence,
+    elapsedTime,
+    state
+  })
 }

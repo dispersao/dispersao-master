@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import PostListItem from '../../posts/components/PostListItem.jsx'
 import SessioncontentCommentItem from './SessioncontentCommentItem.jsx'
 
+import SessioncontentPublisher from './HOC/SessioncontentPublisher.jsx'
+
 import {
   GridListTile,
   GridList,
@@ -64,4 +66,4 @@ SessioncontentGridItem.propTypes = {
 }
 
 
-export default SessioncontentGridItem
+export default SessioncontentPublisher(SessioncontentGridItem)

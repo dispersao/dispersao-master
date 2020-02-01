@@ -1,19 +1,24 @@
 import {
   put,
   takeEvery,
+  takeLeading,
   select
 } from 'redux-saga/effects'
 
 import {
   CREATE_RANDOM_SESSIONCONTENT,
   CREATE_SESSIONCONTENT,
+  UPDATE_SESSIONCONTENT,
   createSessioncontent as createSessioncontentAction,
   createSessioncontentSuccess,
-  createSessioncontentError
+  createSessioncontentError,
+  updateSessioncontentSuccess,
+  updateSessioncontentError
 } from './actions'
 
 import {
-  createSessioncontent as createSessioncontentAPI
+  createSessioncontent as createSessioncontentAPI,
+  updateSessioncontent as updateSessioncontentAPI
 } from '../api/sessioncontent'
 
 import {
@@ -40,6 +45,10 @@ export function* watchCreateSessioncontent() {
   yield takeEvery(CREATE_SESSIONCONTENT, createSessioncontent)
 }
 
+export function* watchUpdateSessioncontent() {
+  yield takeLeading(UPDATE_SESSIONCONTENT, updateSessioncontent)
+}
+
 function* createRandomSessioncontent(action) {
   try {
     const script = yield select(getScriptById, { id: action.payload.script.script })
@@ -64,5 +73,16 @@ function* createSessioncontent(action) {
     console.log(e)
     yield put(createSessioncontentError(e))
   }
-   
+}
+
+function* updateSessioncontent(action) {
+  try {
+    const sessioncontents = yield updateSessioncontentAPI(action.payload.sessioncontents)
+    const sessioncontentsData = sessioncontents.entities.sessioncontents
+    yield put(updateSessioncontentSuccess(sessioncontentsData))
+  } catch (e) {
+    console.log(e)
+    yield put(updateSessioncontentError(e))
+
+  }
 }

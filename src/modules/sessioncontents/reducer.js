@@ -25,7 +25,10 @@ const reducer = (state = fromJS({
       }))
 
     case UPDATE_SESSIONCONTENT_SUCCESS:
-      return state
+      return state.mergeDeep(fromJS({ 
+        error: null, 
+        data: action.payload.sessioncontents,
+      }))
     default:
       return state
   }

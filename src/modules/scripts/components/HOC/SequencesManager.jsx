@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import states from '../../utils/stateConstants'
 import { createRandomScriptsequence } from '../../../scriptsequences/actions'
+
+import ScriptsequenceUpdate from '../../../scriptsequences/components/HOC/helpers/ScriptsequenceUpdater.jsx'
 
 const MIN_PLANNED_TIME = 120
 
@@ -16,11 +18,20 @@ const WithSequenceManager = WrappedComponent => {
       averageSeconds,
       createRandomScriptsequence, 
       connected,
-      state
+      state,
+      speed,
+      scriptsequences
     } = props
 
+    const [lastCreatedIndex, setLastCreatedIndex] = useState(null)
+
     useEffect(() => {
-      if (connected === 'connected' && state !== states.IDLE && remainingTime < MIN_PLANNED_TIME && totalTime < averageSeconds) {
+      if (connected === 'connected' && 
+          state !== states.IDLE && 
+          remainingTime < MIN_PLANNED_TIME && 
+          totalTime < averageSeconds && 
+          lastCreatedIndex !== scriptsequences.length) {
+        setLastCreatedIndex(scriptsequences.length)
         createRandomScriptsequence(id)
       }
     }, [remainingTime, connected, totalTime, averageSeconds, state])
@@ -30,8 +41,16 @@ const WithSequenceManager = WrappedComponent => {
     }
     delete wrappedProps['createRandomScriptsequence']
     
+    const scriptsequencesProgressManagers = scriptsequences.map((scrseq, key) => {
+      return <ScriptsequenceUpdate 
+        key={key}
+        speed={speed}
+        {...scrseq} />
+    })
+
     return (
       <>
+        {scriptsequencesProgressManagers}
         <WrappedComponent {...wrappedProps} />
       </>
     )
@@ -45,7 +64,8 @@ const WithSequenceManager = WrappedComponent => {
     averageSeconds: PropTypes.number,
     createRandomScriptsequence: PropTypes.func.isRequired,
     connected:PropTypes.string,
-    state: PropTypes.string
+    state: PropTypes.string,
+    speed: PropTypes.string.isRequired
   }
   
   const mapDispatchToProps = (dispatch) => ({

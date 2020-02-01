@@ -71,7 +71,7 @@ PostListGridItem.propTypes = {
   contentcreator: PropTypes.object.isRequired,
   media: PropTypes.object,
   disabled: PropTypes.bool,
-  CommentComp: PropTypes.func
+  CommentComp: PropTypes.any
 }
 
 export default PostListGridItem

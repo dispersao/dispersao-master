@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { normalizeSessioncontentList } from '../sessioncontents/schema'
+import { normalizeSessioncontentList, normalizeSessioncontent } from '../sessioncontents/schema'
 
 export const createSessioncontent = async (content) => {
 
@@ -9,4 +9,9 @@ export const createSessioncontent = async (content) => {
   }))
   const sessioncontents = await axios.post('/sessioncontents', mappedContent)
   return normalizeSessioncontentList(sessioncontents.data)
+}
+
+export const updateSessioncontent = async (content) => {
+  const sessioncontents = await axios.put(`/sessioncontents/${content.id}`, content)
+  return normalizeSessioncontent(sessioncontents.data)
 }

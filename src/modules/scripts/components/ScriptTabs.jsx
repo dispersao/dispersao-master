@@ -25,7 +25,12 @@ const ScriptTabs = ({ script }) => {
     setValue(val)
   }
 
-  const { id, sessioncontents, scriptsequences } = script
+  const { 
+    id, 
+    sessioncontents, 
+    scriptsequences,
+    elapsedTime
+  } = script
 
   const classes = useStyles()
 
@@ -57,7 +62,7 @@ const ScriptTabs = ({ script }) => {
         />
         <Divider />
         <SessioncontentsGrid 
-          sessioncontents={sessioncontents} 
+          sessioncontents={sessioncontents}
         />
       </ScriptTab>
     </Paper>

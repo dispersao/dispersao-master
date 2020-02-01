@@ -1,6 +1,8 @@
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 
+import { Map } from 'immutable'
+
 import {
   getScriptsequences,
   formatScriptsequenceData
@@ -31,10 +33,10 @@ const fetchScriptFromIdNotFormated = (list, id) => {
   return list.get(id.toString())
 }
 
-const fetchScriptFromIdFormated = (list, scriptsequences, sequences, sessioncontents, id) => {
+const fetchScriptFromIdFormated = (list, scriptsequences, scriptTimes, sessioncontents, id) => {
   let script = fetchScriptFromIdNotFormated(list, id)
-  if (script && scriptsequences && sequences && sequences.size && sessioncontents) {
-    return formatScriptData(script, scriptsequences, sequences, sessioncontents)
+  if (script && scriptsequences && sessioncontents && scriptTimes) {
+    return formatScriptData(script, scriptsequences, scriptTimes, sessioncontents)
   }
 }
 
@@ -47,6 +49,72 @@ export const getScriptList = createSelector(
   }
 )
 
+const getScriptSequencesFormated = createCachedSelector(
+  [getScripts, getScriptsequences, getSequences, getId],
+  (scripts, scriptsequences, sequences, id) => {
+    if (!scripts || !scripts.size || !scriptsequences || !sequences || !sequences.size || !id ) {
+      return
+    }
+    const script = fetchScriptFromIdNotFormated(scripts, id)
+    return script
+      .get('scriptsequences')
+      .map( id => scriptsequences.get(id.toString()))
+      .map(scriptsequence => {
+        return formatScriptsequenceData(
+          scriptsequence, 
+          sequences.get(
+            scriptsequence.get('sequence').toString()
+          )
+        )
+      })
+  }
+)(getId)
+
+export const getScriptTimes = createCachedSelector(
+  [getScripts, getScriptSequencesFormated, getId], 
+  (scripts, scriptsequences, id) => {
+    if (!scripts || !scripts.size || !scriptsequences || !id) {
+      return
+    }
+    const script = fetchScriptFromIdNotFormated(scripts, id)
+
+    const totalTime = scriptsequences
+      .map(el => parseInt(el.getIn(['sequence', 'duration'])))
+      .reduce((a, b) => a + b) || 0
+
+    const averageSeconds = parseInt(script.get('averagetime')) * 60
+
+    let elapsedTime = 0
+    const playingSequences = scriptsequences.filter(el => el.get('progress') && el.get('progress') > 0)
+    
+    if (playingSequences && playingSequences.size) {
+      const playingSequence = playingSequences.get(playingSequences.size - 1)
+      
+      elapsedTime = scriptsequences
+        .slice(0, scriptsequences.indexOf(playingSequence) + 1)
+        .map(el => {
+          let progress  = el.get( 'progress') || 0
+          progress = progress / 100
+          return progress * el.getIn(['sequence', 'duration'])
+        })
+        .reduce((a, b) => a + b)
+    }
+
+    const remainingTime = totalTime - elapsedTime
+
+    const speed = script.get('speed') || "1"
+
+    return Map({
+      totalTime,
+      elapsedTime,
+      remainingTime,
+      averageSeconds,
+      speed
+    })
+  }
+)(getId)
+
+
 export const getScriptByScriptId = createCachedSelector(
   [getScripts, getScriptId], (list, id) => {
     if (!list || !list.size || !id) {
@@ -56,68 +124,25 @@ export const getScriptByScriptId = createCachedSelector(
   }
 )(getScriptId)
 
+
 export const getScriptById = createCachedSelector(
-  [getScripts, getScriptsequences, getSequences, getSessioncontents, getId],
+  [getScripts, getScriptSequencesFormated, getScriptTimes, getSessioncontents, getId],
   fetchScriptFromIdFormated
 )(getId)
 
-const formatScriptData = (script, scrList, seqList, sesconList) => {
-  let scriptsequences = script
-    .get('scriptsequences')
-    .map( id => scrList.get(id.toString()))
-    .map(scriptsequence => {
-      return formatScriptsequenceData(
-        scriptsequence, 
-        seqList.get(
-          scriptsequence.get('sequence').toString()
-        )
-      )
-    })
 
+const formatScriptData = (script, scrList, scriptTimes, sesconList) => {
   const sessioncontents = script
     .get('sessioncontents')
     .map(id => sesconList.get(id.toString()))
 
-  const totalTime = scriptsequences
-    .map(el => parseInt(el.getIn(['sequence', 'duration'])))
-    .reduce((a, b) => a + b) || 0
-
-  const averageSeconds = parseInt(script.get('averagetime')) * 60
-
-  scriptsequences = scriptsequences.map((scr, key) => {
-    let isLast = averageSeconds <= totalTime && key === scriptsequences.size - 1
+  let scriptsequences = scrList.map((scr, key) => {
+    let isLast = scriptTimes.get('averageSeconds') <= scriptTimes.get('totalTime') && key === scrList.size - 1
     return scr.set('isLast', isLast)
   })
 
-  let elapsedTime = 0
-  const playingSequences = scriptsequences.filter(el => el.get('progress') && el.get('progress') > 0)
-  
-  if (playingSequences && playingSequences.size) {
-    const playingSequence = playingSequences.get(playingSequences.size - 1)
-    
-    elapsedTime = scriptsequences
-      .slice(0, scriptsequences.indexOf(playingSequence) + 1)
-      .map(el => {
-        let progress  = el.get( 'progress') || 0
-        progress = progress / 100
-        return progress * el.getIn(['sequence', 'duration'])
-      })
-      .reduce((a, b) => a + b)
-  }
-
-  const remainingTime = totalTime - elapsedTime
-
-  const speed = script.get('speed') || "1"
-
-  script = script
+  return script
     .setIn(['scriptsequences'], scriptsequences)
     .setIn(['sessioncontents'], sessioncontents)
-
-  return script.mergeDeep({
-    totalTime,
-    elapsedTime,
-    remainingTime,
-    averageSeconds,
-    speed
-  })
+    .mergeDeep(scriptTimes)
 }
