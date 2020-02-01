@@ -67,7 +67,6 @@ export function* whatchScriptStart() {
 function* createRandomScriptSequence(action) {
   try {
     const script = yield select(getScriptById, { id: action.payload.script.script })
-    console.log('aaa entering createRandomScript ' + script.get('scriptsequences').size)
 
     const formatedSequences = yield select(getSequenceListFormatted)
     const nextScriptSequence = yield getNextRandomSequence(script, formatedSequences)
@@ -75,8 +74,6 @@ function* createRandomScriptSequence(action) {
     const scriptsequence = yield createScriptsequenceAPI(nextScriptSequence)
     const scriptsequenceData = scriptsequence.entities.scriptsequences
     yield put(createScriptsequenceSuccess(scriptsequenceData))
-    // yield put(createScriptsequenceAction(nextScriptSequence))
-    console.log('aaa leaving createRandomScript ' + script.get('scriptsequences').size)
   } catch (e) {
     console.log(e)
   }
@@ -109,7 +106,7 @@ function* sendScriptsequence(action) {
 
 function* createScriptsequencesListeners() {
   yield call(addListener, '/getScene', onMessageCallback)
-  yield call(addListener, '/sceneProgress', onMessageCallback)
+  // yield call(addListener, '/sceneProgress', onMessageCallback)
   yield call(addListener, '/updateScene', onMessageCallback)
 }
 
