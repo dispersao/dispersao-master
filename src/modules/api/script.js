@@ -19,3 +19,12 @@ export const updateScript = async (options) => {
   const script = await axios.put(`/scripts/${id}`, params)
   return normalizeScript(script.data) 
 }
+
+export const updateStateScript = async (options) => {
+  const { id } = options
+  const params = { ... options }
+  delete params['id']
+
+  const script = await axios.put(`/scripts/${id}/state`, params)
+  return normalizeScript(script.data)
+}

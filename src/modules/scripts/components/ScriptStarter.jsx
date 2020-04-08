@@ -23,7 +23,7 @@ const ScriptPlayer = ({
 
   const onHandleStart = () => {
     if (state === 'idle') {
-      initSession(id, token)
+      initSession(id)
     }
   }
 
@@ -87,9 +87,8 @@ ScriptPlayer.propTypes = {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  initSession: (id, token) => dispatch(startSession({
-    id,
-    token,
+  initSession: (id) => dispatch(startSession({
+    id
   })),
   reinitSession: (id) => dispatch(resetSession({
     id

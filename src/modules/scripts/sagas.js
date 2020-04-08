@@ -2,7 +2,8 @@ import {
   call, 
   put, 
   takeLeading,
-  takeEvery
+  takeEvery,
+  select
 } from 'redux-saga/effects'
 
 import { push } from 'connected-react-router'
@@ -33,19 +34,23 @@ import {
 } from '../scriptsequences/actions'
 
 import {
-  fetchSessioncontentsSuccess
+  fetchSessioncontentsSuccess,
+  createSessioncontentSuccess
 } from '../sessioncontents/actions'
 
 import { 
   createScript as createScriptAPI,
   fetchScripts as fetchScriptsAPI,
-  updateScript as updateScriptAPI
+  updateScript as updateScriptAPI,
+  updateStateScript as updateStateScriptAPI
 } from '../api/script'
 
 import { 
   sendMessage,
   notify
 } from '../../utils/managers/osc'
+
+import { getScriptByScriptId } from './selectors'
 
 
 export function* watchFetchScripts() {
@@ -103,9 +108,22 @@ function* updateScripts(action) {
   }
 }
 
+function* updateScriptState(action) {
+  try {
+    const script = yield call(updateStateScriptAPI, action.payload.script)
+    const scriptData = script.entities.scripts
+    const sessioncontentsData = script.entities.sessioncontents || []
+    yield put(createSessioncontentSuccess(sessioncontentsData))
+    yield put(updateScriptSuccess(scriptData))
+  } catch (e) {
+    console.log(e)
+    yield put(updateScriptError(e))
+  }
+}
+
 function* resetSession(action) {
   try {
-    yield updateScripts(action)
+    yield updateScriptState(action)
     yield call(notify, {
       address: '/resetsession',
       args: [
@@ -119,12 +137,17 @@ function* resetSession(action) {
 
 function* startSession(action) {
   try {
-    yield updateScripts(action)
+    yield updateScriptState(action)
+    const script = yield select(
+      getScriptByScriptId, {
+        script: action.payload.script.id
+      }
+    )
     yield call(notify, {
       address: '/session',
       args: [
         action.payload.script.id,
-        action.payload.script.token
+        script.get('token')
       ]
     })
   } catch (e) {
@@ -135,7 +158,7 @@ function* startSession(action) {
 
 function* playScript(action) {
   try {
-    yield updateScripts(action)
+    yield updateScriptState(action)
     yield call(notify, {
       address: '/play',
       args: [

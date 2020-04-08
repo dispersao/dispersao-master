@@ -112,9 +112,10 @@ export const resetSession = (script) => ({
   payload: {
     script: {
       ...script,
-      scriptsequences: [],
-      sessioncontents: [],
-      state: states.IDLE
+      // scriptsequences: [],
+      // sessioncontents: [],
+      state: states.IDLE,
+      // token: null
     }
   }
 })
