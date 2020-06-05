@@ -20,6 +20,10 @@ import {
 } from './modules/posts/sagas'
 
 import {
+  watchFetchProfiles
+} from './modules/profiles/sagas'
+
+import {
   watchCreateRandomSessioncontent,
   watchCreateSessioncontent,
   watchUpdateSessioncontent
@@ -40,6 +44,7 @@ export default function* rootSaga() {
     watchFetchPosts(),
     watchCreateRandomSessioncontent(),
     watchCreateSessioncontent(),
-    watchUpdateSessioncontent()
+    watchUpdateSessioncontent(),
+    watchFetchProfiles()
   ])
 }
