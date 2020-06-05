@@ -3,11 +3,13 @@ import { sessioncontentSchema } from './sessioncontent'
 import { scriptSchema } from '../../scripts/schema/script'
 import { postSchema } from '../../posts/schema'
 import commentSchema from '../../comments/schema'
+import { profileSchema } from '../../profiles/schema'
 
 sessioncontentSchema.define({
   script: scriptSchema,
   post: postSchema,
-  comment: commentSchema
+  comment: commentSchema,
+  profile: profileSchema
 })
 
 export const sessioncontentListSchema = [sessioncontentSchema]

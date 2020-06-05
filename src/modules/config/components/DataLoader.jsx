@@ -8,10 +8,12 @@ import { getToken } from '../selectors'
 import { fetchScripts } from '../../scripts/actions'
 import { fetchSequences } from '../../sequences/actions'
 import { fetchPosts } from '../../posts/actions'
+import { fetchProfiles } from '../../profiles/actions'
 
 import { getSequenceList } from '../../sequences/selectors'
 import { getScriptList } from '../../scripts/selectors'
 import { getPostList } from '../../posts/selectors'
+import { getProfileList } from '../../profiles/selectors'
 
 const DataLoader = ({ 
   children, 
@@ -19,10 +21,12 @@ const DataLoader = ({
   scripts, 
   sequences,
   posts,
+  profiles,
   fetchConfigData, 
   fetchSequencesData, 
   fetchScriptsData,
-  fetchPostsData
+  fetchPostsData,
+  fetchProfileData
 }) => {
   useEffect(() => {
     if (!token) {
@@ -37,8 +41,11 @@ const DataLoader = ({
       if (!posts || !posts.length) {
         fetchPostsData()
       }
+      if (!profiles || !profiles.length) {
+        fetchProfileData()
+      }
     }
-  }, [token, scripts, sequences, posts])
+  }, [token, scripts, sequences, posts, profiles])
 
   return (
     <>
@@ -61,10 +68,12 @@ DataLoader.propTypes = {
   scripts: PropTypes.array,
   sequences: PropTypes.array,
   posts: PropTypes.array,
+  profiles: PropTypes.array,
   fetchConfigData: PropTypes.func.isRequired,
   fetchSequencesData: PropTypes.func.isRequired,
   fetchScriptsData: PropTypes.func.isRequired,
-  fetchPostsData: PropTypes.func.isRequired
+  fetchPostsData: PropTypes.func.isRequired,
+  fetchProfileData: PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => {
@@ -72,7 +81,8 @@ const mapStateToProps = (state) => {
     token: getToken(state),
     sequences: getSequenceList(state),
     scripts: getScriptList(state),
-    posts: getPostList(state)
+    posts: getPostList(state),
+    profiles: getProfileList(state)
   }
 }
 
@@ -80,7 +90,8 @@ const mapDispatchToProps = (dispatch) => ({
   fetchConfigData: () => dispatch(fetchConfig()),
   fetchSequencesData: () => dispatch(fetchSequences()),
   fetchScriptsData: () => dispatch(fetchScripts()),
-  fetchPostsData: () => dispatch(fetchPosts())
+  fetchPostsData: () => dispatch(fetchPosts()),
+  fetchProfileData: () => dispatch(fetchProfiles())
 }) 
 
 export default connect(
