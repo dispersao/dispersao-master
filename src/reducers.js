@@ -11,6 +11,7 @@ import parts from './modules/parts/reducer'
 import types from './modules/types/reducer'
 import scriptsequences from './modules/scriptsequences/reducer'
 import posts from './modules/posts/reducer'
+import profiles from './modules/profiles/reducer'
 import comments from './modules/comments/reducer'
 import contentcreators from './modules/contentcreators/reducer'
 import sessioncontents from './modules/sessioncontents/reducer'
@@ -27,6 +28,7 @@ const reducer = combineReducers({
   parts,
   types,
   posts,
+  profiles,
   comments,
   contentcreators,
   sessioncontents

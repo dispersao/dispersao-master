@@ -7,7 +7,8 @@ import { getPostByPostIdFormatted } from '../posts/selectors'
 const getCleanState = (state) => state
 const getState = (state) => state.sessioncontents
 const getIds = (state, props) => props.sessioncontents.map(sescon => sescon.id)
-
+const getScript = (state, props) =>  props.id
+const getType = (state, props) =>  props.type
 const getIdsAsJson = (state, props) => JSON.stringify(props.sessioncontents)
 
 export const getSessioncontents = createSelector(
@@ -27,6 +28,20 @@ export const getSessioncontentsList = createSelector(
     return sessioncontents.valueSeq()
   }
 )
+
+export const getSessioncontentsListByType = createCachedSelector(
+  [getSessioncontents, getType, getScript],
+  (sessioncontents, type, script) => {
+    console.log()
+    if (!sessioncontents || !type || !script ) {
+      return
+    }
+    return sessioncontents
+      .filter(sescon => sescon.get('script') === script)
+      .filter(sescon => sescon.get(type))
+      .valueSeq()
+  }
+)(getScript)
 
 export const getSessioncontentsListAsPosts = createCachedSelector(
   [getIds,  getSessioncontents, getCleanState], 
