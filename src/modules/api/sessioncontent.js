@@ -15,3 +15,8 @@ export const updateSessioncontent = async (content) => {
   const sessioncontents = await axios.put(`/sessioncontents/${content.id}`, content)
   return normalizeSessioncontent(sessioncontents.data)
 }
+
+export const updateSessionContentState = async (content) => {
+  const sessioncontents = await axios.put(`/sessioncontents/${content.id}/state`, content)
+  return normalizeSessioncontent(sessioncontents.data)
+}

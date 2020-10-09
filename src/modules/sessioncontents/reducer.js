@@ -3,7 +3,8 @@ import { fromJS } from 'immutable'
 import {
   FETCH_SESSIONCONTENTS_SUCCESS,
   CREATE_SESSIONCONTENT_SUCCESS,
-  UPDATE_SESSIONCONTENT_SUCCESS
+  UPDATE_SESSIONCONTENT_SUCCESS,
+  UPDATE_SESSIONCONTENT_STATE_SUCCESS
 } from './actions'
 
 const reducer = (state = fromJS({
@@ -25,6 +26,7 @@ const reducer = (state = fromJS({
       }))
 
     case UPDATE_SESSIONCONTENT_SUCCESS:
+    case UPDATE_SESSIONCONTENT_STATE_SUCCESS:
       return state.mergeDeep(fromJS({ 
         error: null, 
         data: action.payload.sessioncontents,
