@@ -5,13 +5,16 @@ export const fetchConfig = async () => {
     const config = await axios.get('/config.json', {
       crossDomain: true
     })
-    axios.defaults.baseURL = config.data.api.url
+
+    const { data: { api: { user, url, password } } } = config
+    axios.defaults.baseURL = API_URL || url
     axios.defaults.headers.post['Content-Type'] = 'json'
 
     const tokenRequest = await axios.post('/auth/local', {
-      identifier: config.data.api.user,
-      password: config.data.api.password
+      identifier: API_USER || user,
+      password: API_PASSWORD || password
     })
+    
     
     const token = tokenRequest.data.jwt
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
