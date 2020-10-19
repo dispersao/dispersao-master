@@ -70,6 +70,6 @@ export const getApiUrl = createSelector(
     if (!apiData || !apiData.size) {
       return
     }
-    return apiData.get('url')
+    return API_URL || apiData.get('url')
   }
 )
