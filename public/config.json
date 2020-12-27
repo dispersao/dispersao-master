@@ -1,0 +1,11 @@
+{
+  "api": {
+    "url":"",
+    "user": "",
+    "password": ""
+  },
+  "osc": {
+    "url": "ws://localhost",
+    "port": 8081
+  }
+}
