@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { updateSessioncontent } from '../../actions'
+import { updateSessioncontentState } from '../../actions'
 
 import { getScriptTimes } from '../../../scripts/selectors'
 import { toJS } from '../../../../utils/immutableToJs.jsx'
@@ -25,13 +25,21 @@ const WithSessioncontentPublisher = WrappedComponent => {
       }
     }, [elapsedTime, state ])
 
+    const republish = () => {
+      console.log('should republish', id)
+      publishContent(id)
+    }
+
     const wrappedProps = {
       ...props
     }
     delete wrappedProps['publishContent']
     
     return (
-      <WrappedComponent {...wrappedProps} />
+      <WrappedComponent 
+        onRepublish={republish} 
+        {...wrappedProps} 
+      />
     )
   }
 
@@ -48,7 +56,7 @@ const WithSessioncontentPublisher = WrappedComponent => {
   })
 
   const mapDispatchToProps = (dispatch) => ({
-    publishContent: (id) => dispatch(updateSessioncontent({
+    publishContent: (id) => dispatch(updateSessioncontentState({
       id,
       state: 'published'
     }))

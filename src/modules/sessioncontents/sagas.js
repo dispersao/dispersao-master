@@ -9,16 +9,20 @@ import {
   CREATE_RANDOM_SESSIONCONTENT,
   CREATE_SESSIONCONTENT,
   UPDATE_SESSIONCONTENT,
+  UPDATE_SESSIONCONTENT_STATE,
   createSessioncontent as createSessioncontentAction,
   createSessioncontentSuccess,
   createSessioncontentError,
   updateSessioncontentSuccess,
-  updateSessioncontentError
+  updateSessioncontentError,
+  updateSessioncontentStateSuccess,
+  updateSessioncontentStateError
 } from './actions'
 
 import {
   createSessioncontent as createSessioncontentAPI,
-  updateSessioncontent as updateSessioncontentAPI
+  updateSessioncontent as updateSessioncontentAPI,
+  updateSessionContentState as updateSessionContentStateAPI
 } from '../api/sessioncontent'
 
 import {
@@ -47,6 +51,7 @@ export function* watchCreateSessioncontent() {
 
 export function* watchUpdateSessioncontent() {
   yield takeLeading(UPDATE_SESSIONCONTENT, updateSessioncontent)
+  yield takeLeading(UPDATE_SESSIONCONTENT_STATE, updateSessionContentState)
 }
 
 function* createRandomSessioncontent(action) {
@@ -83,6 +88,16 @@ function* updateSessioncontent(action) {
   } catch (e) {
     console.log(e)
     yield put(updateSessioncontentError(e))
+  }
+}
+function* updateSessionContentState(action) {
+  try {
+    const sessioncontents = yield updateSessionContentStateAPI(action.payload.sessioncontents)
+    const sessioncontentsData = sessioncontents.entities.sessioncontents
+    yield put(updateSessioncontentStateSuccess(sessioncontentsData))
 
+  } catch (e) {
+    console.log(e)
+    yield put(updateSessioncontentStateError(e))
   }
 }

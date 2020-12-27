@@ -11,6 +11,10 @@ export const UPDATE_SESSIONCONTENT = 'UPDATE_SESSIONCONTENT'
 export const UPDATE_SESSIONCONTENT_SUCCESS = 'UPDATE_SESSIONCONTENT_SUCCESS'
 export const UPDATE_SESSIONCONTENT_ERROR = 'UPDATE_SESSIONCONTENT_ERROR'
 
+export const UPDATE_SESSIONCONTENT_STATE = 'UPDATE_SESSIONCONTENT_STATE'
+export const UPDATE_SESSIONCONTENT_STATE_SUCCESS = 'UPDATE_SESSIONCONTENT_STATE_SUCCESS'
+export const UPDATE_SESSIONCONTENT_STATE_ERROR = 'UPDATE_SESSIONCONTENT_STATE_ERROR'
+
 export const fetchSessioncontentsSuccess = (sessioncontents) => ({
   type: FETCH_SESSIONCONTENTS_SUCCESS,
   payload: {
@@ -69,6 +73,27 @@ export const updateSessioncontentSuccess = (sessioncontents) => ({
 
 export const updateSessioncontentError = (error) => ({
   type: UPDATE_SESSIONCONTENT_ERROR,
+  payload: {
+    error
+  }
+})
+
+export const updateSessioncontentState = (sessioncontents) => ({
+  type: UPDATE_SESSIONCONTENT_STATE,
+  payload: {
+    sessioncontents
+  }
+})
+
+export const updateSessioncontentStateSuccess = (sessioncontents) => ({
+  type: UPDATE_SESSIONCONTENT_STATE_SUCCESS,
+  payload: {
+    sessioncontents
+  }
+})
+
+export const updateSessioncontentStateError = (error) => ({
+  type: UPDATE_SESSIONCONTENT_STATE_ERROR,
   payload: {
     error
   }
