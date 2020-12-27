@@ -25,13 +25,21 @@ const WithSessioncontentPublisher = WrappedComponent => {
       }
     }, [elapsedTime, state ])
 
+    const republish = () => {
+      console.log('should republish', id)
+      publishContent(id)
+    }
+
     const wrappedProps = {
       ...props
     }
     delete wrappedProps['publishContent']
     
     return (
-      <WrappedComponent {...wrappedProps} />
+      <WrappedComponent 
+        onRepublish={republish} 
+        {...wrappedProps} 
+      />
     )
   }
 

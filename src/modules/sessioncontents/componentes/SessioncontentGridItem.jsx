@@ -10,7 +10,8 @@ import {
   GridListTile,
   GridList,
   Typography,
-  Grid
+  Grid,
+  Button
 } from '@material-ui/core'
 
 import { toHHMMSS } from '../../../utils/stringUtils'
@@ -19,8 +20,10 @@ import useStyles from './styles/'
 const SessioncontentGridItem = ({ 
   post,
   state,
-  programmed_at
+  programmed_at,
+  onRepublish
 }) => {
+
   const classes = useStyles()
 
   let color, text, classname
@@ -37,13 +40,26 @@ const SessioncontentGridItem = ({
   return (
     <GridListTile className={classes[classname]}>
       <Grid container direction="column">
-        <Grid item xs>
-          <Typography 
-            variant="body2" 
-            color={color}
-          >
-            {text}
-          </Typography>
+      <Grid item xs>
+          <Grid container direction="row">
+            <Grid item xs>
+              <Typography 
+                variant="body2" 
+                color={color}
+              >
+                {text}
+              </Typography>
+              </Grid>
+            {(state === 'published' && 
+              <Grid item xs>
+                <Button 
+                  variant="contained"
+                  onClick={onRepublish}>
+                  renotify
+                </Button>
+              </Grid>
+            )||null}
+          </Grid>
         </Grid>
         <GridList 
           cellHeight="auto" 
@@ -62,7 +78,8 @@ SessioncontentGridItem.propTypes = {
   post: PropTypes.object.isRequired,
   state: PropTypes.string,
   programmed_at: PropTypes.number,
-  script: PropTypes.number
+  script: PropTypes.number,
+  onRepublish: PropTypes.func
 }
 
 

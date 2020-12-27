@@ -12,13 +12,15 @@ import {
   GridListTile,
   GridList,
   Typography,
-  Grid
+  Grid,
+  Button
 } from '@material-ui/core'
 
 const SessioncontentCommentItem = ({
   comment,
   state,
-  programmed_at
+  programmed_at,
+  onRepublish
 }) => {
   const classes = useStyles()
 
@@ -38,12 +40,25 @@ const SessioncontentCommentItem = ({
     <GridListTile className={classes[classname]}>
       <Grid container direction="column">
         <Grid item xs>
-          <Typography 
-            variant="body2" 
-            color={color}
-          >
-            {text}
-          </Typography>
+          <Grid container direction="row">
+            <Grid item xs>
+              <Typography 
+                variant="body2" 
+                color={color}
+              >
+                {text}
+              </Typography>
+              </Grid>
+            {(state === 'published' && 
+              <Grid item xs>
+                <Button 
+                  variant="contained"
+                  onClick={onRepublish}>
+                  renotify
+                </Button>
+              </Grid>
+            )||null}
+          </Grid>
         </Grid>
         <GridList 
           cellHeight="auto" 
@@ -60,7 +75,8 @@ const SessioncontentCommentItem = ({
 SessioncontentCommentItem.propTypes = {
   comment: PropTypes.object,
   state: PropTypes.string,
-  programmed_at: PropTypes.number
+  programmed_at: PropTypes.number,
+  onRepublish: PropTypes.func
 }
 
 export default SessioncontentPublisher(SessioncontentCommentItem)
