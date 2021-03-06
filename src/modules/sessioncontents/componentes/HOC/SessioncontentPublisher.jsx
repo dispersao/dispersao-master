@@ -1,33 +1,28 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import { updateSessioncontentState } from '../../actions'
 
-import { getScriptTimes } from '../../../scripts/selectors'
 import { toJS } from '../../../../utils/immutableToJs.jsx'
 
 const WithSessioncontentPublisher = WrappedComponent => {
   const SessioncontentPublisher = (props) => {
     const {
       id,
-      programmed_at,
-      times,
-      state,
       publishContent,
+      unpublishContent
     } = props
 
-    const { elapsedTime } = times
-
-    useEffect(() => {
-      if (state === 'pending' && elapsedTime >= programmed_at) {
-        publishContent(id)
-      }
-    }, [elapsedTime, state ])
 
     const republish = () => {
       console.log('should republish', id)
       publishContent(id)
+    }
+
+    const unpublish = () => {
+      console.log('should unpublish', id)
+      unpublishContent(id)
     }
 
     const wrappedProps = {
@@ -37,7 +32,8 @@ const WithSessioncontentPublisher = WrappedComponent => {
     
     return (
       <WrappedComponent 
-        onRepublish={republish} 
+        onRepublish={republish}
+        onUnpublish={unpublish}
         {...wrappedProps} 
       />
     )
@@ -45,24 +41,24 @@ const WithSessioncontentPublisher = WrappedComponent => {
 
   SessioncontentPublisher.propTypes = {
     id: PropTypes.number,
-    programmed_at: PropTypes.number,
-    times: PropTypes.object,
     state: PropTypes.string,
-    publishContent: PropTypes.func
+    publishContent: PropTypes.func,
+    unpublishContent: PropTypes.func,
   }
 
-  const mapStateToProps = (state, ownprops) => ({
-    times: getScriptTimes(state, { id: ownprops.script })
-  })
 
   const mapDispatchToProps = (dispatch) => ({
     publishContent: (id) => dispatch(updateSessioncontentState({
       id,
       state: 'published'
+    })),
+    unpublishContent: (id) => dispatch(updateSessioncontentState({
+      id,
+      state: 'pending'
     }))
   })
   return connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
   )(toJS(SessioncontentPublisher))
 }

@@ -9,6 +9,7 @@ const getState = (state) => state.sessioncontents
 const getIds = (state, props) => props.sessioncontents.map(sescon => sescon.id)
 const getScript = (state, props) =>  props.id
 const getType = (state, props) =>  props.type
+const getTypes = (state, props) =>  props.types
 const getIdsAsJson = (state, props) => JSON.stringify(props.sessioncontents)
 
 export const getSessioncontents = createSelector(
@@ -82,5 +83,18 @@ export const getSessioncontentsListAsPosts = createCachedSelector(
   }
 )(getIdsAsJson)
 
-
+export const getNextContentToPublish = createCachedSelector(
+  [getSessioncontents, getTypes, getScript],
+  (sessioncontents, types, script) => {
+    if (!sessioncontents || !types || !script) {
+      return
+    }
+    return sessioncontents
+      .filter(sescon => sescon.get('script') === script)
+      .filter(sescon => types.some(type => sescon.get(type)))
+      .filter(sescon => sescon.get('state') === 'pending')
+      .sort((a, b) => a.get('programmed_at') - b.get('programmed_at'))
+      .first()
+  }
+)(getScript)
 

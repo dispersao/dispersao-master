@@ -4,13 +4,16 @@ import PropTypes from 'prop-types'
 import states from '../../utils/stateConstants'
 import { 
   createRandomSessioncontent, 
-  createSessioncontent 
+  createSessioncontent,
+  updateSessioncontentState
 } from '../../../sessioncontents/actions'
 
 import { toJS } from '../../../../utils/immutableToJs.jsx'
 
+import { getScriptTimes } from '../../../scripts/selectors'
+
 import { getProfileList } from '../../../profiles/selectors'
-import { getSessioncontentsListByType } from '../../../sessioncontents/selectors'
+import { getSessioncontentsListByType, getNextContentToPublish } from '../../../sessioncontents/selectors'
 
 const WithAppContentManager = WrappedComponent => {
 
@@ -23,14 +26,22 @@ const WithAppContentManager = WrappedComponent => {
       scriptsequences,
       profileSessioncontent,
       profiles,
-      publishContent
+      createContent,
+      publishContent,
+      times: { elapsedTime },
+      nextContentToPublish
     } = props
-
     useEffect(() => {
       if (scriptsequences && scriptsequences.length && connected === 'connected') {
         createRandomAppContent(id)
       }
     }, [scriptsequences.length])
+
+    useEffect(() => {
+      if (nextContentToPublish && elapsedTime >= nextContentToPublish.programmed_at) {
+        publishContent(nextContentToPublish.id)
+      }
+    }, [elapsedTime, nextContentToPublish])
 
     useEffect(() => {
       if (state === states.STARTED) {
@@ -42,7 +53,7 @@ const WithAppContentManager = WrappedComponent => {
               profile: p.id,
               programmed_at: 0
             }))
-            publishContent(profileContent)
+            createContent(profileContent)
           }
         }
       }
@@ -72,7 +83,15 @@ const WithAppContentManager = WrappedComponent => {
     scriptsequences: PropTypes.array,
     profiles: PropTypes.array,
     profileSessioncontent: PropTypes.array,
-    publishContent: PropTypes.func
+    publishContent: PropTypes.func,
+    createContent: PropTypes.func,
+    nextContentToPublish: PropTypes.shape({
+      programmed_at: PropTypes.number,
+      id: PropTypes.number
+    }),
+    times: PropTypes.shape({
+      elapsedTime: PropTypes.number
+    })
   }
 
 
@@ -81,14 +100,20 @@ const WithAppContentManager = WrappedComponent => {
     profileSessioncontent: getSessioncontentsListByType(state, {
       ...ownProps,
       type: 'profile'
-    })
+    }),
+    times: getScriptTimes(state, ownProps),
+    nextContentToPublish: getNextContentToPublish(state, { ...ownProps, types: ['post', 'comment'] })
   })
   
   const mapDispatchToProps = (dispatch) => ({
     createRandomAppContent: (id) => dispatch(createRandomSessioncontent({
       script: id
     })),
-    publishContent: (content) => dispatch(createSessioncontent(content))
+    createContent: (content) => dispatch(createSessioncontent(content)),
+    publishContent: (id) => dispatch(updateSessioncontentState({
+      id,
+      state: 'published'
+    }))
   })
   
   return connect(
