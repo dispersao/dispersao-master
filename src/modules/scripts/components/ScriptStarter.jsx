@@ -10,7 +10,7 @@ import {
 import states from '../utils/stateConstants'
 
 
-const ScriptPlayer = ({ 
+const ScriptStarter = ({ 
   id, 
   token, 
   state, 
@@ -76,7 +76,7 @@ const ScriptPlayer = ({
   )
 }
 
-ScriptPlayer.propTypes = {
+ScriptStarter.propTypes = {
   id: PropTypes.number,
   connected: PropTypes.string,
   state: PropTypes.string,
@@ -98,4 +98,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   null,
   mapDispatchToProps
-)(ScriptPlayer)
+)(ScriptStarter)
