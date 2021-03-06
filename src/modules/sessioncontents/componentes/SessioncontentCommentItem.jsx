@@ -20,7 +20,8 @@ const SessioncontentCommentItem = ({
   comment,
   state,
   programmed_at,
-  onRepublish
+  onRepublish,
+  onUnpublish
 }) => {
   const classes = useStyles()
 
@@ -56,6 +57,11 @@ const SessioncontentCommentItem = ({
                   onClick={onRepublish}>
                   renotify
                 </Button>
+                <Button 
+                  variant="contained"
+                  onClick={onUnpublish}>
+                  unpublish
+                </Button>
               </Grid>
             )||null}
           </Grid>
@@ -76,7 +82,8 @@ SessioncontentCommentItem.propTypes = {
   comment: PropTypes.object,
   state: PropTypes.string,
   programmed_at: PropTypes.number,
-  onRepublish: PropTypes.func
+  onRepublish: PropTypes.func,
+  onUnpublish: PropTypes.func,
 }
 
 export default SessioncontentPublisher(SessioncontentCommentItem)

@@ -21,7 +21,8 @@ const SessioncontentGridItem = ({
   post,
   state,
   programmed_at,
-  onRepublish
+  onRepublish,
+  onUnpublish
 }) => {
 
   const classes = useStyles()
@@ -40,7 +41,7 @@ const SessioncontentGridItem = ({
   return (
     <GridListTile className={classes[classname]}>
       <Grid container direction="column">
-      <Grid item xs>
+        <Grid item xs>
           <Grid container direction="row">
             <Grid item xs>
               <Typography 
@@ -49,13 +50,18 @@ const SessioncontentGridItem = ({
               >
                 {text}
               </Typography>
-              </Grid>
+            </Grid>
             {(state === 'published' && 
               <Grid item xs>
                 <Button 
                   variant="contained"
                   onClick={onRepublish}>
                   renotify
+                </Button>
+                <Button 
+                  variant="contained"
+                  onClick={onUnpublish}>
+                  unpublish
                 </Button>
               </Grid>
             )||null}
@@ -79,7 +85,8 @@ SessioncontentGridItem.propTypes = {
   state: PropTypes.string,
   programmed_at: PropTypes.number,
   script: PropTypes.number,
-  onRepublish: PropTypes.func
+  onRepublish: PropTypes.func,
+  onUnpublish: PropTypes.func,
 }
 
 
