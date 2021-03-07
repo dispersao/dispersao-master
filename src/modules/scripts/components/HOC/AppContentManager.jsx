@@ -15,6 +15,7 @@ import { getScriptTimes } from '../../../scripts/selectors'
 import { getProfileList } from '../../../profiles/selectors'
 import { getSessioncontentsListByType, getNextContentToPublish } from '../../../sessioncontents/selectors'
 
+const env = ENV || 'prod'
 const WithAppContentManager = WrappedComponent => {
 
   const AppContentManager = (props) => {
@@ -38,10 +39,10 @@ const WithAppContentManager = WrappedComponent => {
     }, [scriptsequences.length])
 
     useEffect(() => {
-      if (nextContentToPublish && elapsedTime >= nextContentToPublish.programmed_at) {
+      if (env === 'prod' && state === states.PLAYING && nextContentToPublish && elapsedTime >= nextContentToPublish.programmed_at) {
         publishContent(nextContentToPublish.id)
       }
-    }, [elapsedTime, nextContentToPublish])
+    }, [state, elapsedTime, nextContentToPublish])
 
     useEffect(() => {
       if (state === states.STARTED) {

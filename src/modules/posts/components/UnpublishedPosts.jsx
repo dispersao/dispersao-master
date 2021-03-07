@@ -14,9 +14,9 @@ import CommentListItem from '../../comments/components/CommentListItem.jsx'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {
   GridList,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography
 } from '@material-ui/core'
 
@@ -28,19 +28,19 @@ const UnpublishedPosts = ({ posts }) => {
     <>
       {posts && (posts.length || '') && 
         <div className={classes.tabsRoot}>
-          <ExpansionPanel>
-            <ExpansionPanelSummary
+          <Accordion>
+            <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
               id="panel1a-header">
               <Typography className={classes.heading}>Unpublished Content</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
+            </AccordionSummary>
+            <AccordionDetails>
               <GridList cellHeight={180}>
                 {posts.map((post, key) => <PostListItem key={key} {...post} CommentComp={CommentListItem} />) }
               </GridList>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+            </AccordionDetails>
+          </Accordion>
         </div>
       }
       

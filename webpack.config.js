@@ -8,11 +8,13 @@ module.exports = (env, argv) => {
 
   var defineHash = {}
 
-  var keys = ['api_url', 'api_user', 'api_password']
+  var keys = ['api_url', 'api_user', 'api_password', 'env']
 
   keys.forEach(key => {
     if (argv[key]) {
       defineHash[key.toUpperCase()] = `'${argv[key]}'`
+    } else if (key === 'env') {
+      defineHash[key.toUpperCase()] = `'prod'`
     }
   })
 

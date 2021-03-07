@@ -44,6 +44,7 @@
     "globals": {
       "API_URL": true,
       "API_USER": true,
-      "API_PASSWORD": true
+      "API_PASSWORD": true,
+      "ENV": true
     }
 }

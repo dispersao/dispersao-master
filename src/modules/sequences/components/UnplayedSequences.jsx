@@ -11,9 +11,9 @@ import useStyles from './styles/'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {
   GridList,
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography
 } from '@material-ui/core'
 
@@ -24,20 +24,20 @@ const UnplayedSequences = ({ sequences }) => {
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
+      <Accordion>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header">
           <Typography className={classes.heading}>Unused Sequences</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary>
+        <AccordionDetails>
           
           <GridList cellHeight={180}>
             {sequences.map((seq, key) => <SequenceGridItem key={key} {...seq} />) }
           </GridList>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
     </div>
   )
 }
