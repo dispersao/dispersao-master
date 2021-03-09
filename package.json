@@ -12,7 +12,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "clsx": "^1.1.1",
     "connected-react-router": "^6.9.1",
@@ -30,9 +30,9 @@
     "webpack-merge": "^4.2.2"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.0",
-    "@babel/core": "^7.13.8",
-    "@babel/preset-env": "^7.13.9",
+    "@babel/cli": "^7.13.10",
+    "@babel/core": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
     "@babel/preset-react": "^7.12.13",
     "@hot-loader/react-dom": "^16.14.0",
     "babel-eslint": "^10.1.0",
