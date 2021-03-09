@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { Publish, Refresh, Delete } from '@material-ui/icons'
+
 import PostListItem from '../../posts/components/PostListItem.jsx'
 import SessioncontentCommentItem from './SessioncontentCommentItem.jsx'
 
@@ -11,63 +13,63 @@ import {
   GridList,
   Typography,
   Grid,
-  Button
+  IconButton
 } from '@material-ui/core'
 
 import { toHHMMSS } from '../../../utils/stringUtils'
 import useStyles from './styles/'
 
-const SessioncontentGridItem = ({ 
+const SessioncontentGridItem = ({
   post,
   state,
   programmed_at,
-  onRepublish
+  onRepublish,
+  onUnpublish
 }) => {
+  const allow_republish = ALLOW_REPUBLISH
 
   const classes = useStyles()
 
   let color, text, classname
 
   if (state === 'pending') {
-    color = "secondary"
+    color = 'secondary'
     text = `programmed to: ${toHHMMSS(programmed_at)}`
     classname = 'item-pending'
   } else {
-    color = "primary"
+    color = 'primary'
     text = `published at: ${toHHMMSS(programmed_at)}`
     classname = 'item'
   }
   return (
     <GridListTile className={classes[classname]}>
       <Grid container direction="column">
-      <Grid item xs>
+        <Grid item xs>
           <Grid container direction="row">
             <Grid item xs>
-              <Typography 
-                variant="body2" 
-                color={color}
-              >
+              <Typography variant="body2" color={color}>
                 {text}
               </Typography>
-              </Grid>
-            {(state === 'published' && 
+            </Grid>
+            {(allow_republish && (
               <Grid item xs>
-                <Button 
-                  variant="contained"
-                  onClick={onRepublish}>
-                  renotify
-                </Button>
+                <IconButton fontSize="small" onClick={onRepublish}>
+                  {(state === 'pending' && <Publish />) || null}
+                  {(state === 'published' && <Refresh />) || null}
+                </IconButton>
+                {(state === 'published' && (
+                  <IconButton fontSize="small" onClick={onUnpublish}>
+                    <Delete />
+                  </IconButton>
+                )) ||
+                  null}
               </Grid>
-            )||null}
+            )) ||
+              null}
           </Grid>
         </Grid>
-        <GridList 
-          cellHeight="auto" 
-          cols={1}>
-          <PostListItem 
-            {...post} 
-            CommentComp={SessioncontentCommentItem}
-          />
+        <GridList cellHeight="auto" cols={1}>
+          <PostListItem {...post} CommentComp={SessioncontentCommentItem} />
         </GridList>
       </Grid>
     </GridListTile>
@@ -79,8 +81,8 @@ SessioncontentGridItem.propTypes = {
   state: PropTypes.string,
   programmed_at: PropTypes.number,
   script: PropTypes.number,
-  onRepublish: PropTypes.func
+  onRepublish: PropTypes.func,
+  onUnpublish: PropTypes.func
 }
-
 
 export default SessioncontentPublisher(SessioncontentGridItem)

@@ -23,7 +23,7 @@ const ScriptInput = ({ value, save, field }) => {
     <ClickAwayListener onClickAway={saveValue}>
       <TextField
         autoFocus
-        id="standard-required"
+        id={`standard-required-${field}`}
         label={field}
         className={classes.textField}
         margin="normal"
