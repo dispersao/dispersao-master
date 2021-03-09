@@ -45,6 +45,7 @@
       "API_URL": true,
       "API_USER": true,
       "API_PASSWORD": true,
-      "ENV": true
+      "AUTO_PUBLISH": true,
+      "ALLOW_REPUBLISH": true
     }
 }
