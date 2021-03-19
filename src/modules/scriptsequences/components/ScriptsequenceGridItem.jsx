@@ -1,39 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import ProgressBar from './ProgressBar.jsx'
 import SequenceGridItem from '../../sequences/components/SequenceGridItem.jsx'
 
-import {
-  finishScript
-} from '../../scripts/actions'
 
 import {
   GridListTile,
-  GridList,
-  Typography
+  GridList
 } from '@material-ui/core'
 
 
 import useStyles from './styles/'
 
-const ScriptsequenceGridItem = ({ 
-  sequence, 
-  elapsedTime, 
-  isLast,
-  script,
-  endScript,
-  progress
+const ScriptsequenceGridItem = ({ sequence, 
+  elapsedTime
 }) => {
+
   const classes = useStyles()
   const { duration } = sequence
   const pgr = Math.round((elapsedTime * 100) / duration)
   const classname = pgr >= 100 ? 'item-played' : 'item'
-
-  if (progress >= 100 && isLast) {
-    endScript(script)
-  }
  
   return (
     <GridListTile 
@@ -64,13 +51,6 @@ ScriptsequenceGridItem.propTypes = {
   progress: PropTypes.number,
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  endScript: (id) => dispatch(finishScript({
-    id
-  }))
-})
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(ScriptsequenceGridItem)
+
+export default ScriptsequenceGridItem
