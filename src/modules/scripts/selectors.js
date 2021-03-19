@@ -94,9 +94,6 @@ export const getScriptTimes = createCachedSelector(
         .slice(0, scriptsequences.indexOf(playingSequence) + 1)
         .map(el => {
           return el.get( 'elapsedTime') || 0
-          // let progress  = el.get( 'elapsedTime') || 0
-          // progress = progress / 100
-          // return progress * el.getIn(['sequence', 'duration'])
         })
         .reduce((a, b) => a + b)
     }

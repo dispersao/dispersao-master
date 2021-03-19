@@ -16,12 +16,10 @@ const WithSessioncontentPublisher = WrappedComponent => {
 
 
     const republish = () => {
-      console.log('should republish', id)
       publishContent(id)
     }
 
     const unpublish = () => {
-      console.log('should unpublish', id)
       unpublishContent(id)
     }
 

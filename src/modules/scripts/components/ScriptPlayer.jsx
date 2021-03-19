@@ -9,8 +9,16 @@ import states from '../utils/stateConstants'
 
 import WithSequenceManager from './HOC/SequencesManager.jsx'
 import WithAppContentManager from './HOC/AppContentManager.jsx'
+import WithScriptManager from './HOC/ScriptManager.jsx'
 
-const ScriptPlayer = ({ id, state, speed, startScript, pauseScript, scriptsequences, connected }) => {
+const ScriptPlayer = ({
+  id,
+  state,
+  speed,
+  startScript,
+  pauseScript,
+  connected
+}) => {
   const classes = useStyles()
 
   const onHandlePlayPause = () => {
@@ -21,26 +29,22 @@ const ScriptPlayer = ({ id, state, speed, startScript, pauseScript, scriptsequen
     }
   }
 
-  const acceptedStates = [
-    states.PLAYING, 
-    states.PAUSED,
-    states.STARTED
-  ]
+  const acceptedStates = [states.PLAYING, states.PAUSED, states.STARTED]
   const enabled = acceptedStates.includes(state) && connected
 
   return (
     <>
-      <Button 
-        variant="contained" 
-        className={classes.button}
-        color='primary'
-        disabled={ !enabled }
-        onClick={onHandlePlayPause}>
-        { state === states.PLAYING ? 'pause' : 'play'}
-      </Button>
-      {/* {(scriptsequences.length || '') && 
-        <Button onClick={onHandleRestart}>restart</Button>
-      } */}
+      {state !== states.FINISHED && (
+        <Button
+          variant="contained"
+          className={classes.button}
+          color="primary"
+          disabled={!enabled}
+          onClick={onHandlePlayPause}
+        >
+          {state === states.PLAYING ? 'pause' : 'play'}
+        </Button>
+      )}
     </>
   )
 }
@@ -56,18 +60,18 @@ ScriptPlayer.propTypes = {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  startScript: (id, speed) => dispatch(playScript({
-    id,
-    speed
-  })),
+  startScript: (id, speed) =>
+    dispatch(
+      playScript({
+        id,
+        speed
+      })
+    ),
   pauseScript: (id) => dispatch(pauseScript({ id }))
 })
 
-export default WithAppContentManager(
-  WithSequenceManager(
-    connect(
-      null,
-      mapDispatchToProps
-    )(ScriptPlayer)
+export default WithScriptManager(
+  WithAppContentManager(
+    WithSequenceManager(connect(null, mapDispatchToProps)(ScriptPlayer))
   )
 )

@@ -51,7 +51,7 @@ const ScriptStarter = ({
           start session
         </Button>
       }
-      {state === states.STARTED && 
+      {token && 
         <Typography 
           className={classes.startedText}>
           {token}
@@ -66,9 +66,6 @@ const ScriptStarter = ({
           reset Session
         </Button>
       }
-      
-      
-      
       {/* {(scriptsequences.length || '') && 
         <Button onClick={onHandleRestart}>restart</Button>
       } */}
