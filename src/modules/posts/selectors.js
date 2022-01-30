@@ -134,7 +134,7 @@ export const formatPost = (post, commentsList, contentcreatorsList, url) => {
 
   let media = post.get('media')
   if (media && url) {
-    media = media.setIn(['url'], `${url}/${media.get('url')}`)
+    media = media.setIn(['url'], `${url}${media.get('url')}`)
   }
 
   const comments = post.get('comments')

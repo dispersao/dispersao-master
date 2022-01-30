@@ -45,7 +45,7 @@ export const getNextRandomSequence = (script, sequences) => {
   return {
     index: scriptSequences.length,
     position,
-    sequence: selectedSequence,
+    sequence: selectedSequence.id,
     script: script.get('id')
   }
 }
