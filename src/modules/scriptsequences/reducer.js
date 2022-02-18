@@ -4,10 +4,14 @@ import {
   FETCH_SCRIPTSEQUENCES_SUCCESS,
   CREATE_SCRIPTSEQUENCE_SUCCESS,
   UPDATE_PROGRESS_SCRIPTSEQUENCE,
-  UPDATE_SCRIPTSEQUENCE_LOCAL_STATE
+  UPDATE_SCRIPTSEQUENCE_LOCAL_STATE,
 } from './actions'
 
-let id, progress
+import {
+  UPDATE_SCRIPT_SUCCESS
+} from '../scripts/actions'
+
+let id, progress, filteredList, script
 
 const reducer = (state = fromJS({
   data: {},
@@ -35,6 +39,14 @@ const reducer = (state = fromJS({
         error: null, 
         data: action.payload.scriptsequence,
       }))
+
+    case UPDATE_SCRIPT_SUCCESS:
+      script = Object.values(action.payload.script)[0]
+      filteredList = state.get('data').filter(el => el.get('script') === script.id && !script.scriptsequences.includes(el.get('id')))
+      filteredList.forEach(deleted => {
+        state = state.deleteIn(['data', deleted.get('id').toString()])
+      })
+      return state
 
     case UPDATE_PROGRESS_SCRIPTSEQUENCE:
       id = action.payload.scriptsequence.id
