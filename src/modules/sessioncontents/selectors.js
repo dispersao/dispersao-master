@@ -6,25 +6,25 @@ import { getPostByPostIdFormatted } from '../posts/selectors'
 
 const getCleanState = (state) => state
 const getState = (state) => state.sessioncontents
-const getIds = (state, props) => props.sessioncontents.map(sescon => sescon.id)
-const getScript = (state, props) =>  props.id
-const getType = (state, props) =>  props.type
-const getTypes = (state, props) =>  props.types
+const getIds = (state, props) =>
+  props.sessioncontents.map((sescon) => sescon.id)
+const getScript = (state, props) => props.id
+const getType = (state, props) => props.type
+const getTypes = (state, props) => props.types
 const getIdsAsJson = (state, props) => JSON.stringify(props.sessioncontents)
 
-export const getSessioncontents = createSelector(
-  [getState], (state) => {
-    if (!state) {
-      return
-    }
-    return state.get('data')
+export const getSessioncontents = createSelector([getState], (state) => {
+  if (!state) {
+    return
   }
-)
+  return state.get('data')
+})
 
 export const getSessioncontentsList = createSelector(
-  [getSessioncontents], (sessioncontents) => {
+  [getSessioncontents],
+  (sessioncontents) => {
     if (!sessioncontents) {
-      return 
+      return
     }
     return sessioncontents.valueSeq()
   }
@@ -33,45 +33,59 @@ export const getSessioncontentsList = createSelector(
 export const getSessioncontentsListByType = createCachedSelector(
   [getSessioncontents, getType, getScript],
   (sessioncontents, type, script) => {
-    console.log()
-    if (!sessioncontents || !type || !script ) {
+    if (!sessioncontents || !type || !script) {
       return
     }
     return sessioncontents
-      .filter(sescon => sescon.get('script') === script)
-      .filter(sescon => sescon.get(type))
+      .filter((sescon) => sescon.get('script') === script)
+      .filter((sescon) => sescon.get(type))
+      .valueSeq()
+  }
+)(getScript)
+
+export const getSessioncontentByScriptId = createCachedSelector(
+  [getSessioncontents, getScript],
+  (sessioncontents, script) => {
+    if (!sessioncontents || !script) {
+      return
+    }
+    return sessioncontents
+      .filter((sescon) => sescon.get('script') === script)
       .valueSeq()
   }
 )(getScript)
 
 export const getSessioncontentsListAsPosts = createCachedSelector(
-  [getIds,  getSessioncontents, getCleanState], 
+  [getIds, getSessioncontents, getCleanState],
   (ids, sessioncontents, state) => {
     if (!ids || !sessioncontents || !sessioncontents.size) {
       return
     }
-    const list = ids
-      .map(id => sessioncontents.get(id.toString()))
+    const list = ids.map((id) => sessioncontents.get(id.toString()))
 
     const publishedComents = list
-      .map(sescon => sescon.get('comment'))
+      .map((sescon) => sescon.get('comment'))
       .filter(Boolean)
 
     const ret = list
-      .filter(sescon => sescon.get('post'))
-      .map(sescon => {
+      .filter((sescon) => sescon.get('post'))
+      .map((sescon) => {
         const post = sescon.get('post')
         return sescon.mergeDeep({
           post: getPostByPostIdFormatted(state, { post })
         })
       })
-      .map(sescon => {
-        const comments = sescon.get('post').get('comments')
-          .filter(comment => {
+      .map((sescon) => {
+        const comments = sescon
+          .get('post')
+          .get('comments')
+          .filter((comment) => {
             return publishedComents.includes(comment.get('id'))
           })
-          .map(comment => {
-            const sesconCom = list.find(ssco => ssco.get('comment') === comment.get('id'))
+          .map((comment) => {
+            const sesconCom = list.find(
+              (ssco) => ssco.get('comment') === comment.get('id')
+            )
             return sesconCom.mergeDeep({
               comment
             })
@@ -90,11 +104,10 @@ export const getNextContentToPublish = createCachedSelector(
       return
     }
     return sessioncontents
-      .filter(sescon => sescon.get('script') === script)
-      .filter(sescon => types.some(type => sescon.get(type)))
-      .filter(sescon => sescon.get('state') === 'pending')
+      .filter((sescon) => sescon.get('script') === script)
+      .filter((sescon) => types.some((type) => sescon.get(type)))
+      .filter((sescon) => sescon.get('state') === 'pending')
       .sort((a, b) => a.get('programmed_at') - b.get('programmed_at'))
       .first()
   }
 )(getScript)
-

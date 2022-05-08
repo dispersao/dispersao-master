@@ -1,9 +1,4 @@
-import {
-  put,
-  takeEvery,
-  takeLeading,
-  select
-} from 'redux-saga/effects'
+import { put, takeEvery, takeLeading, select } from 'redux-saga/effects'
 
 import {
   CREATE_RANDOM_SESSIONCONTENT,
@@ -25,21 +20,13 @@ import {
   updateSessionContentState as updateSessionContentStateAPI
 } from '../api/sessioncontent'
 
-import {
-  getScriptById
-} from '../scripts/selectors'
+import { getScriptById } from '../scripts/selectors'
 
-import {
-  getPostsListFormatted
-} from '../posts/selectors'
+import { getPostsListFormatted } from '../posts/selectors'
 
-import {
-  getCommentsListFormatted
-} from '../comments/selectors'
+import { getCommentsListFormatted } from '../comments/selectors'
 
-import {
-  getNextRandomContent
-} from '../../utils/randomgenerator/'
+import { getNextRandomContent } from '../../utils/randomgenerator/'
 
 export function* watchCreateRandomSessioncontent() {
   yield takeEvery(CREATE_RANDOM_SESSIONCONTENT, createRandomSessioncontent)
@@ -56,13 +43,19 @@ export function* watchUpdateSessioncontent() {
 
 function* createRandomSessioncontent(action) {
   try {
-    const script = yield select(getScriptById, { id: action.payload.script.script })
+    const script = yield select(getScriptById, {
+      id: action.payload.script.script
+    })
     const formatedPosts = yield select(getPostsListFormatted)
     const formatedComents = yield select(getCommentsListFormatted)
-    const nextContent = yield getNextRandomContent(script, formatedPosts, formatedComents)
+    const nextContent = yield getNextRandomContent(
+      script,
+      formatedPosts,
+      formatedComents
+    )
     if (nextContent.length) {
       console.log('next App Content', nextContent)
-      yield put (createSessioncontentAction(nextContent))
+      yield put(createSessioncontentAction(nextContent))
     }
   } catch (e) {
     console.log(e)
@@ -71,7 +64,9 @@ function* createRandomSessioncontent(action) {
 
 function* createSessioncontent(action) {
   try {
-    const sessioncontents = yield createSessioncontentAPI(action.payload.sessioncontents)
+    const sessioncontents = yield createSessioncontentAPI(
+      action.payload.sessioncontents
+    )
     const sessioncontentsData = sessioncontents.entities.sessioncontents
     yield put(createSessioncontentSuccess(sessioncontentsData))
   } catch (e) {
@@ -82,7 +77,9 @@ function* createSessioncontent(action) {
 
 function* updateSessioncontent(action) {
   try {
-    const sessioncontents = yield updateSessioncontentAPI(action.payload.sessioncontents)
+    const sessioncontents = yield updateSessioncontentAPI(
+      action.payload.sessioncontents
+    )
     const sessioncontentsData = sessioncontents.entities.sessioncontents
     yield put(updateSessioncontentSuccess(sessioncontentsData))
   } catch (e) {
@@ -92,10 +89,11 @@ function* updateSessioncontent(action) {
 }
 function* updateSessionContentState(action) {
   try {
-    const sessioncontents = yield updateSessionContentStateAPI(action.payload.sessioncontents)
+    const sessioncontents = yield updateSessionContentStateAPI(
+      action.payload.sessioncontents
+    )
     const sessioncontentsData = sessioncontents.entities.sessioncontents
     yield put(updateSessioncontentStateSuccess(sessioncontentsData))
-
   } catch (e) {
     console.log(e)
     yield put(updateSessioncontentStateError(e))
