@@ -40,7 +40,6 @@ import {
 import { sendMessage, notify } from '../../utils/managers/osc'
 
 import { getScriptByScriptId } from './selectors'
-import { getSessioncontentByScriptId } from '../sessioncontents/selectors'
 
 export function* watchFetchScripts() {
   yield takeLeading(FETCH_SCRIPTS, fetchScripts)
