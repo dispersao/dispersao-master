@@ -1,10 +1,4 @@
-import { 
-  call, 
-  put, 
-  takeLeading,
-  takeEvery,
-  select
-} from 'redux-saga/effects'
+import { call, put, takeLeading, takeEvery, select } from 'redux-saga/effects'
 
 import { push } from 'connected-react-router'
 
@@ -29,29 +23,23 @@ import {
   FINISH_SCRIPT
 } from './actions'
 
-import { 
-  fetchScriptsequencesSuccess,
-} from '../scriptsequences/actions'
+import { fetchScriptsequencesSuccess } from '../scriptsequences/actions'
 
 import {
   fetchSessioncontentsSuccess,
   createSessioncontentSuccess
 } from '../sessioncontents/actions'
 
-import { 
+import {
   createScript as createScriptAPI,
   fetchScripts as fetchScriptsAPI,
   updateScript as updateScriptAPI,
   updateStateScript as updateStateScriptAPI
 } from '../api/script'
 
-import { 
-  sendMessage,
-  notify
-} from '../../utils/managers/osc'
+import { sendMessage, notify } from '../../utils/managers/osc'
 
 import { getScriptByScriptId } from './selectors'
-
 
 export function* watchFetchScripts() {
   yield takeLeading(FETCH_SCRIPTS, fetchScripts)
@@ -74,7 +62,7 @@ export function* whatchScriptStart() {
   yield takeEvery(FINISH_SCRIPT, finishScript)
 }
 
-function* fetchScripts () {
+function* fetchScripts() {
   try {
     const entities = yield call(fetchScriptsAPI)
 
@@ -124,11 +112,10 @@ function* updateScriptState(action) {
 function* resetSession(action) {
   try {
     yield updateScriptState(action)
+
     yield call(notify, {
       address: '/resetsession',
-      args: [
-        action.payload.script.id
-      ]
+      args: [action.payload.script.id]
     })
   } catch (e) {
     console.log(e)
@@ -138,22 +125,16 @@ function* resetSession(action) {
 function* startSession(action) {
   try {
     yield updateScriptState(action)
-    const script = yield select(
-      getScriptByScriptId, {
-        script: action.payload.script.id
-      }
-    )
+    const script = yield select(getScriptByScriptId, {
+      script: action.payload.script.id
+    })
     yield call(notify, {
       address: '/session',
-      args: [
-        action.payload.script.id,
-        script.get('token')
-      ]
+      args: [action.payload.script.id, script.get('token')]
     })
   } catch (e) {
     console.log(e)
   }
-  
 }
 
 function* playScript(action) {
@@ -161,10 +142,7 @@ function* playScript(action) {
     yield updateScriptState(action)
     yield call(notify, {
       address: '/play',
-      args: [
-        action.payload.script.id,
-        action.payload.script.speed
-      ]
+      args: [action.payload.script.id, action.payload.script.speed]
     })
   } catch (e) {
     console.log(e)
@@ -176,9 +154,7 @@ function* pauseScript(action) {
     yield updateScripts(action)
     yield call(notify, {
       address: '/pause',
-      args: [
-        action.payload.script.id
-      ]
+      args: [action.payload.script.id]
     })
   } catch (e) {
     console.log(e)
@@ -189,31 +165,34 @@ function* finishScript(action) {
   try {
     yield updateScripts(action)
     yield call(notify, {
-      address: "/finish",
-      args: [
-        action.payload.script.id
-      ]
+      address: '/finish',
+      args: [action.payload.script.id]
     })
   } catch (e) {
     console.log(e)
   }
 }
 
-
 function* connectScript(action) {
   try {
-    yield call(sendMessage, {
-      address: '/connect', 
-      args: [action.payload.script.id]
-    }, {
-      address: '/connected'
-    })
-    yield put(connectScriptSuccess(action.payload.script ))
+    yield call(
+      sendMessage,
+      {
+        address: '/connect',
+        args: [action.payload.script.id]
+      },
+      {
+        address: '/connected'
+      }
+    )
+    yield put(connectScriptSuccess(action.payload.script))
   } catch (e) {
     console.log(e)
-    yield put(connectScriptError({
-      ...action.payload.script,
-      error: e
-    }))
+    yield put(
+      connectScriptError({
+        ...action.payload.script,
+        error: e
+      })
+    )
   }
 }
