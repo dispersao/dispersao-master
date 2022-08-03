@@ -23,13 +23,20 @@ const useStyles = makeStyles(theme => ({
     color: 'rgba(255, 255, 255, 0.34)',
   },
   tilebar: {
+    "&:hover": {
+      top: 0,
+      height: 'auto'
+    },
     backgroundColor: 'rgba(0,0,0,0.25)',
-    title: {
+    cursor:'pointer',
+    '& .MuiGridListTileBar-title': {
       color: red,
       'font-size': '0.9rem'
     },
-    subtitle: {
-      'font-size':'0.65rem'
+    '& .MuiGridListTileBar-subtitle': {
+      'font-size':'0.65rem',
+      'white-space':'normal',
+      'text-overflow': 'clip',
     }
   }
 }))
