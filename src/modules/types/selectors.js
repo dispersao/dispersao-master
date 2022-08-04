@@ -14,6 +14,15 @@ export const getTypesList = createSelector(
   }
 )
 
+export const getTypesListAsArray = createSelector(
+  [getTypesList], (list) => {
+    if(!list || !list.size) {
+      return
+    }
+    return list.valueSeq()
+  }
+)
+
 const fetchTypeById = (list, id) => {
   if (!list || !list.size || !id) {
     return

@@ -20,7 +20,6 @@ export const getFiltersByScriptId = createCachedSelector(
 export const getFilterByProps = createCachedSelector(
   [getFiltersByScriptId, getData, getType, getScript],
   (filters, data, type) => {
-    console.log(filters, data, type)
     if (!filters || !filters.size || !data) {
       return
     } else {

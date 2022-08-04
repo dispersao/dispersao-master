@@ -10,13 +10,15 @@ import { toJS } from '../../../utils/immutableToJs.jsx'
 import { getCategoriesByCategoryType } from '../../categories/selectors'
 import { getFilterByProps } from '../selectors'
 
-const ArcFilter = ({ arcList, selectedArcs = { value : [] }, onArcFilterChange }) => {
+const ArcsFilter = ({ arcList, selectedArcs = { value : [] }, onSelectChange }) => {
   return (
     <MultiFilter
       name="arcs"
+      field="text"
       list={arcList}
       selected={selectedArcs.value}
-      onChange={onArcFilterChange}
+      selectedRadio={selectedArcs.option || 'and'}
+      onChange={onSelectChange}
     />
   )
 }
@@ -24,27 +26,28 @@ const ArcFilter = ({ arcList, selectedArcs = { value : [] }, onArcFilterChange }
 const mapStateToProps = (state, ownProps) => ({
   selectedArcs: getFilterByProps(state, {
     ...ownProps,
-    data: 'category',
+    data: 'categories',
     type: 'arc'
   }),
   arcList: getCategoriesByCategoryType(state, { type: 'arc' })
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  onArcFilterChange: (evt) => dispatch(updateFilter({
+  onSelectChange: (value, option) => dispatch(updateFilter({
     script: ownProps.script,
-    data: 'category',
+    data: 'categories',
     type: 'arc',
-    value: evt.target.value
+    value,
+    option
   }))
 })
 
-ArcFilter.propTypes = {
+ArcsFilter.propTypes = {
   arcList: PropTypes.array.isRequired,
   selectedArcs: PropTypes.shape({
     value: PropTypes.array
   }),
-  onArcFilterChange: PropTypes.func.isRequired
+  onSelectChange: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(toJS(ArcFilter))
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(ArcsFilter))

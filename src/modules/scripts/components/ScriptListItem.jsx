@@ -8,9 +8,13 @@ import IconButton from '@material-ui/core/IconButton'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 const ScriptListItem = ({ id, name, author }) => {
-  console.log(author)
+
+  const onClickitem = () => {
+    console.log('clicked on script')
+  }
+
   return (
-    <ListItem>
+    <ListItem onClick={onClickitem}>
       <ListItemText
         primary={`${name} - ${id}`}
         secondary={author.username}

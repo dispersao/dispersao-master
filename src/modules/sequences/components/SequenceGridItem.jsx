@@ -17,12 +17,17 @@ import { getSequenceById } from '../selectors'
 
 const padStart = require('lodash/padStart')
 
-const SequenceGridItem = ({ sequence }) => {
-  const [hovered, setHovered] = useState(false)
+const SequenceGridItem = ({ sequence, enabled = true }) => {
+
   const classes = useStyles()
+
+  const [hovered, setHovered] = useState(false)
+
   const { sceneNumber, location, duration, type, categories } = sequence
   const positionCategories = categories.filter(({ type }) => type === 'pos')
   const arcCategories = categories.filter(({ type }) => type === 'arc')
+
+  const enabledClass = enabled ? 'enabled' : 'disabled'
 
   let padCount = isNaN(Number(sceneNumber.slice(-1))) ? 4 : 3
   let fileName = padStart(sceneNumber, padCount, '0')
@@ -48,7 +53,7 @@ const SequenceGridItem = ({ sequence }) => {
 
   return (
     <GridListTile
-      className={classes.item}
+      className={[classes.item, classes[enabledClass]].join(' ')}
     >
       <img src={`/photos/${fileName}_0_1.jpg`} alt={sceneNumber} />
       <GridListTileBar
@@ -68,7 +73,8 @@ const SequenceGridItem = ({ sequence }) => {
 }
 
 SequenceGridItem.propTypes = {
-  sequence: PropTypes.object.isRequired
+  sequence: PropTypes.object.isRequired,
+  enabled: PropTypes.bool
 }
 
 const mapStateToProps = (state, ownProps) => {

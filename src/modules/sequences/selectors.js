@@ -1,5 +1,5 @@
 import createCachedSelector from 're-reselect'
-import { Map, fromJS, List } from 'immutable'
+import { /*Map,*/ fromJS, List } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { sortEntity } from '../../utils/listUtils'
@@ -10,8 +10,10 @@ import {
   getLocationsList
 } from '../locations/selectors'
 import { getCategoriesList } from '../categories/selectors'
-import { getPartById, getPartsList } from '../parts/selectors'
+import { /*getPartById,*/ getPartsList } from '../parts/selectors'
 import { getCharactersList } from '../characters/selectors'
+
+import { getFiltersByScriptId } from '../filters/selectors'
 
 const getState = (state) => state.sequences
 const getId = (state, props) => props.id
@@ -80,6 +82,53 @@ export const getSequenceListNotInScript = createSelector(
   }
 )
 
+export const getSequenceListNotInScriptFiltered = createSelector(
+  [getSequenceListNotInScript, getFiltersByScriptId, getPartsList],
+  (sequencesNotInScript, filters, parts) => {
+    if (!sequencesNotInScript || !sequencesNotInScript.size) {
+      return
+    }
+    const filtered = sequencesNotInScript
+      .filter((seq) => filterSequence(seq, filters, parts))
+      .map((seq) => seq.get('id'))
+    return filtered
+  }
+)
+
+const filterSequence = (seq, filters, parts) => {
+  if (!filters || !filters.size) {
+    return true
+  } else {
+    return filters.every((filter) => {
+      const dataType = filter.get('data')
+      const filterValue = filter.get('value')
+      const option = filter.get('option')
+      let list
+
+      if (dataType === 'characters') {
+        list = seq
+          .get('parts')
+          .map((partId) => parts.get(partId.toString()))
+          .map((part) => part.get('characters'))
+          .flatten()
+          .toSet()
+      } else {
+        list = seq.get(dataType)
+        if (!List.isList(list)) {
+          list = [list]
+        }
+      }
+      if (option === 'and') {
+        return filterValue.every((el) => list.includes(el))
+      } else if (option === 'or') {
+        return filterValue.some((el) => list.includes(el))
+      } else if (option === 'exclude') {
+        return filterValue.every((el) => !list.includes(el))
+      }
+    })
+  }
+}
+
 const fetchSequenceFromId = (
   list,
   id,
@@ -129,7 +178,7 @@ export const getSequenceById = createCachedSelector(
   fetchSequenceFromId
 )(getId)
 
-const formatSequenceData = (seq, type, location) => {
+/*const formatSequenceData = (seq, type, location) => {
   return Map({
     id: seq.get('id'),
     sceneNumber: seq.get('sceneNumber'),
@@ -137,7 +186,7 @@ const formatSequenceData = (seq, type, location) => {
     type: type.get('name'),
     location: location.get('name')
   })
-}
+}*/
 
 const formatSequenceForAlgorithm = (
   seq,
@@ -175,6 +224,5 @@ const formatSequenceForAlgorithm = (
   mergedSeq = mergedSeq.setIn(['categories'], List(categories))
   mergedSeq = mergedSeq.setIn(['parts'], List(parts))
 
-  console.log(mergedSeq.toJS())
   return mergedSeq
 }

@@ -19,6 +19,12 @@ const useStyles = makeStyles(theme => ({
     height: 120,
     padding: 2
   },
+  enabled: {
+    opacity:1
+  },
+  disabled: {
+    opacity:0.3
+  },
   icon: {
     color: 'rgba(255, 255, 255, 0.34)',
   },

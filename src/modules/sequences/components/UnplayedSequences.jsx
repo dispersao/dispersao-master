@@ -3,7 +3,10 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import { toJS } from '../../../utils/immutableToJs.jsx'
-import { getSequenceListNotInScript } from '../selectors'
+import {
+  getSequenceListNotInScript,
+  getSequenceListNotInScriptFiltered
+} from '../selectors'
 
 import SequenceGridItem from './SequenceGridItem.jsx'
 import SequencesFilter from '../../filters/components/SequencesFilter.jsx'
@@ -21,8 +24,9 @@ import {
   Typography
 } from '@material-ui/core'
 
-const UnplayedSequences = ({ sequences, script }) => {
+const UnplayedSequences = ({ sequences, script, filteredSequences }) => {
   const classes = useStyles()
+  filteredSequences = filteredSequences || sequences
 
   return (
     <div className={classes.root}>
@@ -39,7 +43,11 @@ const UnplayedSequences = ({ sequences, script }) => {
             <SequencesFilter script={script} />
             <GridList cellHeight={180}>
               {sequences.map((seq, key) => (
-                <SequenceGridItem key={key} {...seq} />
+                <SequenceGridItem
+                  key={key}
+                  {...seq}
+                  enabled={filteredSequences.includes(seq.id)}
+                />
               ))}
             </GridList>
           </Grid>
@@ -51,13 +59,16 @@ const UnplayedSequences = ({ sequences, script }) => {
 
 UnplayedSequences.propTypes = {
   sequences: PropTypes.array,
+  filteredSequences: PropTypes.array,
   script: PropTypes.number.isRequired
 }
 
 const mapStateToProps = (state, ownProps) => {
   let sequences = getSequenceListNotInScript(state, ownProps)
+  let filteredSequences = getSequenceListNotInScriptFiltered(state, ownProps)
   return {
-    sequences
+    sequences,
+    filteredSequences
   }
 }
 

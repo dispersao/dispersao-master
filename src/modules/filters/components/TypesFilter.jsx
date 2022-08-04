@@ -7,46 +7,46 @@ import { updateFilter } from '../actions'
 import MultiFilter from './MultiFilter.jsx'
 import { toJS } from '../../../utils/immutableToJs.jsx'
 
-import { getLocationListAsArray } from '../../locations/selectors'
+import { getTypesListAsArray } from '../../types/selectors'
 import { getFilterByProps } from '../selectors'
 
-const LocationFilter = ({ locationsList, selectedLocations = { value : [] }, onSelectChange }) => {
+const TypesFilter = ({ typesList, selectedTypes = { value : [] }, onSelectChange }) => {
   return (
     <MultiFilter
-      name="locations"
+      name="types"
       field="name"
-      list={locationsList}
-      selected={selectedLocations.value}
+      list={typesList}
+      selected={selectedTypes.value}
       onChange={onSelectChange}
-      selectedRadio={selectedLocations.opton || 'or'}
+      selectedRadio={selectedTypes.opton || 'or'}
       radioList={['or', 'exclude']}
     />
   )
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  selectedLocations: getFilterByProps(state, {
+  selectedTypes: getFilterByProps(state, {
     ...ownProps,
-    data: 'location'
+    data: 'type'
   }),
-  locationsList: getLocationListAsArray(state)
+  typesList: getTypesListAsArray(state)
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onSelectChange: (value, option) => dispatch(updateFilter({
     script: ownProps.script,
-    data: 'location',
+    data: 'type'
     value,
     option
   }))
 })
 
-LocationFilter.propTypes = {
-  locationsList: PropTypes.array.isRequired,
-  selectedLocations: PropTypes.shape({
+TypesFilter.propTypes = {
+  typesList: PropTypes.array.isRequired,
+  selectedTypes: PropTypes.shape({
     value: PropTypes.array
   }),
   onSelectChange: PropTypes.func.isRequired
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(toJS(LocationFilter))
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(TypesFilter))

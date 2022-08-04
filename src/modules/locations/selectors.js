@@ -14,6 +14,15 @@ export const getLocationsList = createSelector(
   }
 )
 
+export const getLocationListAsArray = createSelector(
+  [getLocationsList], (list) => {
+    if(!list || !list.size) {
+      return
+    }
+    return list.valueSeq()
+  }
+)
+
 const fetchLocationById = (list, id) => {
   if (!list || !list.size || !id) {
     return
