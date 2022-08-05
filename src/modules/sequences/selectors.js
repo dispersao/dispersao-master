@@ -105,6 +105,10 @@ const filterSequence = (seq, filters, parts) => {
       const option = filter.get('option')
       let list
 
+      if(!filterValue.size) {
+        return true
+      }
+      
       if (dataType === 'characters') {
         list = seq
           .get('parts')

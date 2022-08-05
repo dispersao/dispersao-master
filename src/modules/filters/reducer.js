@@ -1,11 +1,13 @@
 import { fromJS } from 'immutable'
 
-import { UPDATE_FILTER } from './actions'
+import { UPDATE_FILTER, CLEAR_FILTERS } from './actions'
 
 const reducer = (state = fromJS([]), action) => {
   switch (action.type) {
     case UPDATE_FILTER:
       return updateFilter(state, action.payload)
+    case CLEAR_FILTERS:
+      return fromJS([])
     default:
       return state
   }

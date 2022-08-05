@@ -1,4 +1,4 @@
-import React from 'react'
+/*import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -6,9 +6,10 @@ import { updateFilter } from '../actions'
 
 import MultiFilter from './MultiFilter.jsx'
 import { toJS } from '../../../utils/immutableToJs.jsx'
-
+*/
+import ConnectMultifilter from './HOC/ConnectedMultifilter.jsx'
 import { getCategoriesByCategoryType } from '../../categories/selectors'
-import { getFilterByProps } from '../selectors'
+/*import { getFilterByProps } from '../selectors'
 
 const PositionsFilter = ({ positionsList, selectedPositions = { value : [] }, onSelectChange }) => {
   return (
@@ -51,3 +52,12 @@ PositionsFilter.propTypes = {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(toJS(PositionsFilter))
+*/
+export default ConnectMultifilter({
+  name: 'positions',
+  field: 'text',
+  options: ['and', 'or', 'exclude'],
+  data: 'categories',
+  type: 'pos',
+  listFunc: getCategoriesByCategoryType
+})
