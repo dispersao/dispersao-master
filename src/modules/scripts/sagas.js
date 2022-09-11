@@ -1,4 +1,13 @@
-import { call, put, takeLeading, takeEvery, select } from 'redux-saga/effects'
+import {
+  call,
+  put,
+  takeLeading,
+  takeEvery,
+  select,
+  race,
+  take,
+  delay
+} from 'redux-saga/effects'
 
 import { push } from 'connected-react-router'
 
@@ -20,7 +29,12 @@ import {
   connectScriptSuccess,
   connectScriptError,
   PAUSE_SCRIPT,
-  FINISH_SCRIPT
+  FINISH_SCRIPT,
+  POLL_APPDATA,
+  STOP_POLL_APPDATA,
+  fetchAppDataSuccess,
+  fetchAppusersSuccess,
+  fetchAppusersError
 } from './actions'
 
 import { fetchScriptsequencesSuccess } from '../scriptsequences/actions'
@@ -34,12 +48,15 @@ import {
   createScript as createScriptAPI,
   fetchScripts as fetchScriptsAPI,
   updateScript as updateScriptAPI,
-  updateStateScript as updateStateScriptAPI
+  updateStateScript as updateStateScriptAPI,
+  fetchScriptAppusers as fetchScriptAppusersAPI
 } from '../api/script'
 
 import { sendMessage, notify } from '../../utils/managers/osc'
 
-import { getScriptByScriptId } from './selectors'
+import { getCurrentScript, getScriptByScriptId } from './selectors'
+
+import { getSessioncontentByScriptId } from '../sessioncontents/selectors'
 
 export function* watchFetchScripts() {
   yield takeLeading(FETCH_SCRIPTS, fetchScripts)
@@ -51,6 +68,13 @@ export function* watchCreateScript() {
 
 export function* watchUpdateScript() {
   yield takeEvery(UPDATE_SCRIPT, updateScripts)
+}
+
+export function* watchPollScriptAppuser() {
+  while (true) {
+    yield take(POLL_APPDATA)
+    yield race([call(fetchAppData), take(STOP_POLL_APPDATA)])
+  }
 }
 
 export function* whatchScriptStart() {
@@ -194,5 +218,18 @@ function* connectScript(action) {
         error: e
       })
     )
+  }
+}
+
+function* fetchAppData() {
+  try {
+    const script = yield select(getCurrentScript)
+    const appusers = yield call(fetchScriptAppusersAPI, script)
+    yield put(fetchAppusersSuccess(script, appusers))
+    // yield put(fetchAppDataSuccess(script))
+    yield delay(60 * 1000)
+  } catch (e) {
+    console.log(e)
+    yield put(fetchAppusersError(e))
   }
 }

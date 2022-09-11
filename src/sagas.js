@@ -4,8 +4,10 @@ import {
   watchFetchScripts, 
   watchCreateScript, 
   watchUpdateScript,
-  whatchScriptStart
+  whatchScriptStart,
+  watchPollScriptAppuser
 } from './modules/scripts/sagas'
+
 import { watchFetchSequences } from './modules/sequences/sagas'
 
 import { 
@@ -37,6 +39,7 @@ export default function* rootSaga() {
     watchFetchSequences(),
     watchUpdateScript(),
     whatchScriptStartFromScriptsequence(),
+    watchPollScriptAppuser(),
     watchSendScriptsequence(),
     whatchScriptStart(),
     watchCreateRandomScriptSequence(),

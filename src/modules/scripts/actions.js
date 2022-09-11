@@ -12,6 +12,8 @@ export const UPDATE_SCRIPT_ERROR = 'UPDATE_SCRIPT_ERROR'
 
 export const UPDATE_SCRIPT_LOCAL_STATE = 'UPDATE_SCRIPT_LOCAL_STATE'
 
+export const UPDATE_CURRENT_SCRIPT = 'UPDATE_CURRENT_SCRIPT'
+
 export const START_SESSION = 'START_SESSION'
 export const RESET_SESSION = 'RESET_SESSION'
 export const END_SESSION = 'END_SESSION'
@@ -22,6 +24,13 @@ export const FINISH_SCRIPT = 'FINISH_SCRIPT'
 export const CONNECT_SCRIPT = 'CONNECT_SCRIPT'
 export const CONNECT_SCRIPT_SUCCESS = 'CONNECT_SCRIPT_SUCCESS'
 export const CONNECT_SCRIPT_ERROR = 'CONNECT_SCRIPT_ERROR'
+
+export const POLL_APPDATA = 'POLL_APPDATA'
+export const STOP_POLL_APPDATA = 'STOP_POLL_APPDATA'
+
+export const FETCH_APPDATA_SUCCESS = 'FETCH_APPDATA_SUCCES'
+export const FETCH_APPUSERS_SUCCESS = 'FETCH_APPUSERS_SUCCESS'
+export const FETCH_APPUSERS_ERROR = 'FETCH_APPUSERS_ERROR'
 
 import states from './utils/stateConstants'
 
@@ -177,6 +186,47 @@ export const connectScriptSuccess = (script) => ({
 
 export const connectScriptError = (script) => ({
   type: CONNECT_SCRIPT_ERROR,
+  payload: {
+    script
+  }
+})
+
+export const pollAppdata = (script) => ({
+  type: POLL_APPDATA,
+  payload: {
+    script
+  }
+})
+
+export const stopPollAppdata = () => ({
+  type: STOP_POLL_APPDATA
+})
+
+
+export const fetchAppDataSuccess = (script) => ({
+  type: FETCH_APPDATA_SUCCESS,
+  payload: {
+    script
+  }
+})
+
+export const fetchAppusersSuccess = (script, appusers) => ({
+  type: FETCH_APPUSERS_SUCCESS,
+  payload: {
+    script,
+    appusers
+  }
+})
+
+export const fetchAppusersError = (error) => ({
+  type: FETCH_APPUSERS_ERROR,
+  payload: {
+    error
+  }
+})
+
+export const updateCurrentScript = (script) => ({
+  type: UPDATE_CURRENT_SCRIPT,
   payload: {
     script
   }

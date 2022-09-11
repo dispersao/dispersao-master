@@ -28,3 +28,8 @@ export const updateStateScript = async (options) => {
   const script = await axios.put(`/scripts/${id}/state`, params)
   return normalizeScript(script.data)
 }
+
+export const fetchScriptAppusers = async(script) => {
+  const appusers = await axios.get(`appusers/count?script=${script}`)
+  return appusers.data
+}

@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 import { toJS } from '../../../utils/immutableToJs.jsx'
-import { getScriptById } from '../selectors.js'
+import { getScriptById, getCurrentScript } from '../selectors.js'
 
 import { Redirect } from 'react-router-dom'
 import ScriptHeader from './ScriptHeader.jsx'
@@ -11,11 +11,19 @@ import ScriptActions from './ScriptActions.jsx'
 import ScriptTabs from './ScriptTabs.jsx'
 
 import Divider from '@material-ui/core/Divider'
+import { updateCurrentScript } from '../actions.js'
 
-const Script = ({ script }) => {
+const Script = ({ script, updateCurrentScript }) => {
   if (!script) {
     return <Redirect to='/scripts' />
   }
+
+  useEffect(() => {
+    if(script.id) {
+      updateCurrentScript(script.id, true)
+      
+    }
+  }, [script.id])
 
   return (
     <div>
@@ -29,7 +37,7 @@ const Script = ({ script }) => {
 
 Script.propTypes = {
   script: PropTypes.object
-}
+  }
 
 const mapStateToProps = (state, { match }) => {
   const { id } = match.params
@@ -38,11 +46,14 @@ const mapStateToProps = (state, { match }) => {
     script = getScriptById(state, { id })
   }
   return {
-    script
-  }
+    script  }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  updateCurrentScript: (script) => dispatch(updateCurrentScript(script))
+})
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(toJS(Script))

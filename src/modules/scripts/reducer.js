@@ -13,134 +13,193 @@ import {
   CONNECT_SCRIPT,
   CONNECT_SCRIPT_SUCCESS,
   CONNECT_SCRIPT_ERROR,
-  UPDATE_SCRIPT_LOCAL_STATE
+  UPDATE_SCRIPT_LOCAL_STATE,
+  FETCH_APPUSERS_SUCCESS,
+  FETCH_APPDATA_SUCCESS,
+  UPDATE_CURRENT_SCRIPT
 } from './actions'
 
-import {
-  CREATE_SCRIPTSEQUENCE_SUCCESS
-} from '../scriptsequences/actions'
+import { CREATE_SCRIPTSEQUENCE_SUCCESS } from '../scriptsequences/actions'
 
-import {
-  CREATE_SESSIONCONTENT_SUCCESS
-} from '../sessioncontents/actions'
+import { CREATE_SESSIONCONTENT_SUCCESS } from '../sessioncontents/actions'
 
 let script
 
-const reducer = (state = fromJS({
-  data: {},
-  synching: false,
-  error: null
-}), action) => {
+const reducer = (
+  state = fromJS({
+    data: {},
+    synching: false,
+    error: null,
+    current: null
+  }),
+  action
+) => {
   switch (action.type) {
-    case FETCH_SCRIPTS: 
-    case  CREATE_SCRIPT:
-      return state.mergeDeep(fromJS({ 
-        synching: true 
-      }))
+    case FETCH_SCRIPTS:
+    case CREATE_SCRIPT:
+      return state.mergeDeep(
+        fromJS({
+          synching: true
+        })
+      )
 
     case FETCH_SCRIPTS_SUCCESS:
-      return state.mergeDeep(fromJS({ 
-        error: null, 
-        data: action.payload.scripts,
-        synching: false
-      }))
+      return state.mergeDeep(
+        fromJS({
+          error: null,
+          data: action.payload.scripts,
+          synching: false
+        })
+      )
 
     case FETCH_SCRIPTS_ERROR:
-      return state.mergeDeep(fromJS({ 
-        error: action.payload.error,
-        synching: false
-      }))
+      return state.mergeDeep(
+        fromJS({
+          error: action.payload.error,
+          synching: false
+        })
+      )
 
     case UPDATE_SCRIPT:
-      return state.mergeDeep(fromJS({
-        data: {
-          [`${action.payload.script.id}`]: {
-            synching: true
+      return state.mergeDeep(
+        fromJS({
+          data: {
+            [`${action.payload.script.id}`]: {
+              synching: true
+            }
           }
-        }
-      }))
-    
+        })
+      )
+
     case CREATE_SCRIPT_SUCCESS:
       script = action.payload.script
-      Object.keys(script).forEach(sc => {
+      Object.keys(script).forEach((sc) => {
         script[sc].synching = false
       })
 
-      return state.mergeDeep(fromJS({ 
-        error: null, 
-        data: script,
-        synching: false
-      }))
+      return state.mergeDeep(
+        fromJS({
+          error: null,
+          data: script,
+          synching: false
+        })
+      )
 
     case UPDATE_SCRIPT_SUCCESS:
       script = action.payload.script
-      Object.keys(script).forEach(sc => {
+      Object.keys(script).forEach((sc) => {
         script[sc].synching = false
       })
-      return state.mergeWith(merger, fromJS({
-        data: script,
-        error: null,
-        synching: false
-      }))
+      return state.mergeWith(
+        merger,
+        fromJS({
+          data: script,
+          error: null,
+          synching: false
+        })
+      )
 
     case UPDATE_SCRIPT_LOCAL_STATE:
-      return state.mergeDeep(fromJS({
-        data:{
-          [action.payload.script.id.toString()]: {
-            ...action.payload.script
+      return state.mergeDeep(
+        fromJS({
+          data: {
+            [action.payload.script.id.toString()]: {
+              ...action.payload.script
+            }
           }
-        }
-      }))
+        })
+      )
 
     case CREATE_SCRIPT_ERROR:
     case UPDATE_SCRIPT_ERROR:
-      return state.mergeDeep(fromJS({ 
-        error: action.payload.error,
-        synching: false
-      }))
+      return state.mergeDeep(
+        fromJS({
+          error: action.payload.error,
+          synching: false
+        })
+      )
 
     case CONNECT_SCRIPT:
-      return state.mergeDeep(fromJS({
-        data: {
-          [`${action.payload.script.id}`]: {
-            connected: 'connecting'
+      return state.mergeDeep(
+        fromJS({
+          data: {
+            [`${action.payload.script.id}`]: {
+              connected: 'connecting'
+            }
           }
-        }
-      }))
-    
+        })
+      )
+
     case CONNECT_SCRIPT_SUCCESS:
-      return state.mergeDeep(fromJS({
-        data: {
-          [`${action.payload.script.id}`]: {
-            connected: 'connected'
+      return state.mergeDeep(
+        fromJS({
+          data: {
+            [`${action.payload.script.id}`]: {
+              connected: 'connected'
+            }
           }
-        }
-      })) 
+        })
+      )
 
     case CONNECT_SCRIPT_ERROR:
-      return state.mergeDeep(fromJS({
-        data: {
-          [`${action.payload.script.id}`]: {
-            connected: 'failed'
+      return state.mergeDeep(
+        fromJS({
+          data: {
+            [`${action.payload.script.id}`]: {
+              connected: 'failed'
+            }
           }
-        }
-      }))
+        })
+      )
 
     case CREATE_SCRIPTSEQUENCE_SUCCESS:
-      Object.values(action.payload.scriptsequence).forEach(scriptsequence => {
+      Object.values(action.payload.scriptsequence).forEach((scriptsequence) => {
         let scriptId = scriptsequence.script
-        let newList = state.getIn(['data', scriptId.toString(), 'scriptsequences']).push(scriptsequence.id)
-        state = state.setIn(['data', scriptId.toString(), 'scriptsequences'], newList)
+        let newList = state
+          .getIn(['data', scriptId.toString(), 'scriptsequences'])
+          .push(scriptsequence.id)
+        state = state.setIn(
+          ['data', scriptId.toString(), 'scriptsequences'],
+          newList
+        )
       })
-      return state 
+      return state
 
     case CREATE_SESSIONCONTENT_SUCCESS:
-      Object.values(action.payload.sessioncontents).forEach(sessioncontent => {
-        let scriptId = sessioncontent.script
-        let newList = state.getIn(['data', scriptId.toString(), 'sessioncontents']).push(sessioncontent.id)
-        state = state.setIn(['data', scriptId.toString(), 'sessioncontents'], newList)
-      })
-      return state 
+      Object.values(action.payload.sessioncontents).forEach(
+        (sessioncontent) => {
+          let scriptId = sessioncontent.script
+          let newList = state
+            .getIn(['data', scriptId.toString(), 'sessioncontents'])
+            .push(sessioncontent.id)
+          state = state.setIn(
+            ['data', scriptId.toString(), 'sessioncontents'],
+            newList
+          )
+        }
+      )
+      return state
+
+    // case FETCH_APPUSERS_SUCCESS:
+    //   return state.setIn(['data', action.payload.script, 'appdata', 'users'], action.payload.appusers)
+
+    case FETCH_APPUSERS_SUCCESS:
+      const newstate = state.mergeIn(
+        ['data', action.payload.script.toString(), 'appdata'],
+        fromJS({
+          users: action.payload.appusers,
+          loading: false,
+          fetched: performance.now()
+        })
+      )
+      return newstate
+
+    case UPDATE_CURRENT_SCRIPT:
+      return state.mergeDeep(
+        fromJS({
+          current: action.payload.script
+        })
+      )
 
     default:
       return state

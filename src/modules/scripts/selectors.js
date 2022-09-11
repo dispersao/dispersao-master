@@ -15,6 +15,8 @@ import { getSessioncontents } from '../sessioncontents/selectors'
 const getState = (state) => state.scripts
 const getId = (state, props) => props.id
 
+export const getCurrentScript = (state) => state.scripts.get('current')
+
 export const getScriptId = (state, props) => props.script
 
 const getScripts = createSelector(
@@ -129,6 +131,7 @@ export const getScriptById = createCachedSelector(
 )(getId)
 
 
+
 const formatScriptData = (script, scrList, scriptTimes, sesconList) => {
   const sessioncontents = script
     .get('sessioncontents')
@@ -138,6 +141,8 @@ const formatScriptData = (script, scrList, scriptTimes, sesconList) => {
     let isLast = scriptTimes.get('averageSeconds') <= scriptTimes.get('totalTime') && key === scrList.size - 1
     return scr.set('isLast', isLast)
   })
+
+  console.log(script.get('appdata'))
 
   return script
     .setIn(['scriptsequences'], scriptsequences)
