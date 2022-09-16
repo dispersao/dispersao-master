@@ -8,16 +8,18 @@ import useStyles from './styles/'
 
 import {
   GridListTile,
-  GridListTileBar
-  // IconButton
+  GridListTileBar,
 } from '@material-ui/core'
+
+import PlayedIcon from '@material-ui/icons/ClearOutlined'
+
 
 import { toJS } from '../../../utils/immutableToJs.jsx'
 import { getSequenceById } from '../selectors'
 
 const padStart = require('lodash/padStart')
 
-const SequenceGridItem = ({ sequence, enabled = true }) => {
+const SequenceGridItem = ({ sequence, played = false, filtered = false }) => {
 
   const classes = useStyles()
 
@@ -27,7 +29,7 @@ const SequenceGridItem = ({ sequence, enabled = true }) => {
   const positionCategories = categories.filter(({ type }) => type === 'pos')
   const arcCategories = categories.filter(({ type }) => type === 'arc')
 
-  const enabledClass = enabled ? 'enabled' : 'disabled'
+  const enabledClass = filtered ? 'disabled' : 'enabled'
 
   let padCount = isNaN(Number(sceneNumber.slice(-1))) ? 4 : 3
   let fileName = padStart(sceneNumber, padCount, '0')
@@ -56,17 +58,14 @@ const SequenceGridItem = ({ sequence, enabled = true }) => {
       className={[classes.item, classes[enabledClass]].join(' ')}
     >
       <img src={`/photos/${fileName}_0_1.jpg`} alt={sceneNumber} />
+      {played && <PlayedIcon className={classes.playedIcon}/>}
       <GridListTileBar
         title={`${fileName} (${toHHMMSS(duration)})`}
         subtitle={subtitleComponent}
         className={classes.tilebar}
         onMouseEnter={onMouseIn}
         onMouseLeave={onMouseOut}
-        /*actionIcon={
-          <IconButton aria-label={`info about ${sceneNumber}`} className={classes.icon}>
-            <InfoIcon />
-          </IconButton>
-        }*/
+      
       />
     </GridListTile>
   )

@@ -68,6 +68,7 @@ export const getSequenceListFormatted = createSelector(
   }
 )
 
+
 export const getSequenceListNotInScript = createSelector(
   [getSequences, getScriptsequences],
   (sequences, scriptsequences) => {
@@ -79,18 +80,20 @@ export const getSequenceListNotInScript = createSelector(
       .filter((seq) => !scriptSequencesIds.includes(seq.get('id')))
       .valueSeq()
       .sort(sortEntity)
+      .map((seq) => seq.get('id'))
   }
 )
 
-export const getSequenceListNotInScriptFiltered = createSelector(
-  [getSequenceListNotInScript, getFiltersByScriptId, getPartsList],
-  (sequencesNotInScript, filters, parts) => {
-    if (!sequencesNotInScript || !sequencesNotInScript.size) {
+export const getSequenceListFiltered = createSelector(
+  [getSequences, getFiltersByScriptId, getPartsList],
+  (sequences, filters, parts) => {
+    if (!sequences || !sequences.size) {
       return
     }
-    const filtered = sequencesNotInScript
+    const filtered = sequences
       .filter((seq) => filterSequence(seq, filters, parts))
       .map((seq) => seq.get('id'))
+      .valueSeq()
     return filtered
   }
 )
@@ -181,16 +184,6 @@ export const getSequenceById = createCachedSelector(
   ],
   fetchSequenceFromId
 )(getId)
-
-/*const formatSequenceData = (seq, type, location) => {
-  return Map({
-    id: seq.get('id'),
-    sceneNumber: seq.get('sceneNumber'),
-    duration: seq.get('duration'),
-    type: type.get('name'),
-    location: location.get('name')
-  })
-}*/
 
 const formatSequenceForAlgorithm = (
   seq,

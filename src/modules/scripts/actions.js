@@ -23,6 +23,8 @@ export const CONNECT_SCRIPT = 'CONNECT_SCRIPT'
 export const CONNECT_SCRIPT_SUCCESS = 'CONNECT_SCRIPT_SUCCESS'
 export const CONNECT_SCRIPT_ERROR = 'CONNECT_SCRIPT_ERROR'
 
+export const SET_SCRIPT_MANUAL = 'SET_SCRIPT_MANUAL'
+
 import states from './utils/stateConstants'
 
 // export const CREATE_RANDOM_SCRIPTSEQUENCE = 'CREATE_RANDOM_SCRIPTSEQUENCE'
@@ -177,6 +179,13 @@ export const connectScriptSuccess = (script) => ({
 
 export const connectScriptError = (script) => ({
   type: CONNECT_SCRIPT_ERROR,
+  payload: {
+    script
+  }
+})
+
+export const setScriptManual = (script) => ({
+  type: SET_SCRIPT_MANUAL,
   payload: {
     script
   }

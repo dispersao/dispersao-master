@@ -20,13 +20,14 @@ const WithSequenceManager = WrappedComponent => {
       connected,
       state,
       speed,
-      scriptsequences
+      scriptsequences,
+      manual
     } = props
 
     const [lastCreatedIndex, setLastCreatedIndex] = useState(null)
 
     useEffect(() => {
-      if (connected === 'connected' && 
+      if (!manual && connected === 'connected' && 
           state !== states.IDLE && 
           remainingTime < MIN_PLANNED_TIME && 
           totalTime < averageSeconds && 
@@ -34,7 +35,7 @@ const WithSequenceManager = WrappedComponent => {
         setLastCreatedIndex(scriptsequences.length)
         createRandomScriptsequence(id)
       }
-    }, [remainingTime, connected, totalTime, averageSeconds, state])
+    }, [manual, remainingTime, connected, totalTime, averageSeconds, state])
 
     const wrappedProps = {
       ...props

@@ -46,13 +46,13 @@ const ScriptTabs = ({ script }) => {
         <Tab label="Posts & Comments" />
       </Tabs>
       <ScriptTab index={0} value={value} >
+      <ScriptSequencesGrid 
+          scriptsequences={scriptsequences}
+        />
+        <Divider/>
         <UnplayedSequences 
           script={id} 
           scriptsequences={scriptsequences} 
-        />
-        <Divider/>
-        <ScriptSequencesGrid 
-          scriptsequences={scriptsequences}
         />
       </ScriptTab>
       <ScriptTab index={1} value={value} >

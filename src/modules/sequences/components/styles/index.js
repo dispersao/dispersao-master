@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     opacity:1
   },
   disabled: {
-    opacity:0.3
+    opacity:0.5
   },
   icon: {
     color: 'rgba(255, 255, 255, 0.34)',
@@ -44,6 +44,15 @@ const useStyles = makeStyles(theme => ({
       'white-space':'normal',
       'text-overflow': 'clip',
     }
+  },
+  playedIcon: {
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: '#ccc',
+    position: 'absolute',
+    fontSize: 80,
+    opacity: 0.75
   }
 }))
 

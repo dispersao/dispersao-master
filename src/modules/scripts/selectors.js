@@ -138,7 +138,6 @@ const formatScriptData = (script, scrList, scriptTimes, sesconList) => {
     let isLast = scriptTimes.get('averageSeconds') <= scriptTimes.get('totalTime') && key === scrList.size - 1
     return scr.set('isLast', isLast)
   })
-
   return script
     .setIn(['scriptsequences'], scriptsequences)
     .setIn(['sessioncontents'], sessioncontents)
