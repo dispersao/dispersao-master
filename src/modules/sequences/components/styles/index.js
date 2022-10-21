@@ -19,6 +19,11 @@ const useStyles = makeStyles(theme => ({
     height: 120,
     padding: 2
   },
+  image: {
+    width: 160,
+    height: 120,
+    objectFit: 'cover'
+  },
   enabled: {
     opacity:1
   },
