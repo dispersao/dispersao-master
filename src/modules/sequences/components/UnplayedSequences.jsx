@@ -24,11 +24,33 @@ import {
   AccordionDetails,
   Typography
 } from '@material-ui/core'
+import DropableFactory from '../../../utils/dnd/DropableFactory.jsx'
+import DraggableFactory from '../../../utils/dnd/DraggableFactory.jsx'
 
-const UnplayedSequences = ({ script, sequences, unplayedSequences, filteredSequences }) => {
-
+const UnplayedSequences = ({
+  script,
+  sequences,
+  unplayedSequences,
+  filteredSequences
+}) => {
   const classes = useStyles()
   filteredSequences = filteredSequences || sequences
+
+  const getGridItems = () => {
+    return sequences.map(getDraggableElement)
+  }
+
+  const getDraggableElement = (seq, index) => {
+    return (
+      <SequenceGridItem
+        component={DraggableFactory(seq.id.toString(), index)}
+        key={seq.id}
+        {...seq}
+        played={!unplayedSequences.includes(seq.id)}
+        filtered={!filteredSequences.includes(seq.id)}
+      />
+    )
+  }
 
   return (
     <div className={classes.root}>
@@ -43,15 +65,11 @@ const UnplayedSequences = ({ script, sequences, unplayedSequences, filteredSeque
         <AccordionDetails>
           <Grid>
             <SequencesFilter script={script} />
-            <GridList cellHeight={180}>
-              {sequences.map((seq, key) => (
-                <SequenceGridItem
-                  key={key}
-                  {...seq}
-                  played={!unplayedSequences.includes(seq.id)}
-                  filtered={!filteredSequences.includes(seq.id)}
-                />
-              ))}
+            <GridList
+              cellHeight={180}
+              component={DropableFactory('sequences', true)}
+            >
+              {getGridItems()}
             </GridList>
           </Grid>
         </AccordionDetails>

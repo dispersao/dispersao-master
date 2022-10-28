@@ -14,22 +14,27 @@ import {
 import useStyles from './styles/'
 
 const ScriptsequenceGridItem = ({ sequence, 
-  elapsedTime
+  elapsedTime,
+  index,
+  component = 'li'
 }) => {
 
   const classes = useStyles()
   const { duration } = sequence
   const pgr = Math.round((elapsedTime * 100) / duration)
   const classname = pgr >= 100 ? 'item-played' : 'item'
- 
+
   return (
     <GridListTile 
-      className={classes[classname]}>
+      className={classes[classname]}
+      component={component}
+      >
       <GridList 
         cellHeight="auto" 
         cols={1}>
         <SequenceGridItem 
           {...sequence} 
+          index={index}
           subtitleField={'duration'} 
         />
         <ProgressBar 

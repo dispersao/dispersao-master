@@ -12,18 +12,24 @@ import ScriptSequencesGrid from '../../scriptsequences/components/ScriptSequence
 import UnpublishedPosts from '../../posts/components/UnpublishedPosts.jsx'
 import SessioncontentsGrid from '../../sessioncontents/componentes/SessioncontentsGrid.jsx'
 
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DragDropContext } from "react-beautiful-dnd";
 
 const ScriptTabs = ({ script }) => {
   const [value, setValue] = useState(0)
+
+  
 
   const handleChange = (evt, val) => {
     setValue(val)
   }
 
-  const { id, sessioncontents, scriptsequences, elapsedTime } = script
+  const { id, sessioncontents, scriptsequences } = script
 
+  const onDragEnd = ({source, destination}) => {
+    if(source.droppableId === 'scriptsequences'){
+      
+    }
+  }
   const classes = useStyles()
 
   return (
@@ -38,11 +44,11 @@ const ScriptTabs = ({ script }) => {
         <Tab label="Posts & Comments" />
       </Tabs>
       <ScriptTab index={0} value={value}>
-        <DndProvider backend={HTML5Backend}>
+        <DragDropContext onDragEnd={onDragEnd}>
           <ScriptSequencesGrid scriptsequences={scriptsequences} />
           <Divider />
           <UnplayedSequences script={id} scriptsequences={scriptsequences} />
-        </DndProvider>
+          </DragDropContext>
       </ScriptTab>
       <ScriptTab index={1} value={value}>
         <UnpublishedPosts script={id} sessioncontents={sessioncontents} />

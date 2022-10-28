@@ -19,6 +19,14 @@ const useStyles = makeStyles(theme => {
       padding: 2,
       opacity: 0.3
     },
+    droppper: {
+      width:7,
+      height:'100%',
+      backgroundColor: 'yellow'
+    },
+    over:{
+      width: 160
+    },
     progressDivRL: {
       height: '100%',
       position: 'absolute',
