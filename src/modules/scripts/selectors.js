@@ -59,6 +59,7 @@ const getScriptSequencesFormated = createCachedSelector(
     return script
       .get('scriptsequences')
       .map( id => scriptsequences.get(id.toString()))
+      .filter(Boolean)
       .map(scriptsequence => {
         return formatScriptsequenceData(
           scriptsequence, 

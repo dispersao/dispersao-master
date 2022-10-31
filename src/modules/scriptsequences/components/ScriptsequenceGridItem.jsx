@@ -40,7 +40,7 @@ const ScriptsequenceGridItem = ({ sequence,
         <ProgressBar 
           value={pgr} 
           enabled={pgr > 0 && pgr < 100}
-          direction='r-l'
+          direction='l-r'
         />
       </GridList>
     </GridListTile>

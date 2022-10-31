@@ -8,6 +8,9 @@ const useStyles = makeStyles(theme => {
       overflow: 'hidden',
       backgroundColor: theme.palette.background.paper,
     },
+    list: {
+      width: '100%'
+    },
     item: {
       width: 160,
       height: 120,

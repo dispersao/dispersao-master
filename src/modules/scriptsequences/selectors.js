@@ -5,7 +5,7 @@ import { getSequenceBySequenceId } from '../sequences/selectors'
 
 const getState = (state) => state.scriptsequences
 const getId = (state, props) => props.id
-
+export const getLoading = (state) => state.scriptsequences.get('loading')
 
 export const getScriptsequences = createSelector(
   [getState], (state) => {

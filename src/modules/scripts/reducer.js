@@ -17,7 +17,10 @@ import {
   SET_SCRIPT_MANUAL
 } from './actions'
 
-import { CREATE_SCRIPTSEQUENCE_SUCCESS } from '../scriptsequences/actions'
+import {
+  CREATE_SCRIPTSEQUENCE_SUCCESS,
+  DELETE_SCRIPTSEQUENCE_SUCCESS
+} from '../scriptsequences/actions'
 
 import { CREATE_SESSIONCONTENT_SUCCESS } from '../sessioncontents/actions'
 
@@ -156,6 +159,21 @@ const reducer = (
         let newList = state
           .getIn(['data', scriptId.toString(), 'scriptsequences'])
           .push(scriptsequence.id)
+        state = state.setIn(
+          ['data', scriptId.toString(), 'scriptsequences'],
+          newList
+        )
+      })
+      return state
+
+    case DELETE_SCRIPTSEQUENCE_SUCCESS:
+      Object.values(action.payload.scriptsequence).forEach((scriptsequence) => {
+        let scriptId = scriptsequence.script
+        let newList = state
+          .getIn(['data', scriptId.toString(), 'scriptsequences'])
+          .filter(
+            (el) => el !== action.payload.scriptsequence.id
+          )
         state = state.setIn(
           ['data', scriptId.toString(), 'scriptsequences'],
           newList
