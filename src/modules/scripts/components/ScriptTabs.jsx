@@ -38,7 +38,7 @@ const ScriptTabs = ({ script }) => {
         <Tab label="Posts & Comments" />
       </Tabs>
       <ScriptTab index={0} value={value}>
-        <DragContext script={id} scriptsequences={scriptsequences}>
+        <DragContext script={id}>
           <ScriptSequencesGrid scriptsequences={scriptsequences} />
           <Divider />
           <UnplayedSequences script={id} scriptsequences={scriptsequences} />

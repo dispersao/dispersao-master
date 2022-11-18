@@ -11,45 +11,49 @@ import { GridList, Typography, CircularProgress } from '@material-ui/core'
 import DraggableFactory from '../../../utils/dnd/DraggableFactory.jsx'
 import { getLoading } from '../selectors.js'
 
-const ScriptSequencesGrid = ({ scriptsequences, loading }) => {
-  const classes = useStyles()
+const ScriptSequencesGrid = React.memo(
+  ({ scriptsequences, loading = false }) => {
+    const classes = useStyles()
 
-  const getSequencesComps = () =>
-    sortBy(scriptsequences, 'index')
-      // .reverse()
-      .map((scriptseq, idx) => {
-        const component = DraggableFactory(
-          `${scriptseq.id.toString()}_scrseq`,
-          idx,
-          false
-        )
-        return (
-          <ScriptsequenceGridItem
-            component={component}
-            key={scriptseq.id}
-            {...scriptseq}
-            index={idx}
-          />
-        )
-      })
-  return (
-    <div>
-      <Typography variant="h4" component="h2">
-        Timeline
-      </Typography>
-      <div className={classes.root}>
-        <GridList
-          cellHeight={120}
-          component={(!loading && DropableFactory('scriptsequences', false) || 'ul')}
-          className={classes.list}
-        >
-          {(!loading && getSequencesComps()) || null}
-          {(loading && <CircularProgress />) || null}
-        </GridList>
+    const getSequencesComps = () =>
+      sortBy(scriptsequences, 'index')
+        // .reverse()
+        .map((scriptseq, idx) => {
+          const component = DraggableFactory(
+            `${scriptseq.id.toString()}_scrseq`,
+            idx,
+            false,
+            scriptseq.sentToPlayer
+          )
+          return (
+            <ScriptsequenceGridItem
+              component={component}
+              key={scriptseq.id}
+              {...scriptseq}
+              index={idx}
+            />
+          )
+        })
+    return (
+      <div>
+        <Typography variant="h4" component="h2">
+          Timeline
+        </Typography>
+        <div className={classes.root}>
+          <GridList
+            cellHeight={120}
+            component={DropableFactory('scriptsequences', false)}
+            className={classes.list}
+          >
+            <>{!loading && getSequencesComps()}</>
+            {(loading && <CircularProgress className={classes.loading} />) ||
+              null}
+          </GridList>
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
 
 ScriptSequencesGrid.propTypes = {
   scriptsequences: PropTypes.array.isRequired

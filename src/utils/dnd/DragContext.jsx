@@ -7,20 +7,24 @@ import {
   bulkupdateScriptsequence,
   createUpdateDeleteScriptsequences
 } from '../../modules/scriptsequences/actions'
-import { getLoading } from '../../modules/scriptsequences/selectors'
 import { getSequenceList } from '../../modules/sequences/selectors'
 import { toJS } from '../immutableToJs.jsx'
-import { orderBy } from 'lodash'
+// import { orderBy } from 'lodash'
+import { getScriptScriptsequences } from '../../modules/scriptsequences/selectors'
+import { useEffect } from 'react'
 
-const DragContext = ({
+const DragContext = React.memo(({
   children,
   script,
-  loading,
   createUpdateDelete,
-  scriptsequences = [],
+  orderedScriptsequences = [],
   sequences = []
 }) => {
-  const orderedScriptsequences = orderBy(scriptsequences, 'index')
+  //const orderedScriptsequences = orderBy(scriptsequences, 'index')
+
+  useEffect(() => {
+    console.log('orderedScriptsequences changed')
+  }, [orderedScriptsequences])
 
   const reorderScriptsequences = (source, destination) => {
     const moveForward = source.index > destination.index
@@ -28,15 +32,14 @@ const DragContext = ({
     const iniSlice = moveForward ? destination.index : source.index + 1
     const endSlice = moveForward ? source.index : destination.index + 1
     let reordered = orderedScriptsequences.slice(iniSlice, endSlice)
-    reordered = reordered.map(({ id, index, sequence: { sceneNumber } }) => ({
+    const step = moveForward ? 1 : -1
+    reordered = reordered.map(id => ({
       id,
-      index: moveForward ? index + 1 : index - 1,
-      seq: sceneNumber
+      index: orderedScriptsequences.indexOf(id) + step
     }))
     reordered.push({
-      id: movedScriptSequence.id,
-      index: destination.index,
-      seq: movedScriptSequence.sequence.sceneNumber
+      id: movedScriptSequence,
+      index: destination.index
     })
 
     reordered = (reordered.length && reordered) || null
@@ -56,15 +59,14 @@ const DragContext = ({
 
     let reordered = orderedScriptsequences
       .slice(source.index + 1)
-      .map(({ id, index, sequence: { sceneNumber } }) => ({
+      .map(id => ({
         id,
-        index: index - 1,
-        seq: sceneNumber
+        index: orderedScriptsequences.indexOf(id) - 1
       }))
 
     reordered = (reordered.length && reordered) || null
 
-    createUpdateDelete(null, reordered, removedScriptsequence.id)
+    createUpdateDelete(null, reordered, removedScriptsequence)
   }
 
   const createScriptsequence = (source, destination) => {
@@ -76,10 +78,9 @@ const DragContext = ({
     }
     let reordered = orderedScriptsequences
       .slice(destination.index)
-      .map(({ id, index, sequence: { sceneNumber } }) => ({
+      .map(id => ({
         id,
-        index: index + 1,
-        seq: sceneNumber
+        index: orderedScriptsequences.indexOf(id) + 1
       }))
 
     reordered = (reordered.length && reordered) || null
@@ -100,17 +101,12 @@ const DragContext = ({
       }
     }
   }
-
-  if (loading) {
-    return children
-  } else {
-    return <DragDropContext onDragEnd={onDragEnd}>{children}</DragDropContext>
-  }
-}
+  return <DragDropContext onDragEnd={onDragEnd}>{children}</DragDropContext>
+})
 
 const mapStateToProps = (state, ownProps) => ({
   sequences: getSequenceList(state, ownProps),
-  loading: getLoading(state)
+  orderedScriptsequences: getScriptScriptsequences(state, ownProps)
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -123,7 +119,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 DragContext.propTypes = {
   children: PropTypes.node,
-  scriptsequences: PropTypes.array,
+  orderedScriptsequences: PropTypes.array,
   createUpdateDelete: PropTypes.func
 }
 

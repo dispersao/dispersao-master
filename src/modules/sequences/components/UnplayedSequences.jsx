@@ -26,12 +26,14 @@ import {
 } from '@material-ui/core'
 import DropableFactory from '../../../utils/dnd/DropableFactory.jsx'
 import DraggableFactory from '../../../utils/dnd/DraggableFactory.jsx'
+import { getLoading } from '../../scriptsequences/selectors.js'
 
-const UnplayedSequences = ({
+const UnplayedSequences = React.memo(({
   script,
   sequences,
   unplayedSequences,
-  filteredSequences
+  filteredSequences,
+  loading = false
 }) => {
   const classes = useStyles()
   filteredSequences = filteredSequences || sequences
@@ -43,7 +45,7 @@ const UnplayedSequences = ({
   const getDraggableElement = (seq, index) => {
     return (
       <SequenceGridItem
-        component={DraggableFactory(seq.id.toString(), index)}
+        component={DraggableFactory(seq.id.toString(), index, true, loading)}
         key={seq.id}
         {...seq}
         played={!unplayedSequences.includes(seq.id)}
@@ -76,23 +78,26 @@ const UnplayedSequences = ({
       </Accordion>
     </div>
   )
-}
+})
 
 UnplayedSequences.propTypes = {
   sequences: PropTypes.array,
   unplayedSequences: PropTypes.array,
   filteredSequences: PropTypes.array,
-  script: PropTypes.number.isRequired
+  script: PropTypes.number.isRequired,
+  loading: PropTypes.bool
 }
 
 const mapStateToProps = (state, ownProps) => {
   let sequences = getSequenceList(state, ownProps)
   let unplayedSequences = getSequenceListNotInScript(state, ownProps)
   let filteredSequences = getSequenceListFiltered(state, ownProps)
+  let loading = getLoading(state)
   return {
     sequences,
     unplayedSequences,
-    filteredSequences
+    filteredSequences,
+    loading
   }
 }
 

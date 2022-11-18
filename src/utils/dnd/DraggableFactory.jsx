@@ -2,10 +2,10 @@ import { CallMissedSharp } from '@material-ui/icons'
 import React from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 
-const DraggableFactory = (id, index, clone = true) =>
+const DraggableFactory = (id, index, clone = true, dragDisabled = false) =>
   React.memo(({ children, ...props }) => {
     return (
-      <Draggable draggableId={id.toString()} index={index}>
+      <Draggable draggableId={id.toString()} index={index} isDragDisabled={dragDisabled}>
         {(provided, snapshot) => {
           return (
             <>

@@ -11,16 +11,31 @@ const useStyles = makeStyles(theme => {
     list: {
       width: '100%'
     },
+    loading: {
+      width: '50px !important',
+      height:'50px !important',
+      margin:2,
+      display: 'inline-block'
+    },
     item: {
       width: 160,
       height: 120,
       padding: 2,
+      '&.played' : {
+        opacity: 0.3
+      }
     },
-    "item-played": {
-      width: 160,
-      height: 120,
-      padding: 2,
-      opacity: 0.3
+    sentMarker : {
+      width: '20% !important',
+      height: '20% !important',
+      position: 'absolute',
+      right: 0,
+      display: 'inline-block',
+      backgroundColor:'white',
+      opacity: 0.6,
+      textAlign: 'center',
+      verticalAlign: 'middle',
+      color: 'darkviolet'
     },
     droppper: {
       width:7,

@@ -9,7 +9,8 @@ import {
   DELETE_SCRIPTSEQUENCE_SUCCESS,
   CREATE_UPDATE_DELETE_SCRIPTSEQUENCES,
   CREATE_UPDATE_DELETE_SCRIPTSEQUENCES_SUCCESS,
-  CREATE_UPDATE_DELETE_SCRIPTSEQUENCES_ERROR
+  CREATE_UPDATE_DELETE_SCRIPTSEQUENCES_ERROR,
+  SEND_SCRIPTSEQUENCE
 } from './actions'
 
 import { UPDATE_SCRIPT_SUCCESS } from '../scripts/actions'
@@ -30,6 +31,17 @@ const reducer = (
         fromJS({
           error: null,
           data: action.payload.scriptsequences
+        })
+      )
+
+    case SEND_SCRIPTSEQUENCE:
+      return state.mergeDeep(
+        fromJS({
+          data: {
+            [action.payload.scriptsequence.id.toString()]: {
+              sentToPlayer: true
+            }
+          }
         })
       )
 
@@ -107,6 +119,7 @@ const reducer = (
     case UPDATE_PROGRESS_SCRIPTSEQUENCE:
       id = action.payload.scriptsequence.id
       progress = action.payload.scriptsequence.progress
+      //return state
       return state.setIn(['data', id.toString(), 'progress'], progress)
 
     default:
