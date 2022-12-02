@@ -14,14 +14,14 @@ import SessioncontentsGrid from '../../sessioncontents/componentes/Sessionconten
 
 import DragContext from '../../../utils/dnd/DragContext.jsx'
 
-const ScriptTabs = ({ script }) => {
+const ScriptTabs = () => {
   const [value, setValue] = useState(0)
 
   const handleChange = (evt, val) => {
     setValue(val)
   }
 
-  const { id, sessioncontents, scriptsequences } = script
+  // const { id, sessioncontents, scriptsequences } = script
 
 
   const classes = useStyles()
@@ -38,23 +38,23 @@ const ScriptTabs = ({ script }) => {
         <Tab label="Posts & Comments" />
       </Tabs>
       <ScriptTab index={0} value={value}>
-        <DragContext script={id}>
-          <ScriptSequencesGrid scriptsequences={scriptsequences} />
+        <DragContext>
+          {/* <ScriptSequencesGrid />
           <Divider />
-          <UnplayedSequences script={id} scriptsequences={scriptsequences} />
+          <UnplayedSequences /> */}
         </DragContext>
       </ScriptTab>
-      <ScriptTab index={1} value={value}>
-        <UnpublishedPosts script={id} sessioncontents={sessioncontents} />
+      {/* <ScriptTab index={1} value={value}>
+        <UnpublishedPosts />
         <Divider />
-        <SessioncontentsGrid sessioncontents={sessioncontents} />
-      </ScriptTab>
+        <SessioncontentsGrid/>
+      </ScriptTab> */}
     </Paper>
   )
 }
 
-ScriptTabs.propTypes = {
-  script: PropTypes.object
-}
+// ScriptTabs.propTypes = {
+//   script: PropTypes.object
+// }
 
 export default ScriptTabs

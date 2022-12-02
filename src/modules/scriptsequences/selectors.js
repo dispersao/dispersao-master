@@ -6,7 +6,7 @@ import { getSequenceBySequenceId } from '../sequences/selectors'
 
 const getState = (state) => state.scriptsequences
 const getId = (state, props) => props.id
-const getScript = (state, props) => props.script
+const getCurrentScript = (state, props) => state.scripts.get('current')
 export const getLoading = (state) => state.scriptsequences.get('loading')
 
 export const getScriptsequences = createSelector([getState], (state) => {
@@ -52,13 +52,13 @@ export const formatScriptsequenceData = (scriptsequence, sequence) => {
 }
 
 export const getScriptScriptsequences = createArraySelector(
-  [getScript, getScriptsequences],
+  [getCurrentScript, getScriptsequences],
   (script, scriptSequences) => {
     if (!script || !scriptSequences) {
       return
     } else {
       const mapped = scriptSequences
-      .filter((ss) => ss.get('script') === script)
+      .filter((ss) => ss.get('script').toString() === script)
       .sortBy((el) => el.get('index'))
       .map(el => el.get('id'))
       .valueSeq()

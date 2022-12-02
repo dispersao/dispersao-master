@@ -17,7 +17,6 @@ const ScriptSequencesGrid = React.memo(
 
     const getSequencesComps = () =>
       sortBy(scriptsequences, 'index')
-        // .reverse()
         .map((scriptseq, idx) => {
           const component = DraggableFactory(
             `${scriptseq.id.toString()}_scrseq`,

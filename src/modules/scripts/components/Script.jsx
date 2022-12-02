@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 import { toJS } from '../../../utils/immutableToJs.jsx'
-import { getScriptById } from '../selectors.js'
+import { getScriptById, getScriptIsLoaded } from '../selectors.js'
 
 import { Redirect } from 'react-router-dom'
 import ScriptHeader from './ScriptHeader.jsx'
@@ -11,38 +11,56 @@ import ScriptActions from './ScriptActions.jsx'
 import ScriptTabs from './ScriptTabs.jsx'
 
 import Divider from '@material-ui/core/Divider'
+import { useEffect } from 'react'
+import { setCurrentScript } from '../actions.js'
 
-const Script = ({ script }) => {
-  if (!script) {
+const Script = ({ isScriptLoaded, setCurrentScript, match: { params : { id }} }) => {
+  
+  useEffect(() => {
+    if(id && isScriptLoaded && setCurrentScript){
+      setCurrentScript(id)
+    }
+    return ()=>{
+      setCurrentScript(null)
+    }
+  }, [id, isScriptLoaded, setCurrentScript])
+
+  if (!isScriptLoaded) {
     return <Redirect to='/scripts' />
   }
 
   return (
     <div>
-      <ScriptHeader {...script} />
+      {/* <ScriptHeader {...script} /> */}
       <Divider />
-      <ScriptActions {...script} />
-      <ScriptTabs script={script}/>
+      {/* <ScriptActions {...script} /> */}
+      <ScriptTabs/>
     </div>
   )
 }
 
 Script.propTypes = {
-  script: PropTypes.object
+  isScriptLoaded: PropTypes.bool,
+  setCurrentScript: PropTypes.func
 }
 
 const mapStateToProps = (state, { match }) => {
   const { id } = match.params
-  let script = {}
-  if (id ) {
-    script = getScriptById(state, { id })
+  let isScriptLoaded = false
+  if (id) {
+    isScriptLoaded = getScriptIsLoaded(state, { id })
+    // script = getScriptById(state, { id })
   }
   return {
-    script
+    isScriptLoaded
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentScript: (id) => dispatch(setCurrentScript(id))
+})
+
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(toJS(Script))

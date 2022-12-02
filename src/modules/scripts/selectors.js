@@ -14,6 +14,7 @@ import { getSessioncontents } from '../sessioncontents/selectors'
 
 const getState = (state) => state.scripts
 const getId = (state, props) => props.id
+export const getCurrentScript = (state) => state.scripts.get('current')
 
 export const getScriptId = (state, props) => props.script
 
@@ -23,6 +24,16 @@ const getScripts = createSelector(
       return 
     }
     return state.get('data')
+  }
+)
+
+export const getScriptIsLoaded = createSelector(
+  [getId, getScripts],
+  (id, scripts) => {
+    if(!id || !scripts || !scripts.size){
+      return
+    }
+    return !!scripts.get(id.toString())
   }
 )
 

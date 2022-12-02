@@ -14,7 +14,8 @@ import {
   CONNECT_SCRIPT_SUCCESS,
   CONNECT_SCRIPT_ERROR,
   UPDATE_SCRIPT_LOCAL_STATE,
-  SET_SCRIPT_MANUAL
+  SET_SCRIPT_MANUAL,
+  SET_CURRENTSCRIPT
 } from './actions'
 
 import {
@@ -29,6 +30,7 @@ let script
 const reducer = (
   state = fromJS({
     data: {},
+    current: null,
     synching: false,
     error: null
   }),
@@ -59,6 +61,9 @@ const reducer = (
           synching: false
         })
       )
+
+    case SET_CURRENTSCRIPT:
+      return state.setIn(['current'], action.payload.script)
 
     case UPDATE_SCRIPT:
       return state.mergeDeep(
@@ -171,9 +176,7 @@ const reducer = (
         let scriptId = scriptsequence.script
         let newList = state
           .getIn(['data', scriptId.toString(), 'scriptsequences'])
-          .filter(
-            (el) => el !== action.payload.scriptsequence.id
-          )
+          .filter((el) => el !== action.payload.scriptsequence.id)
         state = state.setIn(
           ['data', scriptId.toString(), 'scriptsequences'],
           newList
