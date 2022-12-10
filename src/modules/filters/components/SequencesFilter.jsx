@@ -19,7 +19,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import { clearFilters } from '../actions'
 
-const SequencesFilter = ({ script, onClearFilters }) => {
+const SequencesFilter = ({ onClearFilters }) => {
   return (
     <Accordion>
       <AccordionSummary
@@ -37,19 +37,19 @@ const SequencesFilter = ({ script, onClearFilters }) => {
         <Grid item xs>
           <Grid container spacing={2}>
             <Grid item xs>
-              <ArcsFilter script={script} />
+              <ArcsFilter />
             </Grid>
             <Grid item xs>
-              <CharactersFilter script={script} />
+              <CharactersFilter />
             </Grid>
             <Grid item xs>
-              <TypesFilter script={script} />
+              <TypesFilter />
             </Grid>
             <Grid item xs>
-              <LocationsFilter script={script} />
+              <LocationsFilter />
             </Grid>
             <Grid item xs>
-              <PositionsFilter script={script} />
+              <PositionsFilter />
             </Grid>
           </Grid>
         </Grid>
@@ -59,9 +59,9 @@ const SequencesFilter = ({ script, onClearFilters }) => {
 }
 
 SequencesFilter.propTypes = {
-  script: PropTypes.number.isRequired,
   onClearFilters: PropTypes.func.isRequired
 }
+
 
 const mapDispatchToProps = (dispatch) => ({
   onClearFilters: () => dispatch(clearFilters())

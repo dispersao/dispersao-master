@@ -5,6 +5,8 @@ import { List } from 'immutable'
 
 const getState = (state) => state.parts
 const getPartId = (state, props) => props.id
+const getPartsIds = (state, props) => props.parts
+
 
 import { getCharactersList } from '../characters/selectors'
 
@@ -43,4 +45,3 @@ export const getPartById = createCachedSelector(
  
   }
 )(getPartId)
-

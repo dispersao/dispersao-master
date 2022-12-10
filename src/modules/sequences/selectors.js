@@ -1,5 +1,5 @@
 import createCachedSelector from 're-reselect'
-import { /*Map,*/ fromJS, List } from 'immutable'
+import { fromJS, List } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { sortEntity } from '../../utils/listUtils'
@@ -10,15 +10,12 @@ import {
   getLocationsList
 } from '../locations/selectors'
 import { getCategoriesList } from '../categories/selectors'
-import { /*getPartById,*/ getPartsList } from '../parts/selectors'
+import { getPartsList } from '../parts/selectors'
 import { getCharactersList } from '../characters/selectors'
-
-import { getFiltersByScriptId } from '../filters/selectors'
 
 const getState = (state) => state.sequences
 const getId = (state, props) => props.id
 const getSequenceId = (state, props) => props.sequence
-const getScriptsequences = (state, props) => props.scriptsequences
 
 const getData = (state) => {
   if (!state) {
@@ -68,73 +65,6 @@ export const getSequenceListFormatted = createSelector(
   }
 )
 
-
-export const getSequenceListNotInScript = createSelector(
-  [getSequences, getScriptsequences],
-  (sequences, scriptsequences) => {
-    if (!sequences || !sequences.size || !scriptsequences) {
-      return
-    }
-    const scriptSequencesIds = scriptsequences.map((el) => el.sequence.id)
-    return sequences
-      .filter((seq) => !scriptSequencesIds.includes(seq.get('id')))
-      .valueSeq()
-      .sort(sortEntity)
-      .map((seq) => seq.get('id'))
-  }
-)
-
-export const getSequenceListFiltered = createSelector(
-  [getSequences, getFiltersByScriptId, getPartsList],
-  (sequences, filters, parts) => {
-    if (!sequences || !sequences.size) {
-      return
-    }
-    const filtered = sequences
-      .filter((seq) => filterSequence(seq, filters, parts))
-      .map((seq) => seq.get('id'))
-      .valueSeq()
-    return filtered
-  }
-)
-
-const filterSequence = (seq, filters, parts) => {
-  if (!filters || !filters.size) {
-    return true
-  } else {
-    return filters.every((filter) => {
-      const dataType = filter.get('data')
-      const filterValue = filter.get('value')
-      const option = filter.get('option')
-      let list
-
-      if(!filterValue.size) {
-        return true
-      }
-      
-      if (dataType === 'characters') {
-        list = seq
-          .get('parts')
-          .map((partId) => parts.get(partId.toString()))
-          .map((part) => part.get('characters'))
-          .flatten()
-          .toSet()
-      } else {
-        list = seq.get(dataType)
-        if (!List.isList(list)) {
-          list = [list]
-        }
-      }
-      if (option === 'and') {
-        return filterValue.every((el) => list.includes(el))
-      } else if (option === 'or') {
-        return filterValue.some((el) => list.includes(el))
-      } else if (option === 'exclude') {
-        return filterValue.every((el) => !list.includes(el))
-      }
-    })
-  }
-}
 
 const fetchSequenceFromId = (
   list,

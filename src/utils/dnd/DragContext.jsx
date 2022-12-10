@@ -10,7 +10,7 @@ import {
 import { getCurrentScript } from '../../modules/scripts/selectors'
 import { getSequenceList } from '../../modules/sequences/selectors'
 import { toJS } from '../immutableToJs.jsx'
-import { getScriptScriptsequences } from '../../modules/scriptsequences/selectors'
+import { getCurrentScriptScriptsequences } from '../../modules/scriptsequences/selectors'
 import { useEffect } from 'react'
 
 const DragContext = React.memo(({
@@ -106,7 +106,7 @@ const DragContext = React.memo(({
 const mapStateToProps = (state, ownProps) => ({
   script: getCurrentScript(state),
   sequences: getSequenceList(state, ownProps),
-  orderedScriptsequences: getScriptScriptsequences(state, ownProps)
+  orderedScriptsequences: getCurrentScriptScriptsequences(state, ownProps)
 })
 
 const mapDispatchToProps = (dispatch) => ({

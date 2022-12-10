@@ -14,9 +14,9 @@ function resultCheckMemoize(
   let lastResult = null
   return (...args) => {
     if (
-      lastArgs !== null &&
+      (lastArgs !== null &&
       lastArgs.length === args.length &&
-      args.every((value, index) => argsCheck(value, lastArgs[index]))
+      args.every((value, index) => argsCheck(value, lastArgs[index])))
     ) {
       return lastResult
     }
@@ -30,5 +30,11 @@ function resultCheckMemoize(
 
 export const createArraySelector = createSelectorCreator(
   resultCheckMemoize,
-  shallowEqual
+  (el1, el2) => {
+    if(el1?.equals && el2?.equals){
+      return el1.equals(el2)
+    } else {
+      return shallowEqual(el1, el2)
+    }
+  }
 )

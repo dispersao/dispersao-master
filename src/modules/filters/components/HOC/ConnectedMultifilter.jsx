@@ -6,9 +6,10 @@ import { updateFilter } from '../../actions'
 import { getFilterByProps } from '../../selectors'
 import { toJS } from '../../../../utils/immutableToJs.jsx'
 import MultiFilter from './MultiFilter.jsx'
+import { getCurrentScript } from '../../../scripts/selectors'
 
 const ConnectMultifilter = (
-  { name, field, options, data, type, listFunc }
+  { name, field, options, data, type, listFunc, script }
 ) => {
   const ConnectedFilter = ({
     list,
@@ -17,11 +18,11 @@ const ConnectMultifilter = (
   }) => {
 
     const selectChangeHandler = (value) => {
-      onUpdateFilter(value, filter.option || options[0])
+      onUpdateFilter(value, filter.option || options[0], script)
     }
 
     const radioChangeHandler = (value) => {
-      onUpdateFilter(filter.value || [], value)
+      onUpdateFilter(filter.value || [], value, script)
     }
 
     return (
@@ -38,18 +39,21 @@ const ConnectMultifilter = (
     )
   }
 
-  const mapStateToProps = (state, ownProps) => ({
+  const mapStateToProps = (state, ownProps) => {
+    return {
     filter: getFilterByProps(state, {
       ...ownProps,
       data,
-      type
+      type,
     }),
-    list: listFunc(state, {type})
-  })
+    list: listFunc(state, {type}),
+    script: getCurrentScript(state)
+  }
+  }
 
   const mapDispatchToProps = (dispatch, ownProps) => ({
-    onUpdateFilter: (value, option) => dispatch(updateFilter({
-      script: ownProps.script,
+    onUpdateFilter: (value, option, script) => dispatch(updateFilter({
+      script,
       data,
       type,
       value,
@@ -63,7 +67,8 @@ const ConnectMultifilter = (
       value: PropTypes.array,
       option: PropTypes.string
     }),
-    onUpdateFilter: PropTypes.func
+    onUpdateFilter: PropTypes.func,
+    script: PropTypes.string
   }
 
   return connect(mapStateToProps, mapDispatchToProps)(toJS(ConnectedFilter))

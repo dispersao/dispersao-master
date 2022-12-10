@@ -3,7 +3,11 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 import { toJS } from '../../../utils/immutableToJs.jsx'
-import { getScriptById, getScriptIsLoaded } from '../selectors.js'
+import {
+  getCurrentScript,
+  getScriptById,
+  getScriptIsLoaded
+} from '../selectors.js'
 
 import { Redirect } from 'react-router-dom'
 import ScriptHeader from './ScriptHeader.jsx'
@@ -14,19 +18,28 @@ import Divider from '@material-ui/core/Divider'
 import { useEffect } from 'react'
 import { setCurrentScript } from '../actions.js'
 
-const Script = ({ isScriptLoaded, setCurrentScript, match: { params : { id }} }) => {
-  
+const Script = ({
+  isScriptLoaded,
+  setCurrentScript,
+  currentScript,
+  match: {
+    params: { id }
+  }
+}) => {
   useEffect(() => {
-    if(id && isScriptLoaded && setCurrentScript){
+    if (id && isScriptLoaded && setCurrentScript && id !== currentScript) {
       setCurrentScript(id)
     }
-    return ()=>{
+  }, [id, isScriptLoaded, setCurrentScript, currentScript])
+
+  useEffect(() => {
+    return () => {
       setCurrentScript(null)
     }
-  }, [id, isScriptLoaded, setCurrentScript])
+  }, [])
 
   if (!isScriptLoaded) {
-    return <Redirect to='/scripts' />
+    return <Redirect to="/scripts" />
   }
 
   return (
@@ -34,14 +47,15 @@ const Script = ({ isScriptLoaded, setCurrentScript, match: { params : { id }} })
       {/* <ScriptHeader {...script} /> */}
       <Divider />
       {/* <ScriptActions {...script} /> */}
-      <ScriptTabs/>
+      {currentScript && <ScriptTabs />}
     </div>
   )
 }
 
 Script.propTypes = {
   isScriptLoaded: PropTypes.bool,
-  setCurrentScript: PropTypes.func
+  setCurrentScript: PropTypes.func,
+  currentScript: PropTypes.string
 }
 
 const mapStateToProps = (state, { match }) => {
@@ -49,10 +63,11 @@ const mapStateToProps = (state, { match }) => {
   let isScriptLoaded = false
   if (id) {
     isScriptLoaded = getScriptIsLoaded(state, { id })
-    // script = getScriptById(state, { id })
   }
+  const currentScript = getCurrentScript(state)
   return {
-    isScriptLoaded
+    isScriptLoaded,
+    currentScript
   }
 }
 
@@ -60,7 +75,4 @@ const mapDispatchToProps = (dispatch) => ({
   setCurrentScript: (id) => dispatch(setCurrentScript(id))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(toJS(Script))
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(Script))

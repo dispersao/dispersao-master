@@ -14,7 +14,7 @@ import {
 const ScriptsequenceTimer = ({
   id,
   state,
-  elapsedTime,
+  º,
   sequence,
   speed,
   updateProgress

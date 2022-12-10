@@ -1,8 +1,13 @@
+import { List } from 'immutable'
 import createCachedSelector from 're-reselect'
+import { shallowEqual } from 'react-redux'
 import { createSelector } from 'reselect'
 import { createArraySelector } from '../../utils/selectorUtils'
 
-import { getSequenceBySequenceId } from '../sequences/selectors'
+import {
+  getSequenceBySequenceId,
+  getSequenceList
+} from '../sequences/selectors'
 
 const getState = (state) => state.scriptsequences
 const getId = (state, props) => props.id
@@ -31,11 +36,6 @@ const fetchScriptsequenceFromIdFormat = (list, id, sequence) => {
   return formatScriptsequenceData(scriptsequence, sequence)
 }
 
-export const getScriptsequenceById = createCachedSelector(
-  [getScriptsequences, getId, getSequenceBySequenceId],
-  fetchScriptsequenceFromIdFormat
-)(getId)
-
 export const getScriptsequenceByIdNoFormat = createCachedSelector(
   [getScriptsequences, getId],
   fetchScriptsequenceFromId
@@ -50,20 +50,55 @@ export const formatScriptsequenceData = (scriptsequence, sequence) => {
     state
   })
 }
+///-----------new methods
 
-export const getScriptScriptsequences = createArraySelector(
+export const getScriptsequenceById = createCachedSelector(
+  [getId, getScriptsequences],
+  (scriptsequence, scriptsequences) => {
+    if (!scriptsequence || !scriptsequences) {
+      return
+    }
+    return scriptsequences.get(scriptsequence.toString())
+  }
+)(getId)
+
+export const getCurrentScriptScriptsequences = createArraySelector(
   [getCurrentScript, getScriptsequences],
   (script, scriptSequences) => {
     if (!script || !scriptSequences) {
       return
     } else {
       const mapped = scriptSequences
-      .filter((ss) => ss.get('script').toString() === script)
-      .sortBy((el) => el.get('index'))
-      .map(el => el.get('id'))
-      .valueSeq()
-      .toJS()
+        .filter((ss) => ss.get('script').toString() === script)
+        .sortBy((el) => el.get('index'))
+        .map((el) => el.get('id'))
+        .valueSeq()
+
       return mapped
     }
   }
 )
+
+export const getScriptsequenceSequenceIdById = createCachedSelector(
+  [getId, getScriptsequences],
+  (scriptsequence, scriptsequences) => {
+    if (!scriptsequence || !scriptsequences) {
+      return
+    }
+    return scriptsequences.getIn([scriptsequence.toString(), 'sequence'])
+  }
+)(getId)
+
+export const getScriptsequenceSequenceById = createCachedSelector(
+  [getId, getScriptsequences, getSequenceList],
+  (scriptsequence, scriptsequences, sequences) => {
+    if (!scriptsequence || !scriptsequences || !sequences) {
+      return
+    }
+    const sequenceId = scriptsequences.getIn([
+      scriptsequence.toString(),
+      'sequence'
+    ])
+    return sequences.get(sequenceId.toString())
+  }
+)(getId)
