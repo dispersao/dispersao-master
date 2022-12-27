@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { toJS } from '../../../utils/immutableToJs.jsx'
 import {
-  getCurrentScript,
+  getCurrentScriptId,
   getScriptById,
   getScriptIsLoaded
 } from '../selectors.js'
@@ -44,10 +44,14 @@ const Script = ({
 
   return (
     <div>
-      {/* <ScriptHeader {...script} /> */}
-      <Divider />
-      {/* <ScriptActions {...script} /> */}
-      {currentScript && <ScriptTabs />}
+      {currentScript && (
+        <>
+          <ScriptHeader />
+          <Divider />
+          <ScriptActions />
+          <ScriptTabs />
+        </>
+      )}
     </div>
   )
 }
@@ -64,7 +68,7 @@ const mapStateToProps = (state, { match }) => {
   if (id) {
     isScriptLoaded = getScriptIsLoaded(state, { id })
   }
-  const currentScript = getCurrentScript(state)
+  const currentScript = getCurrentScriptId(state)
   return {
     isScriptLoaded,
     currentScript

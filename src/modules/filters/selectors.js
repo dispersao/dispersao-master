@@ -2,7 +2,7 @@ import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 
 const getState = (state) => state.filters
-const getCurrentScript = (state, props) => state.scripts.get('current')
+const getCurrentScriptId = (state, props) => state.scripts.get('current')
 
 const getData = (state, props) => props.data
 const getType = (state, props) => props.type
@@ -20,8 +20,8 @@ export const getFiltersByScriptId = createCachedSelector(
   }
 )(getScript)
 
-export const getCurrentScriptFilters = createSelector(
-  [getState, getCurrentScript],
+export const getCurrentScriptIdFilters = createSelector(
+  [getState, getCurrentScriptId],
   (filters, script) => {
     if (!filters || !filters.size || !script) {
       return
@@ -33,7 +33,7 @@ export const getCurrentScriptFilters = createSelector(
 )
 
 export const getFilterByProps = createCachedSelector(
-  [getCurrentScriptFilters, getData, getType, getCurrentScript],
+  [getCurrentScriptIdFilters, getData, getType, getCurrentScriptId],
   (filters, data, type) => {
     if (!filters || !filters.size || !data) {
       return

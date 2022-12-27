@@ -11,7 +11,7 @@ import {
 
 const getState = (state) => state.scriptsequences
 const getId = (state, props) => props.id
-const getCurrentScript = (state, props) => state.scripts.get('current')
+const getCurrentScriptId = (state, props) => state.scripts.get('current')
 export const getLoading = (state) => state.scriptsequences.get('loading')
 
 export const getScriptsequences = createSelector([getState], (state) => {
@@ -63,7 +63,7 @@ export const getScriptsequenceById = createCachedSelector(
 )(getId)
 
 export const getCurrentScriptScriptsequences = createArraySelector(
-  [getCurrentScript, getScriptsequences],
+  [getCurrentScriptId, getScriptsequences],
   (script, scriptSequences) => {
     if (!script || !scriptSequences) {
       return
@@ -71,10 +71,20 @@ export const getCurrentScriptScriptsequences = createArraySelector(
       const mapped = scriptSequences
         .filter((ss) => ss.get('script').toString() === script)
         .sortBy((el) => el.get('index'))
-        .map((el) => el.get('id'))
         .valueSeq()
 
       return mapped
+    }
+  }
+)
+
+export const getCurrentScriptScriptsequencesIds = createArraySelector(
+  [getCurrentScriptScriptsequences],
+  (scriptSequences) => {
+    if (!scriptSequences) {
+      return
+    } else {
+      return scriptSequences.map(ss => ss.get('id'))
     }
   }
 )

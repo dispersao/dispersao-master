@@ -8,7 +8,7 @@ import useStyles from './styles'
 import Sequence from '../../sequences/components/Sequence.jsx'
 import DraggableFactory from '../../../utils/dnd/DraggableFactory.jsx'
 import { getScriptsequenceSequenceIdById } from '../selectors.js'
-import TimelineRelation from './TimelineRelation.jsx'
+import ScriptsequenceTimelineProgress from './ScriptsequenceTimelineProgress.jsx'
 
 const Scriptsequence = React.memo(({
   id,
@@ -28,7 +28,7 @@ const Scriptsequence = React.memo(({
     )}>
       <GridList cellHeight="auto" cols={1}>
         <Sequence id={sequence}  />
-        <TimelineRelation id={id}/>
+        <ScriptsequenceTimelineProgress id={id}/>
       </GridList>
     </GridListTile>
   )

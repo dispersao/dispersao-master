@@ -6,7 +6,7 @@ import { updateFilter } from '../../actions'
 import { getFilterByProps } from '../../selectors'
 import { toJS } from '../../../../utils/immutableToJs.jsx'
 import MultiFilter from './MultiFilter.jsx'
-import { getCurrentScript } from '../../../scripts/selectors'
+import { getCurrentScriptId } from '../../../scripts/selectors'
 
 const ConnectMultifilter = (
   { name, field, options, data, type, listFunc, script }
@@ -47,7 +47,7 @@ const ConnectMultifilter = (
       type,
     }),
     list: listFunc(state, {type}),
-    script: getCurrentScript(state)
+    script: getCurrentScriptId(state)
   }
   }
 

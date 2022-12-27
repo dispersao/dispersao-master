@@ -1,85 +1,63 @@
-import React/*, { useState }*/ from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { 
-  updateScript,
-  updateScriptLocalState
-} from '../../actions'
+import { getCurrentScriptIdFieldByFieldname, getCurrentScriptId } from '../../selectors'
 
-// import {
-//   Typography
-// } from '@material-ui/core'
+import { updateScript, updateScriptLocalState } from '../../actions'
 
 function getDisplayName(WrappedComponent) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component'
 }
 
-const ScriptFieldUpdateComp = (WrappedComponent, field, isSynch = true) => {
-  
+const ScriptFieldUpdateComp = (WrappedComponent, field, isSynch = true, extraFields = []) => {
   const ScriptFieldUpdate = (props) => {
-    const { save, synching, value } = props
-
-    // const [edit, setEdit] = useState(false)
-  
-    // const clickTextHandler = () => {
-    //   if (!synching) {
-    //     // setEdit(true)
-    //   }
-    // }
-
+    const { save, synching, value, id } = props
     const saveField = (val) => {
       if (val !== value.toString() && !synching) {
-        save(val)
+        save(id, val)
       }
-      // setEdit(false)
     }
+    return <WrappedComponent {...props} save={saveField} />
+  }
 
-    return (
-      <>
-        {/* { edit &&  */}
-          <WrappedComponent {...props} save={saveField}/>
-        {/* } */}
-        {/* {!edit &&
-          <Typography 
-            color={synching ? 'textSecondary' : 'initial'}
-            variant="h5" 
-            component="div"
-            onClick={clickTextHandler}>
-            {value}
-          </Typography>
-        } */}
-      </>
-    )
-  } 
   ScriptFieldUpdate.propTypes = {
-    field: PropTypes.string,
     save: PropTypes.func,
     synching: PropTypes.bool,
     value: PropTypes.any,
-    isSynch: PropTypes.bool
+    isSynch: PropTypes.bool,
+    id: PropTypes.string
   }
 
-  ScriptFieldUpdate.displayName = `ScriptFieldUpdate(${getDisplayName(WrappedComponent)})`
+  ScriptFieldUpdate.displayName = `ScriptFieldUpdate(${getDisplayName(
+    WrappedComponent
+  )})`
+
+  const mapStateToProps = (state, ownProps) => ({
+    value: getCurrentScriptIdFieldByFieldname(state, {...ownProps, field }),
+    synching: getCurrentScriptIdFieldByFieldname(state, { ...ownProps, field: 'synching' }) || false,
+    id: getCurrentScriptId(state),
+    ...(extraFields.reduce((acc, curr) => ({
+      ...acc,
+      [curr]: getCurrentScriptIdFieldByFieldname(state, { ...ownProps, field: curr }),
+    }), {}))
+  })
 
   const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-      save: (value) => {
+      save: (id, value) => {
         const action = isSynch ? updateScript : updateScriptLocalState
-        dispatch(action({
-          id: ownProps.id,
-          [field]: value
-        })
+        dispatch(
+          action({
+            id,
+            [field]: value
+          })
         )
-      },
-      value: ownProps[field]
+      }
     }
   }
 
-  return connect(
-    null,
-    mapDispatchToProps
-  )(ScriptFieldUpdate)
+  return connect(mapStateToProps, mapDispatchToProps)(ScriptFieldUpdate)
 }
 
 export default ScriptFieldUpdateComp

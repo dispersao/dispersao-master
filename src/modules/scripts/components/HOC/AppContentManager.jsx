@@ -2,45 +2,57 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import states from '../../utils/stateConstants'
-import { 
-  createRandomSessioncontent, 
+import {
+  createRandomSessioncontent,
   createSessioncontent,
   updateSessioncontentState
 } from '../../../sessioncontents/actions'
 
 import { toJS } from '../../../../utils/immutableToJs.jsx'
 
-import { getScriptTimes } from '../../../scripts/selectors'
+import {
+  getCurrentScript,
+  getCurrentScriptElapsedTime
+} from '../../../scripts/selectors'
 
 import { getProfileList } from '../../../profiles/selectors'
-import { getSessioncontentsListByType, getNextContentToPublish } from '../../../sessioncontents/selectors'
+import {
+  getSessioncontentsListByType,
+  getNextContentToPublish
+} from '../../../sessioncontents/selectors'
 
 const auto_publish = AUTO_PUBLISH
 
-const WithAppContentManager = WrappedComponent => {
-
+const WithAppContentManager = (WrappedComponent) => {
   const AppContentManager = (props) => {
-    const { 
-      id, 
-      createRandomAppContent, 
-      connected,
-      state,
-      scriptsequences,
+    const {
+      script: { id, connected, state, scriptsequences },
+      createRandomAppContent,
       profileSessioncontent,
       profiles,
       createContent,
       publishContent,
-      times: { elapsedTime },
+      elapsedTime,
       nextContentToPublish
     } = props
+
     useEffect(() => {
-      if (scriptsequences && scriptsequences.length && connected === 'connected') {
+      if (
+        scriptsequences &&
+        scriptsequences.length &&
+        connected === 'connected'
+      ) {
         createRandomAppContent(id)
       }
     }, [scriptsequences.length])
 
     useEffect(() => {
-      if (auto_publish && state === states.PLAYING && nextContentToPublish && elapsedTime >= nextContentToPublish.programmed_at) {
+      if (
+        auto_publish &&
+        state === states.PLAYING &&
+        nextContentToPublish &&
+        elapsedTime >= nextContentToPublish.programmed_at
+      ) {
         publishContent(nextContentToPublish.id)
       }
     }, [state, elapsedTime, nextContentToPublish])
@@ -49,7 +61,7 @@ const WithAppContentManager = WrappedComponent => {
       if (state === states.STARTED) {
         if (!profileSessioncontent || !profileSessioncontent.length) {
           if (profiles) {
-            const profileContent = profiles.map(p => ({
+            const profileContent = profiles.map((p) => ({
               state: 'published',
               script: id,
               profile: p.id,
@@ -60,29 +72,27 @@ const WithAppContentManager = WrappedComponent => {
         }
       }
     }, [state])
-   
 
     const wrappedProps = {
       ...props
     }
     delete wrappedProps['createRandomScriptsequence']
-    
+
     return (
       <>
         <WrappedComponent {...wrappedProps} />
       </>
     )
   }
-  
+
   AppContentManager.propTypes = {
-    id: PropTypes.number.isRequired,
-    remainingTime: PropTypes.number,
-    totalTime: PropTypes.number,
-    averageSeconds: PropTypes.number,
+    script: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      connected: PropTypes.string,
+      state: PropTypes.string,
+      scriptsequences: PropTypes.array
+    }),
     createRandomAppContent: PropTypes.func.isRequired,
-    connected:PropTypes.string,
-    state: PropTypes.string,
-    scriptsequences: PropTypes.array,
     profiles: PropTypes.array,
     profileSessioncontent: PropTypes.array,
     publishContent: PropTypes.func,
@@ -91,37 +101,41 @@ const WithAppContentManager = WrappedComponent => {
       programmed_at: PropTypes.number,
       id: PropTypes.number
     }),
-    times: PropTypes.shape({
-      elapsedTime: PropTypes.number
-    })
+    elapsedTime: PropTypes.number
   }
 
-
   const mapStateToProps = (state, ownProps) => ({
+    script: getCurrentScript(state),
     profiles: getProfileList(state),
     profileSessioncontent: getSessioncontentsListByType(state, {
       ...ownProps,
       type: 'profile'
     }),
-    times: getScriptTimes(state, ownProps),
-    nextContentToPublish: getNextContentToPublish(state, { ...ownProps, types: ['post', 'comment'] })
+    elapsedTime: getCurrentScriptElapsedTime(state),
+    nextContentToPublish: getNextContentToPublish(state, {
+      ...ownProps,
+      types: ['post', 'comment']
+    })
   })
-  
+
   const mapDispatchToProps = (dispatch) => ({
-    createRandomAppContent: (id) => dispatch(createRandomSessioncontent({
-      script: id
-    })),
+    createRandomAppContent: (id) =>
+      dispatch(
+        createRandomSessioncontent({
+          script: id
+        })
+      ),
     createContent: (content) => dispatch(createSessioncontent(content)),
-    publishContent: (id) => dispatch(updateSessioncontentState({
-      id,
-      state: 'published'
-    }))
+    publishContent: (id) =>
+      dispatch(
+        updateSessioncontentState({
+          id,
+          state: 'published'
+        })
+      )
   })
-  
-  return connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(toJS(AppContentManager))
+
+  return connect(mapStateToProps, mapDispatchToProps)(toJS(AppContentManager))
 }
 
 export default WithAppContentManager

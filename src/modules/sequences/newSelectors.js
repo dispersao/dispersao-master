@@ -4,7 +4,7 @@ import { createSelector } from 'reselect'
 import { sortEntity } from '../../utils/listUtils'
 import { createArraySelector } from '../../utils/selectorUtils'
 import { getCategoriesList } from '../categories/selectors'
-import { getCurrentScriptFilters } from '../filters/selectors'
+import { getCurrentScriptIdFilters } from '../filters/selectors'
 import { getLocationsList } from '../locations/selectors'
 import { getPartsList } from '../parts/selectors'
 import { getScriptsequences } from '../scriptsequences/selectors'
@@ -13,7 +13,7 @@ import { getTypesList } from '../types/selectors'
 const getData = (state) => state.sequences.get('data')
 const getId = (state, props) => props.id
 
-const getCurrentScript = (state) => state.scripts.get('current')
+const getCurrentScriptId = (state) => state.scripts.get('current')
 
 export const getSequencesIds = createSelector([getData], (sequences) => {
   if (!sequences) {
@@ -68,7 +68,7 @@ export const getSequenceCategoriesById = createCachedSelector(
 })
 
 export const getSequenceIsFiltered = createCachedSelector(
-  [getSequenceById, getCurrentScriptFilters, getPartsList],
+  [getSequenceById, getCurrentScriptIdFilters, getPartsList],
   (sequence, filters, parts) => {
     if (!sequence || !parts) {
       return
@@ -111,7 +111,7 @@ export const getSequenceIsFiltered = createCachedSelector(
 )(getId)
 
 export const getSequenceIsInCurrentScript = createCachedSelector(
-  [getCurrentScript, getScriptsequences, getId],
+  [getCurrentScriptId, getScriptsequences, getId],
   (script, scriptsequences, id) => {
     if (!script || !scriptsequences || !id) {
       return

@@ -8,11 +8,12 @@ import {
 } from '@material-ui/core'
 
 import useStyles from './styles'
+import { getCurrentScriptId, getCurrentScriptIdFieldByFieldname } from '../selectors'
 
 const ScriptConnecter = ({ connected, connect, id }) => {
   const classes = useStyles()
   const onClick = () => {
-    connect(id)
+    connect(parseInt(id))
   }
 
   const text = !connected ? 'connect' : 're-try connect'
@@ -39,14 +40,19 @@ const ScriptConnecter = ({ connected, connect, id }) => {
 ScriptConnecter.propTypes = {
   connected: PropTypes.string,
   connect: PropTypes.func.isRequired,
-  id: PropTypes.number.isRequired
+  id: PropTypes.string.isRequired
 }
+
+const mapStateToProps = (state, ownProps) => ({
+  id: getCurrentScriptId(state),
+  connected: getCurrentScriptIdFieldByFieldname(state, { ...ownProps, field: 'connected'})
+})
 
 const mapDispatchToProps = (dispatch) => ({
   connect: (id) => dispatch(connectScript({ id }))
 })
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(ScriptConnecter)

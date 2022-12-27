@@ -7,10 +7,10 @@ import {
   bulkupdateScriptsequence,
   createUpdateDeleteScriptsequences
 } from '../../modules/scriptsequences/actions'
-import { getCurrentScript } from '../../modules/scripts/selectors'
+import { getCurrentScriptId } from '../../modules/scripts/selectors'
 import { getSequenceList } from '../../modules/sequences/selectors'
 import { toJS } from '../immutableToJs.jsx'
-import { getCurrentScriptScriptsequences } from '../../modules/scriptsequences/selectors'
+import { getCurrentScriptScriptsequencesIds } from '../../modules/scriptsequences/selectors'
 import { useEffect } from 'react'
 
 const DragContext = React.memo(({
@@ -104,9 +104,9 @@ const DragContext = React.memo(({
 })
 
 const mapStateToProps = (state, ownProps) => ({
-  script: getCurrentScript(state),
+  script: getCurrentScriptId(state),
   sequences: getSequenceList(state, ownProps),
-  orderedScriptsequences: getCurrentScriptScriptsequences(state, ownProps)
+  orderedScriptsequences: getCurrentScriptScriptsequencesIds(state, ownProps)
 })
 
 const mapDispatchToProps = (dispatch) => ({

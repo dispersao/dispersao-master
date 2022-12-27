@@ -9,7 +9,7 @@ import { toJS } from '../../../utils/immutableToJs.jsx'
 import useStyles from './styles'
 
 import { GridList, Typography, CircularProgress } from '@material-ui/core'
-import { getCurrentScriptScriptsequences, getLoading } from '../selectors.js'
+import { getCurrentScriptScriptsequencesIds, getLoading } from '../selectors.js'
 
 const Timeline = React.memo(({ scriptsequences, loading = false }) => {
   const classes = useStyles()
@@ -44,7 +44,7 @@ Timeline.propTypes = {
 
 const mapStateToProps = (state) => ({
   loading: getLoading(state),
-  scriptsequences: getCurrentScriptScriptsequences(state)
+  scriptsequences: getCurrentScriptScriptsequencesIds(state)
 })
 
 export default connect(mapStateToProps, null)(toJS(Timeline))

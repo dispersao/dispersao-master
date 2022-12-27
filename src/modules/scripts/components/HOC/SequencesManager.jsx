@@ -5,24 +5,30 @@ import states from '../../utils/stateConstants'
 import { createRandomScriptsequence } from '../../../scriptsequences/actions'
 
 import ScriptsequenceUpdate from '../../../scriptsequences/components/HOC/helpers/ScriptsequenceUpdater.jsx'
+import { getCurrentScript, getCurrentScriptRemainingTime, getCurrentScriptTotalTime } from '../../selectors'
+import { toJS } from '../../../../utils/immutableToJs.jsx'
 
 const MIN_PLANNED_TIME = 120
 
 const WithSequenceManager = WrappedComponent => {
 
   const SequenceManager = (props) => {
-    const { 
-      id, 
+    const {
+      script: {
+        id, 
+        connected,
+        state,
+        speed = 1,
+        scriptsequences,
+        averagetime,
+        manual
+      },
       remainingTime,
       totalTime,
-      averageSeconds,
-      createRandomScriptsequence, 
-      connected,
-      state,
-      speed,
-      scriptsequences,
-      manual
+      createRandomScriptsequence
     } = props
+
+    const averageSeconds = parseInt(averagetime) * 60
 
     const [lastCreatedIndex, setLastCreatedIndex] = useState(null)
 
@@ -42,32 +48,40 @@ const WithSequenceManager = WrappedComponent => {
     }
     delete wrappedProps['createRandomScriptsequence']
     
-    const scriptsequencesProgressManagers = scriptsequences.map((scrseq, key) => {
-      return <ScriptsequenceUpdate 
-        key={key}
-        speed={speed}
-        {...scrseq} />
-    })
+    // const scriptsequencesProgressManagers = scriptsequences.map((scrseq, key) => {
+    //   return <ScriptsequenceUpdate 
+    //     key={key}
+    //     speed={speed}
+    //     {...scrseq} />
+    // })
 
     return (
       <>
-        {scriptsequencesProgressManagers}
+        {/* {scriptsequencesProgressManagers} */}
         <WrappedComponent {...wrappedProps} />
       </>
     )
   }
   
   SequenceManager.propTypes = {
-    id: PropTypes.number.isRequired,
-    scriptsequences: PropTypes.array,
     remainingTime: PropTypes.number,
     totalTime: PropTypes.number,
-    averageSeconds: PropTypes.number,
     createRandomScriptsequence: PropTypes.func.isRequired,
-    connected:PropTypes.string,
-    state: PropTypes.string,
-    speed: PropTypes.string.isRequired
+    script: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      scriptsequences: PropTypes.array,
+      connected:PropTypes.string,
+      state: PropTypes.string,
+      speed: PropTypes.string,
+      averagetime: PropTypes.number
+    })
   }
+
+  const mapStateToProps = (state) => ({
+    script: getCurrentScript(state),
+    totalTime: getCurrentScriptTotalTime(state),
+    remainingTime: getCurrentScriptRemainingTime(state)
+  })
   
   const mapDispatchToProps = (dispatch) => ({
     createRandomScriptsequence: (id) => dispatch(createRandomScriptsequence({
@@ -76,9 +90,9 @@ const WithSequenceManager = WrappedComponent => {
   })
   
   return connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
-  )(SequenceManager)
+  )(toJS(SequenceManager))
 }
 
 export default WithSequenceManager

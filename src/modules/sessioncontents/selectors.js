@@ -4,6 +4,7 @@ import { List } from 'immutable'
 
 import { getPostByPostIdFormatted } from '../posts/selectors'
 
+const getCurrentScriptId = (state, props) => state.scripts.get('current')
 const getCleanState = (state) => state
 const getState = (state) => state.sessioncontents
 const getIds = (state, props) =>
@@ -31,7 +32,7 @@ export const getSessioncontentsList = createSelector(
 )
 
 export const getSessioncontentsListByType = createCachedSelector(
-  [getSessioncontents, getType, getScript],
+  [getSessioncontents, getType, getCurrentScriptId],
   (sessioncontents, type, script) => {
     if (!sessioncontents || !type || !script) {
       return
@@ -41,7 +42,7 @@ export const getSessioncontentsListByType = createCachedSelector(
       .filter((sescon) => sescon.get(type))
       .valueSeq()
   }
-)(getScript)
+)(getType)
 
 export const getSessioncontentByScriptId = createCachedSelector(
   [getSessioncontents, getScript],
@@ -97,8 +98,8 @@ export const getSessioncontentsListAsPosts = createCachedSelector(
   }
 )(getIdsAsJson)
 
-export const getNextContentToPublish = createCachedSelector(
-  [getSessioncontents, getTypes, getScript],
+export const getNextContentToPublish = createSelector(
+  [getSessioncontents, getTypes, getCurrentScriptId],
   (sessioncontents, types, script) => {
     if (!sessioncontents || !types || !script) {
       return
@@ -110,4 +111,4 @@ export const getNextContentToPublish = createCachedSelector(
       .sort((a, b) => a.get('programmed_at') - b.get('programmed_at'))
       .first()
   }
-)(getScript)
+)
