@@ -185,7 +185,7 @@ export const getCurrentScriptIdFieldByFieldname = createSelector(
       return
     }
     let retvalue = scripts.getIn([currentScript.toString(), field])
-    if (retvalue === 'speed') {
+    if (field === 'speed') {
       retvalue = retvalue || '1'
     }
     return retvalue
@@ -206,7 +206,7 @@ export const getCurrentScriptElapsedTime = createSelector(
   [getCurrentScriptScriptsequences],
   (scriptsequences) => {
     if (!scriptsequences || !scriptsequences.size) {
-      return
+      return 0
     }
 
     const playingSequences = scriptsequences.filter(
@@ -243,7 +243,7 @@ export const getCurrentScriptTotalTime = createSelector(
 export const getCurrentScriptRemainingTime = createSelector(
   [getCurrentScriptTotalTime, getCurrentScriptElapsedTime],
   (totalTime, elapsedTime) => {
-    return totalTime - elapsedTime
+    return totalTime - (elapsedTime||0)
   }
 )
 

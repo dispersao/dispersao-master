@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import WithScriptsequenceTimer from './HOC/helpers/ScriptsequenceTimer.jsx'
+
 import ProgressBar from './ProgressBar.jsx'
 import PlayArrowIcon from '@material-ui/icons/PlayCircleOutline'
 import useStyles from './styles'
@@ -11,12 +13,8 @@ const ScriptsequenceTimelineProgress = ({
   duration
 }) => {
   const classes = useStyles()
-
   const pgr = Math.round((elapsedTime * 100) / duration)
-  if (pgr >= 100) {
-    classesnames.push('played')
-  }
-
+  //console.log('ScriptsequenceTimelineProgress', pgr)
   return (
     <>
       <ProgressBar value={pgr} enabled={pgr > 0 && pgr < 100} direction="l-r" />
@@ -25,14 +23,17 @@ const ScriptsequenceTimelineProgress = ({
           <PlayArrowIcon />
         </div>
       )}
+      { pgr >= 100 && 
+      <div className={classes.played}/>
+      }
     </>
   )
 }
 
 ScriptsequenceTimelineProgress.propTypes = {
-  elapsedTime:PropTypes.number,
+  elapsedTime: PropTypes.number,
   sentToPlayer: PropTypes.bool,
   duration: PropTypes.number
 }
 
-export default ScriptsequenceTimelineProgress
+export default WithScriptsequenceTimer(ScriptsequenceTimelineProgress)

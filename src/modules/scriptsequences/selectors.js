@@ -1,15 +1,10 @@
-import { List } from 'immutable'
 import createCachedSelector from 're-reselect'
-import { shallowEqual } from 'react-redux'
 import { createSelector } from 'reselect'
 import { createArraySelector } from '../../utils/selectorUtils'
 
-import {
-  getSequenceBySequenceId,
-  getSequenceList
-} from '../sequences/selectors'
 
 const getState = (state) => state.scriptsequences
+const getSequences = (state) => state.sequences.get('data')
 const getId = (state, props) => props.id
 const getCurrentScriptId = (state, props) => state.scripts.get('current')
 export const getLoading = (state) => state.scriptsequences.get('loading')
@@ -20,26 +15,6 @@ export const getScriptsequences = createSelector([getState], (state) => {
   }
   return state.get('data')
 })
-
-const fetchScriptsequenceFromId = (list, id) => {
-  if (!list || !list.size || !id) {
-    return
-  }
-  return list.get(id.toString())
-}
-
-const fetchScriptsequenceFromIdFormat = (list, id, sequence) => {
-  if (!list || !list.size || !id || !sequence || !sequence.size) {
-    return
-  }
-  let scriptsequence = fetchScriptsequenceFromId(list, id)
-  return formatScriptsequenceData(scriptsequence, sequence)
-}
-
-export const getScriptsequenceByIdNoFormat = createCachedSelector(
-  [getScriptsequences, getId],
-  fetchScriptsequenceFromId
-)(getId)
 
 export const formatScriptsequenceData = (scriptsequence, sequence) => {
   const elapsedTime = scriptsequence.get('elapsedTime') || 0
@@ -100,7 +75,7 @@ export const getScriptsequenceSequenceIdById = createCachedSelector(
 )(getId)
 
 export const getScriptsequenceSequenceById = createCachedSelector(
-  [getId, getScriptsequences, getSequenceList],
+  [getId, getScriptsequences, getSequences],
   (scriptsequence, scriptsequences, sequences) => {
     if (!scriptsequence || !scriptsequences || !sequences) {
       return

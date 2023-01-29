@@ -4,22 +4,26 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import { updateScriptsequenceLocalState } from '../../../actions'
+import {
+  getScriptsequenceById,
+  getScriptsequenceSequenceById
+} from '../../../selectors'
+import { getCurrentScriptIdFieldByFieldname } from '../../../../scripts/selectors'
+import { toJS } from '../../../../../utils/immutableToJs.jsx'
 
 const WithScriptsequenceTimer = (WrappedComponent) => {
   const ScriptsequenceTimer = (props) => {
     const { scriptsequence, sequence, speed, updateProgress } = props
-
-
-    console.log('WithScriptsequenceTimer', scriptsequence)
     const SEC_INTERVAL = 1000 / Number(speed)
-    const { id, state } = scriptsequence
+    let { id, state, index, elapsedTime = 0 } = scriptsequence
+    state = state || 'idle'
     const { duration, sceneNumber } = sequence
     const [ticker, setTicker] = useState()
 
     const elapsedTimeRef = useRef(elapsedTime)
     elapsedTimeRef.current = elapsedTime
 
-    const stateRef = useRef(0)
+    const stateRef = useRef('idle')
 
     const createRef = (vari) => {
       const ref = useRef(vari)
@@ -83,6 +87,7 @@ const WithScriptsequenceTimer = (WrappedComponent) => {
     }
 
     useEffect(() => {
+      //console.log(id, 'state change', state, stateRef.current)
       const now = performance.now()
       switch (state) {
         case 'play':
@@ -123,36 +128,50 @@ const WithScriptsequenceTimer = (WrappedComponent) => {
       stateRef.current = state
     }, [state])
 
+    useEffect(() => {
+      //console.log(id, 'component mounting', state)
+      return (
+      () => {
+        //console.log(id, 'component unmount')
+        endTimeout(true)
+      })
+    }, [])
+
     return <WrappedComponent {...scriptsequence} duration={duration} />
   }
 
   ScriptsequenceTimer.propTypes = {
     id: PropTypes.number.isRequired,
-    state: PropTypes.string.isRequired,
+    scriptsequence: PropTypes.shape({
+      state: PropTypes.string,
+      elapsedTime: PropTypes.number
+    }),
     sequence: PropTypes.shape({
       duration: PropTypes.number.isRequired,
       sceneNumber: PropTypes.string.isRequired
-    }),
+    }).isRequired,
     speed: PropTypes.string.isRequired,
     updateProgress: PropTypes.func.isRequired
   }
 
   const mapStateToProps = (state, ownProps) => ({
     sequence: getScriptsequenceSequenceById(state, ownProps),
-    scriptsequence: getScriptsequenceById(state, ownProps)
+    scriptsequence: getScriptsequenceById(state, ownProps),
+    speed: getCurrentScriptIdFieldByFieldname(state, { field: 'speed' })
   })
 
   const mapDispatchtoProps = (dispatch) => ({
-    updateProgress: (id, elapsedTime) =>
+    updateProgress: (id, elapsedTime) => {
       dispatch(
         updateScriptsequenceLocalState({
           id,
           elapsedTime
         })
       )
+    }
   })
 
-  return connect(mapStateToProps, mapDispatchtoProps)(ScriptsequenceTimer)
+  return connect(mapStateToProps, mapDispatchtoProps)(toJS(ScriptsequenceTimer))
 }
 
 export default WithScriptsequenceTimer

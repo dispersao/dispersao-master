@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import states from '../../utils/stateConstants'
 import { createRandomScriptsequence } from '../../../scriptsequences/actions'
 
-import ScriptsequenceUpdate from '../../../scriptsequences/components/HOC/helpers/ScriptsequenceUpdater.jsx'
 import { getCurrentScript, getCurrentScriptRemainingTime, getCurrentScriptTotalTime } from '../../selectors'
 import { toJS } from '../../../../utils/immutableToJs.jsx'
 
