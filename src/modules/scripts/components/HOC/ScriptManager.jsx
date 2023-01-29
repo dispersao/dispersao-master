@@ -14,7 +14,7 @@ import { toJS } from '../../../../utils/immutableToJs.jsx'
 const WithScriptManager = (WrappedComponent) => {
   const ScriptManager = (props) => {
     const {
-      script: { id, state },
+      script: { id, state, manual },
       lastScriptSequence,
       elapsedTime,
       totalTime,
@@ -25,7 +25,7 @@ const WithScriptManager = (WrappedComponent) => {
 
     useEffect(() => {
       if (isLastScriptSequenceOver) {
-        if (elapsedTime >= totalTime && state !== states.FINISHED) {
+        if ((manual || elapsedTime >= totalTime) && state !== states.FINISHED) {
           endScript(id)
         }
       }
@@ -41,7 +41,8 @@ const WithScriptManager = (WrappedComponent) => {
   ScriptManager.propTypes = {
     script: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      state: PropTypes.string
+      state: PropTypes.string,
+      manual: PropTypes.bool
     }),
     elapsedTime: PropTypes.number,
     totalTime: PropTypes.number,

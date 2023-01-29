@@ -1,13 +1,13 @@
 import { makeStyles } from '@material-ui/core'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: '100%'
   },
   button: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(1)
   },
   connectButton: {
     backgroundColor: '#33ee33'
@@ -18,6 +18,18 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     color: '#ee3333',
     display: 'contents'
+  },
+  warning: {
+    fontWeight: 'bold',
+    animationName: '$colorChange',
+    animationDuration: '700ms',
+    animationTimingFunction: theme.transitions.easing.easeInOut,
+    animationIterationCount: 'infinite'
+  },
+  '@keyframes colorChange': {
+    '0%': { color: 'red' },
+    '50%': { color: theme.palette.text.primary },
+    '100%': { color: 'red' }
   },
   connectingText: {
     ...theme.typography.button,

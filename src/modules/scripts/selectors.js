@@ -209,15 +209,13 @@ export const getCurrentScriptElapsedTime = createSelector(
       return 0
     }
 
-    const playingSequences = scriptsequences.filter(
+    const lastPlayingSequence = scriptsequences.findLast(
       (el) => el.get('elapsedTime') && el.get('elapsedTime') > 0
     )
 
-    if (playingSequences && playingSequences.size) {
-      const playingSequence = playingSequences.get(playingSequences.size - 1)
-
+    if (lastPlayingSequence) {
       return scriptsequences
-        .slice(0, scriptsequences.indexOf(playingSequence) + 1)
+        .slice(0, scriptsequences.indexOf(lastPlayingSequence) + 1)
         .map((el) => {
           return el.get('elapsedTime') || 0
         })
@@ -250,13 +248,13 @@ export const getCurrentScriptRemainingTime = createSelector(
 export const getCurrentSCriptLastScriptsequence = createSelector(
   [getCurrentScript, getCurrentScriptTotalTime, getCurrentScriptScriptsequences],
   (currentScript, totalTime, scriptsequences) => {
-    if(!currentScript || !totalTime || !scriptsequences){
+    if(!currentScript || !totalTime || !scriptsequences || !scriptsequences.size){
       return
     }
    
     const averageSeconds = parseInt(currentScript.get('averagetime')) * 60
 
-    if(averageSeconds <= totalTime){
+    if(averageSeconds <= totalTime || currentScript.get('manual')){
       return scriptsequences.get(scriptsequences.size - 1)
     }
   }
