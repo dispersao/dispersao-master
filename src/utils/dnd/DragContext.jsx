@@ -20,7 +20,6 @@ const DragContext = React.memo(({
   orderedScriptsequences = [],
   sequences = []
 }) => {
-  console.log('DragContext', orderedScriptsequences, sequences, script)
   useEffect(() => {
     console.log('orderedScriptsequences changed')
   }, [orderedScriptsequences])

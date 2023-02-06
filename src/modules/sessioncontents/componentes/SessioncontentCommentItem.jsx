@@ -1,11 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
-import { Publish, Refresh, Delete } from '@material-ui/icons'
+import { connect } from 'react-redux'
+import { toJS } from '../../../utils/immutableToJs.jsx'
 
 import CommentListItem from '../../comments/components/CommentListItem.jsx'
-
-import SessioncontentPublisher from './HOC/SessioncontentPublisher.jsx'
 
 import { toHHMMSS } from '../../../utils/stringUtils'
 import useStyles from './styles/'
@@ -17,13 +15,11 @@ import {
   Grid,
   IconButton
 } from '@material-ui/core'
+import { getSessioncontentById } from '../selectors.js'
+import Republisher from './Republisher.jsx'
 
 const SessioncontentCommentItem = ({
-  comment,
-  state,
-  programmed_at,
-  onRepublish,
-  onUnpublish
+  commentSessioncontent: { comment, state, programmed_at, id },
 }) => {
   const allow_republish = ALLOW_REPUBLISH
 
@@ -51,25 +47,12 @@ const SessioncontentCommentItem = ({
                 {text}
               </Typography>
             </Grid>
-            {(allow_republish && (
-              <Grid item xs>
-                <IconButton fontSize="small" onClick={onRepublish}>
-                  {(state === 'pending' && <Publish />) || null}
-                  {(state === 'published' && <Refresh />) || null}
-                </IconButton>
-                {(state === 'published' && (
-                  <IconButton fontSize="small" onClick={onUnpublish}>
-                    <Delete />
-                  </IconButton>
-                )) ||
-                  null}
-              </Grid>
-            )) ||
+            {(allow_republish && <Republisher id={id} state={state} />) ||
               null}
           </Grid>
         </Grid>
         <GridList cellHeight="auto" cols={1}>
-          <CommentListItem {...comment} />
+          <CommentListItem id={comment} />
         </GridList>
       </Grid>
     </GridListTile>
@@ -77,11 +60,18 @@ const SessioncontentCommentItem = ({
 }
 
 SessioncontentCommentItem.propTypes = {
-  comment: PropTypes.object,
-  state: PropTypes.string,
-  programmed_at: PropTypes.number,
+  commentSessioncontent: PropTypes.shape({
+    comment: PropTypes.number,
+    state: PropTypes.string,
+    programmed_at: PropTypes.number
+  }),
   onRepublish: PropTypes.func,
   onUnpublish: PropTypes.func
 }
 
-export default SessioncontentPublisher(SessioncontentCommentItem)
+const mapStateToProps = (state, ownProps) => ({
+  commentSessioncontent: getSessioncontentById(state, ownProps)
+})
+
+export default connect(mapStateToProps)(toJS(SessioncontentCommentItem))
+

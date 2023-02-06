@@ -3,13 +3,8 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import { toJS } from '../../../utils/immutableToJs.jsx'
-import { getPostsListNotInSession } from '../selectors'
-
-import PostListItem from './PostListItem.jsx'
+import { getPostsIds } from '../selectors'
 import useStyles from './styles/'
-
-import CommentListItem from '../../comments/components/CommentListItem.jsx'
-
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {
@@ -19,47 +14,47 @@ import {
   AccordionDetails,
   Typography
 } from '@material-ui/core'
-
+import UnpublishedPostItem from './UnpublishedPostItem.jsx'
 
 const UnpublishedPosts = ({ posts }) => {
   const classes = useStyles()
 
   return (
     <>
-      {posts && (posts.length || '') && 
+      {posts && (posts.length || '') && (
         <div className={classes.tabsRoot}>
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
-              id="panel1a-header">
-              <Typography className={classes.heading}>Unpublished Content</Typography>
+              id="panel1a-header"
+            >
+              <Typography className={classes.heading}>
+                Unpublished Content
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <GridList cellHeight={180}>
-                {posts.map((post, key) => <PostListItem key={key} {...post} CommentComp={CommentListItem} />) }
+                { posts
+                  .map((post, key) => (
+                    <UnpublishedPostItem id={post} key={key} />
+                    )).filter(Boolean)
+                  }
               </GridList>
             </AccordionDetails>
           </Accordion>
         </div>
-      }
-      
+      )}
     </>
   )
 }
 
 UnpublishedPosts.propTypes = {
-  posts: PropTypes.array
+  posts: PropTypes.arrayOf(PropTypes.number)
 }
 
-const mapStateToProps = (state, ownProps) => {
-  let posts = getPostsListNotInSession(state, ownProps)
-  return {
-    posts
-  }
-}
+const mapStateToProps = (state, ownProps) => ({
+  posts: getPostsIds(state, ownProps)
+})
 
-export default connect(
-  mapStateToProps,
-  null
-)(toJS(UnpublishedPosts))
+export default connect(mapStateToProps, null)(toJS(UnpublishedPosts))

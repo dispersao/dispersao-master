@@ -5,6 +5,7 @@ import { Paper, Tabs, Tab, Divider } from '@material-ui/core'
 
 import useStyles from './styles'
 
+import UnpublishedPosts from '../../posts/components/UnpublishedPosts.jsx'
 import ScriptTab from './ScriptTab.jsx'
 import Sequences from '../../sequences/components/Sequences.jsx'
 import Timeline from '../../scriptsequences/components/Timeline.jsx'
@@ -42,11 +43,11 @@ const ScriptTabs = () => {
           <Sequences />
         </DragContext>
       </ScriptTab>
-      {/* <ScriptTab index={1} value={value}>
+      <ScriptTab index={1} value={value}>
         <UnpublishedPosts />
         <Divider />
         <SessioncontentsGrid/>
-      </ScriptTab> */}
+      </ScriptTab>
     </Paper>
   )
 }

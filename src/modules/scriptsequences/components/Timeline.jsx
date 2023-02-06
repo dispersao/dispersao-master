@@ -15,7 +15,7 @@ const Timeline = React.memo(({ scriptsequences, loading = false }) => {
   const classes = useStyles()
 
   const getSequencesComps = () =>
-    sortBy(scriptsequences, 'index').map((scriptseq, idx) => {
+    scriptsequences.map((scriptseq, idx) => {
       return <Scriptsequence key={scriptseq} id={scriptseq} index={idx} />
     })
   return (

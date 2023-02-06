@@ -6,34 +6,41 @@ import { sortEntity } from '../../utils/listUtils'
 
 import { getContentcreatorsList } from '../contentcreators/selectors'
 
-
 const getState = (state) => state.comments
 const getId = (state, props) => props.id
 const getCommentId = (state, props) => props.comment
 
-export const getComments = createSelector(
-  [getState], (state) => {
-    if (!state) {
-      return 
-    }
-    return state.get('data')
+export const getComments = createSelector([getState], (state) => {
+  if (!state) {
+    return
   }
-)
-export const getCommentsList = createSelector(
-  [getComments], (coments) => {
-    if (!coments) {
-      return 
+  return state.get('data')
+})
+
+export const getCommentContentcreatorByCommentId = createCachedSelector(
+  [getId, getComments, getContentcreatorsList],
+  (id, comments, contentcreators) => {
+    if (!id || !comments || !contentcreators) {
+      return
     }
-    return coments.valueSeq()
+    return contentcreators.get(
+      comments.get(id.toString()).get('contentcreator').toString()
+    )
   }
-)
+)(getId)
+
+export const getCommentsList = createSelector([getComments], (coments) => {
+  if (!coments) {
+    return
+  }
+  return coments.valueSeq()
+})
 
 export const getCommentsListFormatted = createSelector(
   [getComments, getContentcreatorsList],
   (comments, contentcreators) => {
-  
     const lists = [comments, contentcreators]
-    const anyEmpty = lists.some(list => !list || !list.size)
+    const anyEmpty = lists.some((list) => !list || !list.size)
 
     if (anyEmpty) {
       return
@@ -42,10 +49,7 @@ export const getCommentsListFormatted = createSelector(
     return comments
       .valueSeq()
       .sort(sortEntity)
-      .map(comment => formatCommentForAlgorithm(
-        comment,
-        contentcreators
-      ))
+      .map((comment) => formatCommentForAlgorithm(comment, contentcreators))
   }
 )
 
@@ -57,11 +61,13 @@ const fetchCommentById = (list, id) => {
 }
 
 export const getCommentById = createCachedSelector(
-  [getCommentsList, getId], fetchCommentById
+  [getComments, getId],
+  fetchCommentById
 )(getId)
 
 export const getCommentByCommentId = createCachedSelector(
-  [getCommentsList, getCommentId], fetchCommentById
+  [getCommentsList, getCommentId],
+  fetchCommentById
 )(getCommentId)
 
 const formatCommentForAlgorithm = (comment, contentcreatorsList) => {
@@ -69,7 +75,9 @@ const formatCommentForAlgorithm = (comment, contentcreatorsList) => {
     comment.get('contentcreator').toString()
   )
 
-  return comment.mergeDeep(fromJS({
-    contentcreator
-  }))
+  return comment.mergeDeep(
+    fromJS({
+      contentcreator
+    })
+  )
 }

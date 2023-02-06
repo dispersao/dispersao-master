@@ -1,15 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { connect } from 'react-redux'
+
+import { toJS } from '../../../utils/immutableToJs.jsx'
+
 import useStyles from './styles/'
 
-import {
-  GridListTile,
-  Typography,
-  Grid
-} from '@material-ui/core'
+import { GridListTile, Typography, Grid } from '@material-ui/core'
+import { getCommentById, getCommentContentcreatorByCommentId } from '../selectors'
 
-const CommentListItem = ({ contentcreator, content }) => {
+const CommentListItem = ({
+  contentcreator: { name },
+  comment: { content }
+}) => {
   const classes = useStyles()
 
   return (
@@ -17,10 +21,10 @@ const CommentListItem = ({ contentcreator, content }) => {
       <Grid container direction="column" spacing={2}>
         <Grid item xs>
           <Typography variant="body2" color="textSecondary">
-            {contentcreator.name} commented:
+            {name} commented:
           </Typography>
           <Typography variant="body2" gutterBottom>
-            {content} 
+            {content}
           </Typography>
         </Grid>
       </Grid>
@@ -29,8 +33,17 @@ const CommentListItem = ({ contentcreator, content }) => {
 }
 
 CommentListItem.propTypes = {
-  contentcreator: PropTypes.object,
-  content: PropTypes.string
+  comment: PropTypes.shape({
+    content: PropTypes.string
+  }),
+  contentcreator: PropTypes.shape({
+    name: PropTypes.string
+  }).isRequired
 }
 
-export default CommentListItem
+const mapStateToProps = (state, ownProps) => ({
+  comment: getCommentById(state, ownProps),
+  contentcreator: getCommentContentcreatorByCommentId(state, ownProps)
+})
+
+export default connect(mapStateToProps)(toJS(CommentListItem))

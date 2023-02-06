@@ -17,7 +17,7 @@ import {
 
 import { getProfileList } from '../../../profiles/selectors'
 import {
-  getSessioncontentsListByType,
+  getCurrentScriptSessioncontentsListByType,
   getNextContentToPublish
 } from '../../../sessioncontents/selectors'
 
@@ -107,7 +107,7 @@ const WithAppContentManager = (WrappedComponent) => {
   const mapStateToProps = (state, ownProps) => ({
     script: getCurrentScript(state),
     profiles: getProfileList(state),
-    profileSessioncontent: getSessioncontentsListByType(state, {
+    profileSessioncontent: getCurrentScriptSessioncontentsListByType(state, {
       ...ownProps,
       type: 'profile'
     }),
