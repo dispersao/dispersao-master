@@ -1,6 +1,8 @@
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 
+import { List } from 'immutable'
+
 import { sortEntity } from '../../utils/listUtils'
 import { createArraySelector } from '../../utils/selectorUtils'
 import { getCategoriesList } from '../categories/selectors'
@@ -98,13 +100,15 @@ export const getSequenceIsFiltered = createCachedSelector(
             list = [list]
           }
         }
+        let ret
         if (option === 'and') {
-          return filterValue.every((el) => list.includes(el))
+          ret = filterValue.every((el) => list.includes(el))
         } else if (option === 'or') {
-          return filterValue.some((el) => list.includes(el))
+          ret =  filterValue.some((el) => list.includes(el))
         } else if (option === 'exclude') {
-          return filterValue.every((el) => !list.includes(el))
+          ret =  filterValue.every((el) => !list.includes(el))
         }
+        return ret
       })
     }
   }
@@ -117,7 +121,7 @@ export const getSequenceIsInCurrentScript = createCachedSelector(
       return
     }
     return scriptsequences.some(
-      (sseq) => sseq.get('sequence') === id && sseq.get('script') === script
+      (sseq) => sseq.get('sequence').toString() === id.toString() && sseq.get('script').toString() === script.toString()
     )
   }
 )(getId)

@@ -18,7 +18,6 @@ export const bulkUpdateScriptsequence = async (scriptsequences) => {
 }
 
 export const deleteScriptsequence = async (id) => {
-  console.log(`/scriptsequences/${id}`)
   const scriptsequence = await axios.delete(`/scriptsequences/${id}`)
   return normalizeScriptsequence(scriptsequence.data)
 }

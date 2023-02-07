@@ -14,23 +14,23 @@ import useStyles from './styles'
 import { getLoading } from '../../scriptsequences/selectors'
 import { getSequenceIsFiltered, getSequenceIsInCurrentScript } from '../newSelectors'
 
-const SequenceBucketItem = ({
+const SequenceBucketItem = React.memo(({
+  sequence,
   id,
   index,
   inCurrentScript = false,
   filtered = false,
   loading = false
-}) => {
-  
-const classname = filtered ? 'disabled' : 'enabled'
+}) => {  
+const classname = filtered ? 'enabled' : 'disabled'
 const classes = useStyles()
 
   return (
-    <Sequence id={id} classes={classes[classname]} component={DraggableFactory(id.toString(), index, true, loading)}>
+    <Sequence id={id} classNames={classes[classname]} component={DraggableFactory(id.toString(), index, true, loading)}>
       {inCurrentScript && <PlayedIcon className={classes.playedIcon} />}
       </Sequence>
   )
-}
+})
 
 SequenceBucketItem.propTypes = {
   id: PropTypes.string.isRequired,

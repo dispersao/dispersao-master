@@ -9,11 +9,12 @@ import MultiFilter from './MultiFilter.jsx'
 import { getCurrentScriptId } from '../../../scripts/selectors'
 
 const ConnectMultifilter = (
-  { name, field, options, data, type, listFunc, script }
+  { name, field, options, data, type, listFunc }
 ) => {
   const ConnectedFilter = ({
     list,
     filter = { value: [] },
+    script,
     onUpdateFilter
   }) => {
 
