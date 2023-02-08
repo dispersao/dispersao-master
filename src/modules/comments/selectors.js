@@ -8,7 +8,6 @@ import { getContentcreatorsList } from '../contentcreators/selectors'
 
 const getState = (state) => state.comments
 const getId = (state, props) => props.id
-const getCommentId = (state, props) => props.comment
 
 export const getComments = createSelector([getState], (state) => {
   if (!state) {
@@ -65,10 +64,6 @@ export const getCommentById = createCachedSelector(
   fetchCommentById
 )(getId)
 
-export const getCommentByCommentId = createCachedSelector(
-  [getCommentsList, getCommentId],
-  fetchCommentById
-)(getCommentId)
 
 const formatCommentForAlgorithm = (comment, contentcreatorsList) => {
   const contentcreator = contentcreatorsList.get(

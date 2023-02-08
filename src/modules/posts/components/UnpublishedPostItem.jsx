@@ -21,7 +21,6 @@ const UnpublishedPostItem = ({
   if (isPublished && comments.length === publishedComments.length) {
     return null
   } else {
-    console.log(id, isPublished, comments, publishedComments)
     return (
       <PostListItem id={id} disabled={isPublished}>
         {comments.map((comment, key) => (

@@ -21,12 +21,3 @@ export const getCharactersListAsArray = createSelector(
   }
 )
 
-export const getCharactersById = createCachedSelector(
-  [getCharactersList, getCharactersId],
-  (list, id) => {
-    if (!list || !list.size || !id) {
-      return
-    }
-    return list.get(id.toString())
-  }
-)(getCharactersId)

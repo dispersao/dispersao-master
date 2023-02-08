@@ -25,7 +25,6 @@ export const formatScriptsequenceData = (scriptsequence, sequence) => {
     state
   })
 }
-///-----------new methods
 
 export const getScriptsequenceById = createCachedSelector(
   [getId, getScriptsequences],

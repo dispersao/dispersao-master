@@ -38,7 +38,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       })
     )},
   unpublishContent: () => {
-    console.log(ownProps.id)
     dispatch(
       updateSessioncontentState({
         id: ownProps.id,

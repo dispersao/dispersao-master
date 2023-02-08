@@ -30,10 +30,6 @@ const fetchLocationById = (list, id) => {
   return list.get(id.toString())
 }
 
-export const getLocationById = createCachedSelector(
-  [getLocationsList, getId], fetchLocationById
-)(getId)
-
 export const getLocationByLocationId = createCachedSelector(
   [getLocationsList, getLocationId], fetchLocationById
 )(getLocationId)

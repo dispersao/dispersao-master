@@ -14,7 +14,7 @@ import {
   getSequenceCategoriesById,
   getSequenceLocationById,
   getSequenceTypeById
-} from '../newSelectors'
+} from '../selectors'
 
 const padStart = require('lodash/padStart')
 

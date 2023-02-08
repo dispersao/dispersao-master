@@ -7,30 +7,36 @@ import DraggableFactory from '../../../utils/dnd/DraggableFactory.jsx'
 import PlayedIcon from '@material-ui/icons/ClearOutlined'
 
 import { toJS } from '../../../utils/immutableToJs.jsx'
-import { getSequenceById } from '../selectors'
-
 
 import useStyles from './styles'
 import { getLoading } from '../../scriptsequences/selectors'
-import { getSequenceIsFiltered, getSequenceIsInCurrentScript } from '../newSelectors'
+import {
+  getSequenceIsFiltered,
+  getSequenceIsInCurrentScript
+} from '../selectors'
 
-const SequenceBucketItem = React.memo(({
-  sequence,
-  id,
-  index,
-  inCurrentScript = false,
-  filtered = false,
-  loading = false
-}) => {  
-const classname = filtered ? 'enabled' : 'disabled'
-const classes = useStyles()
+const SequenceBucketItem = React.memo(
+  ({
+    id,
+    index,
+    inCurrentScript = false,
+    filtered = false,
+    loading = false
+  }) => {
+    const classname = filtered ? 'enabled' : 'disabled'
+    const classes = useStyles()
 
-  return (
-    <Sequence id={id} classNames={classes[classname]} component={DraggableFactory(id.toString(), index, true, loading)}>
-      {inCurrentScript && <PlayedIcon className={classes.playedIcon} />}
+    return (
+      <Sequence
+        id={id}
+        classNames={classes[classname]}
+        component={DraggableFactory(id.toString(), index, true, loading)}
+      >
+        {inCurrentScript && <PlayedIcon className={classes.playedIcon} />}
       </Sequence>
-  )
-})
+    )
+  }
+)
 
 SequenceBucketItem.propTypes = {
   id: PropTypes.string.isRequired,
@@ -38,15 +44,10 @@ SequenceBucketItem.propTypes = {
   filtered: PropTypes.bool
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    sequence: getSequenceById(state, ownProps),
-    loading: getLoading(state),
-    filtered: getSequenceIsFiltered(state, ownProps) ,
-    inCurrentScript: getSequenceIsInCurrentScript(state, ownProps)
-  }
-}
+const mapStateToProps = (state, ownProps) => ({
+  loading: getLoading(state),
+  filtered: getSequenceIsFiltered(state, ownProps),
+  inCurrentScript: getSequenceIsInCurrentScript(state, ownProps)
+})
 
-export default connect(mapStateToProps, null)(
-  toJS(SequenceBucketItem)
-)
+export default connect(mapStateToProps, null)(toJS(SequenceBucketItem))

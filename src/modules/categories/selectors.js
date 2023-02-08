@@ -34,12 +34,4 @@ export const getCategoryById = createCachedSelector(
   }
 )(getCategoryId)
 
-export const getCategoriesByCategoriesIds = createCachedSelector(
-  [getCategoriesList, getCategoriesIds],
-  (list, ids) => {
-    if (!list || !list.size || !ids || !ids.length) {
-      return
-    }
-    return list.filter((cat) => ids.includes(cat.get('id'))).valueSeq()
-  }
-)((list, ids) => JSON.stringify(ids))
+

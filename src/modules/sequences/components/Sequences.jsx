@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import { toJS } from '../../../utils/immutableToJs.jsx'
-import { getSequencesIds } from '../newSelectors'
+import { getSequencesIds } from '../selectors'
 import SequencesFilter from '../../filters/components/SequencesFilter.jsx'
 
 import useStyles from './styles'

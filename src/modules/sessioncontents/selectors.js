@@ -43,18 +43,6 @@ export const getCurrentScriptPostSessioncontentsIds = createArraySelector(
   }
 )
 
-export const getCurrentScriptSessioncontentsListIdsByType =
-  createCachedSelector(
-    [getCurrentScriptSessioncontentsListByType, getType],
-    (sessioncontents, type) => {
-      if (!sessioncontents) {
-        return
-      } else {
-        return sessioncontents.map((sc) => sc.get('id'))
-      }
-    }
-  )(getType)
-
 export const getCurrentScriptSessioncontentsListByType = createCachedSelector(
   [getSessioncontents, getType, getCurrentScriptId],
   (sessioncontents, type, script) => {
@@ -112,17 +100,6 @@ export const getPostSessioncontentCommentSessioncontentsIdsById =
       return commentSessioncontents.map((sc) => sc.get('id'))
     }
   )(getId)
-
-//-------------
-export const getSessioncontentsList = createSelector(
-  [getSessioncontents],
-  (sessioncontents) => {
-    if (!sessioncontents) {
-      return
-    }
-    return sessioncontents.valueSeq()
-  }
-)
 
 
 export const getNextContentToPublish = createSelector(

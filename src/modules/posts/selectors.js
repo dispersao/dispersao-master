@@ -91,40 +91,6 @@ export const getPostPublishedComment = createCachedSelector(
   }
 )(getId)
 
-export const isPostFullyPublished = createCachedSelector(
-  [getId, getCurrentScriptId, getSessioncontents, getPosts, getCommentsList],
-  (id, script, sessioncontents, posts, comments) => {
-    if (!id || !script || !sessioncontents || !posts || !comments) {
-      return
-    }
-
-    const postSessioncontent = sessioncontents.find(
-      (sescon) =>
-        sescon.get('script').toString() === script.toString() &&
-        sescon.get('post') &&
-        sescon.get('post').toString() === id.toString()
-    )
-
-    if (postSessioncontent) {
-      const postComments = comments
-        .filter((comment) => comment.get('post').toString() === id.toString())
-        .map((comment) => comment.get('id'))
-      return postComments.every((comment) =>
-        sessioncontents.find(
-          (sescon) =>
-            sescon.get('script').toString() === script.toString() &&
-            sescon.get('comment') &&
-            sescon.get('comment').toString() === comment.toString()
-        )
-      )
-    } else {
-      return false
-    }
-  }
-)(getId)
-
-//--------------------------------
-
 export const getPostList = createSelector([getPosts], (posts) => {
   if (!posts) {
     return
@@ -166,23 +132,6 @@ export const getPostByPostId = createCachedSelector(
   fetchPostById
 )(getPostId)
 
-export const getPostByPostIdFormatted = createCachedSelector(
-  [getPostId, getPosts, getCommentsList, getContentcreatorsList, getApiUrl],
-  (id, posts, comments, contentcreators, url) => {
-    if (
-      !id ||
-      !posts ||
-      !posts.size ||
-      !comments ||
-      !contentcreators ||
-      !contentcreators.size ||
-      !url
-    ) {
-      return
-    }
-    return formatPost(posts.get(id.toString()), comments, contentcreators, url)
-  }
-)(getPostId)
 
 export const formatPost = (post, commentsList, contentcreatorsList, url) => {
   const contentcreator = contentcreatorsList.get(

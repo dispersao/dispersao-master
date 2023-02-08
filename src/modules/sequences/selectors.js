@@ -1,36 +1,146 @@
 import createCachedSelector from 're-reselect'
-import { fromJS, List } from 'immutable'
 import { createSelector } from 'reselect'
 
-import { sortEntity } from '../../utils/listUtils'
+import { List } from 'immutable'
 
-import { getTypeByTypeId, getTypesList } from '../types/selectors'
-import {
-  getLocationByLocationId,
-  getLocationsList
-} from '../locations/selectors'
+import { sortEntity } from '../../utils/listUtils'
+import { createArraySelector } from '../../utils/selectorUtils'
 import { getCategoriesList } from '../categories/selectors'
+import { getCurrentScriptIdFilters } from '../filters/selectors'
+import { getLocationsList } from '../locations/selectors'
 import { getPartsList } from '../parts/selectors'
+import { getScriptsequences } from '../scriptsequences/selectors'
+import { getTypesList } from '../types/selectors'
 import { getCharactersList } from '../characters/selectors'
 
-const getState = (state) => state.sequences
 const getId = (state, props) => props.id
-const getSequenceId = (state, props) => props.sequence
+const getState = (state) => state.sequences
 
-const getData = (state) => {
+const getCurrentScriptId = (state) => state.scripts.get('current')
+
+export const getSequences = createSelector([getState], (state) => {
   if (!state) {
     return
   }
   return state.get('data')
-}
-export const getSequences = createSelector([getState], getData)
-
+})
 export const getSequenceList = createSelector([getSequences], (sequences) => {
   if (!sequences) {
     return
   }
   return sequences.valueSeq().sort(sortEntity)
 })
+
+
+export const getSequencesIds = createSelector([getSequences], (sequences) => {
+  if (!sequences) {
+    return
+  }
+  return sequences.sort(sortEntity).keySeq()
+})
+
+export const getSequenceById = createCachedSelector(
+  [getSequences, getId],
+  (sequences, id) => {
+    if (!sequences || !id) {
+      return
+    } else {
+      return sequences.get(id.toString())
+    }
+  }
+)(getId)
+
+export const getSequenceTypeById = createCachedSelector(
+  [getSequenceById, getTypesList],
+  (sequence, types) => {
+    if (!sequence || !types) {
+      return
+    }
+    return types.get(sequence.get('type').toString())
+  }
+)(getId)
+
+export const getSequenceLocationById = createCachedSelector(
+  [getSequenceById, getLocationsList],
+  (sequence, locations) => {
+    if (!sequence || !locations) {
+      return
+    }
+    return locations.get(sequence.get('location').toString())
+  }
+)(getId)
+
+export const getSequenceCategoriesById = createCachedSelector(
+  [getSequenceById, getCategoriesList],
+  (sequence, categories) => {
+    if (!sequence || !categories) {
+      return
+    }
+    return categories
+      .filter((cat) => sequence.get('categories').includes(cat.get('id'))).valueSeq()
+  }
+)({
+  selectorCreator: createArraySelector,
+  keySelector: getId
+})
+
+export const getSequenceIsFiltered = createCachedSelector(
+  [getSequenceById, getCurrentScriptIdFilters, getPartsList],
+  (sequence, filters, parts) => {
+    if (!sequence || !parts) {
+      return
+    } else if (!filters || !filters.size) {
+      return true
+    } else {
+      return filters.every((filter) => {
+        const dataType = filter.get('data')
+        const filterValue = filter.get('value')
+        const option = filter.get('option')
+        let list
+
+        if (!filterValue.size) {
+          return true
+        }
+
+        if (dataType === 'characters') {
+          list = sequence
+            .get('parts')
+            .map((partId) => parts.get(partId.toString()))
+            .map((part) => part.get('characters'))
+            .flatten()
+            .toSet()
+        } else {
+          list = sequence.get(dataType)
+          if (!List.isList(list)) {
+            list = [list]
+          }
+        }
+        let ret
+        if (option === 'and') {
+          ret = filterValue.every((el) => list.includes(el))
+        } else if (option === 'or') {
+          ret =  filterValue.some((el) => list.includes(el))
+        } else if (option === 'exclude') {
+          ret =  filterValue.every((el) => !list.includes(el))
+        }
+        return ret
+      })
+    }
+  }
+)(getId)
+
+export const getSequenceIsInCurrentScript = createCachedSelector(
+  [getCurrentScriptId, getScriptsequences, getId],
+  (script, scriptsequences, id) => {
+    if (!script || !scriptsequences || !id) {
+      return
+    }
+    return scriptsequences.some(
+      (sseq) => sseq.get('sequence').toString() === id.toString() && sseq.get('script').toString() === script.toString()
+    )
+  }
+)(getId)
+
 
 export const getSequenceListFormatted = createSelector(
   [
@@ -65,55 +175,6 @@ export const getSequenceListFormatted = createSelector(
   }
 )
 
-
-const fetchSequenceFromId = (
-  list,
-  id,
-  type,
-  location,
-  parts,
-  characters,
-  categories
-) => {
-  if (!list || !list.size || !id || !type || !location) {
-    return
-  }
-  let sequence = list.get(id.toString())
-  return formatSequenceForAlgorithm(
-    sequence,
-    type,
-    location,
-    parts,
-    characters,
-    categories
-  )
-}
-
-export const getSequenceBySequenceId = createCachedSelector(
-  [
-    getSequences,
-    getSequenceId,
-    getTypeByTypeId,
-    getLocationByLocationId,
-    getPartsList,
-    getCharactersList,
-    getCategoriesList
-  ],
-  fetchSequenceFromId
-)(getSequenceId)
-
-export const getSequenceById = createCachedSelector(
-  [
-    getSequences,
-    getId,
-    getTypesList,
-    getLocationsList,
-    getPartsList,
-    getCharactersList,
-    getCategoriesList
-  ],
-  fetchSequenceFromId
-)(getId)
 
 const formatSequenceForAlgorithm = (
   seq,
@@ -153,3 +214,4 @@ const formatSequenceForAlgorithm = (
 
   return mergedSeq
 }
+
