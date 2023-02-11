@@ -9,7 +9,7 @@ import {
   getCurrentScriptScriptsequences
 } from '../scriptsequences/selectors'
 
-import { getSequenceList, getSequences } from '../sequences/selectors'
+import { getSequences } from '../sequences/selectors'
 import { getSessioncontents } from '../sessioncontents/selectors'
 
 const getState = (state) => state.scripts
@@ -227,34 +227,49 @@ export const getCurrentScriptElapsedTime = createSelector(
 )
 
 export const getCurrentScriptTotalTime = createSelector(
-  [getCurrentScriptScriptsequences, getSequenceList],
+  [getCurrentScriptScriptsequences, getSequences],
   (scriptsequences, sequences) => {
-    if(!scriptsequences || !sequences){
+    if (!scriptsequences || !sequences) {
       return
     }
-    return scriptsequences
-      .map((el) => sequences.getIn([el.get('sequence').toString(), 'duration']))
-      .reduce((a, b) => a + b) || 0
+
+    return (
+      scriptsequences
+        .map((el) => {
+          const sequence = sequences.get(el.get('sequence').toString())
+          return sequence.get('duration')
+        })
+        .reduce((a, b) => a + b) || 0
+    )
   }
 )
 
 export const getCurrentScriptRemainingTime = createSelector(
   [getCurrentScriptTotalTime, getCurrentScriptElapsedTime],
   (totalTime, elapsedTime) => {
-    return totalTime - (elapsedTime||0)
+    return totalTime - (elapsedTime || 0)
   }
 )
 
 export const getCurrentSCriptLastScriptsequence = createSelector(
-  [getCurrentScript, getCurrentScriptTotalTime, getCurrentScriptScriptsequences],
+  [
+    getCurrentScript,
+    getCurrentScriptTotalTime,
+    getCurrentScriptScriptsequences
+  ],
   (currentScript, totalTime, scriptsequences) => {
-    if(!currentScript || !totalTime || !scriptsequences || !scriptsequences.size){
+    if (
+      !currentScript ||
+      !totalTime ||
+      !scriptsequences ||
+      !scriptsequences.size
+    ) {
       return
     }
-   
+
     const averageSeconds = parseInt(currentScript.get('averagetime')) * 60
 
-    if(averageSeconds <= totalTime || currentScript.get('manual')){
+    if (averageSeconds <= totalTime || currentScript.get('manual')) {
       return scriptsequences.get(scriptsequences.size - 1)
     }
   }

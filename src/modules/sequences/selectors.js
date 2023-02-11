@@ -1,7 +1,7 @@
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 
-import { List } from 'immutable'
+import { List, fromJS } from 'immutable'
 
 import { sortEntity } from '../../utils/listUtils'
 import { createArraySelector } from '../../utils/selectorUtils'
