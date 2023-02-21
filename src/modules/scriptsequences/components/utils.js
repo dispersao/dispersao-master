@@ -1,13 +1,13 @@
-export const reorderScriptsequences = (source, destination) => {
+export const reorderScriptsequences = ({source, destination, list}) => {
   const moveForward = source > destination
-  const movedScriptSequence = orderedScriptsequences[source]
+  const movedScriptSequence = list[source]
   const iniSlice = moveForward ? destination : source + 1
   const endSlice = moveForward ? source : destination + 1
-  let reordered = orderedScriptsequences.slice(iniSlice, endSlice)
+  let reordered = list.slice(iniSlice, endSlice)
   const step = moveForward ? 1 : -1
   reordered = reordered.map((id) => ({
     id,
-    index: orderedScriptsequences.indexOf(id) + step
+    index: list.indexOf(id) + step
   }))
   reordered.push({
     id: movedScriptSequence,
@@ -16,12 +16,12 @@ export const reorderScriptsequences = (source, destination) => {
 
   reordered = (reordered.length && reordered) || null
 
-  createUpdateDelete(null, reordered)
-
   console.log(
     'after reordering script sequences',
     iniSlice,
     endSlice,
     reordered
   )
+
+  return reordered
 }

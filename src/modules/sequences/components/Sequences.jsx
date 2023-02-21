@@ -26,7 +26,6 @@ import WithContextProps from '../../../utils/dnd/HOC/WithContextProps.jsx'
 
 const Sequences = React.memo(({ sequences }) => {
   const classes = useStyles()
-  console.log('rendering Sequences')
 
   return (
     <div className={classes.root}>

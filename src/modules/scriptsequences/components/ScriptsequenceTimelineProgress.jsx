@@ -17,7 +17,7 @@ const ScriptsequenceTimelineProgress = React.memo(({
   const pgr = Math.round((elapsedTime * 100) / duration)
   return (
     <>
-    <div className={classes.id}>{id}</div>
+    {/**<div className={classes.id}>{id}</div>**/}
       <ProgressBar value={pgr} enabled={pgr > 0 && pgr < 100} direction="l-r" />
       {pgr < 100 && sentToPlayer && (
         <div className={classes.sentMarker}>

@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme) => {
       minHeight: 120
     },
     loading: {
-      width: '50px !important',
-      height: '50px !important',
+      width: '50 !important',
+      height: '50 !important',
       margin: 2,
       display: 'inline-block'
     },
@@ -86,12 +86,26 @@ const useStyles = makeStyles((theme) => {
         opacity: 0.3
       }
     },
+    deleteScriptSequence: {
+      right: 0,
+      margin: 5,
+      position: 'absolute',
+      color: 'white',
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: 5,
+      padding: 1,
+      fontSize: 10
+    },
     id: {
       position: 'absolute',
       zIndex: 99,
-      color: 'red',
-      padding: 5,
-      right: 0
+      color: 'lightgray',
+      left: 0,
+      right: 0,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      width: 10,
+      padding: 5
     }
   }
 })

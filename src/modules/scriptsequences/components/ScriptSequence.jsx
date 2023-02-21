@@ -8,6 +8,7 @@ import useStyles from './styles'
 import Sequence from '../../sequences/components/Sequence.jsx'
 import { getScriptsequenceFieldByFieldName, getScriptsequenceSequenceIdById } from '../selectors.js'
 import ScriptsequenceTimelineProgress from './ScriptsequenceTimelineProgress.jsx'
+import DeleteScriptsequence from './DeleteScriptsequence.jsx'
 
 const Scriptsequence = React.memo(({
   id,
@@ -25,6 +26,7 @@ const Scriptsequence = React.memo(({
       <GridList cellHeight="auto" cols={1}>
         <Sequence id={sequence}  />
         <ScriptsequenceTimelineProgress id={id}/>
+        {!sentToPlayer && <DeleteScriptsequence id={id} />}
       </GridList>
     </GridListTile>
   )

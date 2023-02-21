@@ -14,8 +14,6 @@ import WithContextProps from '../../../utils/dnd/HOC/WithContextProps.jsx'
 
 const Timeline = React.memo(({ scriptsequences, loading = false }) => {
   const classes = useStyles()
-  console.log('rendering timeline')
-  
   const getSequencesComps = () =>
     scriptsequences.map((scriptseq, idx) => {
       return <Scriptsequence key={scriptseq} id={scriptseq} index={idx} />
@@ -26,20 +24,21 @@ const Timeline = React.memo(({ scriptsequences, loading = false }) => {
         Timeline
       </Typography>
       <div className={classes.root}>
-        <ScriptSequenceSortable
-          id="timeline"
-          tag={GridList}
-          list={scriptsequences.map(ssc => ({id:`${ssc}_ssc`}))}
-          setList={(list)=> {}}
-          ghostClass={classes.ghostDrag}
-          groupName="shared"
-          sort={true}
-          clone={false}
-        >
-          {getSequencesComps()}
-          {/**(loading && <CircularProgress className={classes.loading} />) ||
-            null**/}
-        </ScriptSequenceSortable>
+        {!loading && (
+          <ScriptSequenceSortable
+            id="timeline"
+            tag={GridList}
+            list={scriptsequences.map((ssc) => ({ id: `${ssc}_ssc` }))}
+            setList={(list) => {}}
+            ghostClass={classes.ghostDrag}
+            groupName="shared"
+            sort={true}
+            clone={false}
+          >
+            {getSequencesComps()}
+          </ScriptSequenceSortable>
+        )}
+        {(loading && <CircularProgress className={classes.loading} />) || null}
       </div>
     </div>
   )

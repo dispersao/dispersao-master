@@ -12,9 +12,7 @@ import { getSequenceList } from '../../modules/sequences/selectors'
 import { toJS } from '../immutableToJs.jsx'
 import { getCurrentScriptScriptsequencesIds, getHighestIndexSentToPlay } from '../../modules/scriptsequences/selectors'
 
-export const Context = createContext({
-  key: 'value'
-})
+export const Context = createContext()
 
 const SortableContext = ({
   children,
@@ -24,7 +22,6 @@ const SortableContext = ({
   sequences = [],
   lastIndexSentToPlayer = 0
 }) => {
-  console.log('lastIndexSentToPlayer', lastIndexSentToPlayer)
   const onDropSequence = ({ newIndex, oldIndex, to }) => {
     if (to.id === 'timeline') {
       createScriptsequence(oldIndex, newIndex)
@@ -33,13 +30,12 @@ const SortableContext = ({
 
   const onDropScriptsequence = ({ newIndex, oldIndex, to }) => {
     if (to.id === 'timeline' && newIndex > lastIndexSentToPlayer) {
-      console.log('newIndex', newIndex, 'oldIndex', oldIndex)
       reorderScriptsequences(oldIndex, newIndex)
     }
   }
 
   const onScriptsequenceRemoved = (item) => {
-    console.log(item)
+    removeScriptsequence(orderedScriptsequences.indexOf(item))
   }
 
   const reorderScriptsequences = (source, destination) => {
@@ -71,7 +67,7 @@ const SortableContext = ({
   }
 
   const removeScriptsequence = (source) => {
-    const removedScriptsequence = orderedScriptsequences[source.index]
+    const removedScriptsequence = orderedScriptsequences[source]
 
     let reordered = orderedScriptsequences.slice(source + 1).map((id) => ({
       id,
