@@ -1,13 +1,14 @@
+import { sortBy } from 'lodash'
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 import { createArraySelector } from '../../utils/selectorUtils'
-
 
 const getState = (state) => state.scriptsequences
 const getSequences = (state) => state.sequences.get('data')
 const getId = (state, props) => props.id
 const getCurrentScriptId = (state, props) => state.scripts.get('current')
 export const getLoading = (state) => state.scriptsequences.get('loading')
+const getField = (state, props) => props.field
 
 export const getScriptsequences = createSelector([getState], (state) => {
   if (!state) {
@@ -58,7 +59,20 @@ export const getCurrentScriptScriptsequencesIds = createArraySelector(
     if (!scriptSequences) {
       return
     } else {
-      return scriptSequences.map(ss => ss.get('id'))
+      return scriptSequences.map((ss) => ss.get('id'))
+    }
+  }
+)
+export const getHighestIndexSentToPlay = createSelector(
+  [getCurrentScriptScriptsequences],
+  (scriptsequences) => {
+    if (!scriptsequences) {
+      return
+    } else {
+      const sentIds = scriptsequences
+        .filter((el) => el.get('sentToPlayer'))
+        .sortBy((el) => el.get('index'))
+      return sentIds.last()?.get('index')
     }
   }
 )
@@ -84,5 +98,15 @@ export const getScriptsequenceSequenceById = createCachedSelector(
       'sequence'
     ])
     return sequences.get(sequenceId.toString())
+  }
+)(getId)
+
+export const getScriptsequenceFieldByFieldName = createCachedSelector(
+  [getScriptsequenceById, getField],
+  (scriptsequence, field) => {
+    if (!scriptsequence || !field) {
+      return
+    }
+    return scriptsequence.get(field)
   }
 )(getId)

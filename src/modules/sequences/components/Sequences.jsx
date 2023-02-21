@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -18,11 +18,15 @@ import {
   AccordionDetails,
   Typography
 } from '@material-ui/core'
-import DropableFactory from '../../../utils/dnd/DropableFactory.jsx'
-import SequenceBucketItem from './SequenceBucketItem.jsx'
 
-const Sequences = React.memo(({ script, sequences }) => {
+import Sortable from '../../../utils/dnd/Sortable.jsx'
+
+import SequenceBucketItem from './SequenceBucketItem.jsx'
+import WithContextProps from '../../../utils/dnd/HOC/WithContextProps.jsx'
+
+const Sequences = React.memo(({ sequences }) => {
   const classes = useStyles()
+  console.log('rendering Sequences')
 
   return (
     <div className={classes.root}>
@@ -37,14 +41,20 @@ const Sequences = React.memo(({ script, sequences }) => {
         <AccordionDetails>
           <Grid>
             <SequencesFilter />
-            <GridList
-              cellHeight={180}
-              component={DropableFactory('sequences', true)}
+            <SequencesSortable
+              id="sequences"
+              tag={GridList}
+              list={sequences.map((sq) => ({ id: `${sq}_sq` }))}
+              ghostClass={classes.ghostDrag}
+              setList={(list) => {}}
+              groupName="shared"
+              sort={false}
+              clone={true}
             >
               {sequences.map((seq, idx) => (
                 <SequenceBucketItem key={seq} id={seq} index={idx} />
               ))}
-            </GridList>
+            </SequencesSortable>
           </Grid>
         </AccordionDetails>
       </Accordion>
@@ -65,3 +75,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 export default connect(mapStateToProps, null)(toJS(Sequences))
+
+const SequencesSortable = WithContextProps(Sortable, {
+  onEnd: 'onDropSequence'
+})

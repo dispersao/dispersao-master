@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import useStyles from './styles'
 
 
-const Progressbar = ({ value, direction, enabled }) => {
+const Progressbar = React.memo(({ value, direction, enabled }) => {
   const className = direction === 'r-l' ? 'progressDivRL' : 'progressDivLR'
   const classes = useStyles()
   
@@ -18,7 +18,7 @@ const Progressbar = ({ value, direction, enabled }) => {
     <>
     </>
   )
-}
+})
 
 Progressbar.propTypes = {
   value: PropTypes.number,

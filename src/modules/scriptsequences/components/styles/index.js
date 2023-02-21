@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => {
       width: '20% !important',
       height: '20% !important',
       position: 'absolute',
-      right: 0,
+      left: 0,
       display: 'inline-block',
       backgroundColor: 'white',
       opacity: 0.6,
@@ -75,6 +75,23 @@ const useStyles = makeStyles((theme) => {
       bar: {
         borderRadius: 20
       }
+    },
+    sortableGhost: {
+      opacity: 0.0,
+      cursor: 'grabbing',
+      border: '1 solid red',
+      position: 'relative',
+      backgroundColor: 'pink',
+      '& image': {
+        opacity: 0.3
+      }
+    },
+    id: {
+      position: 'absolute',
+      zIndex: 99,
+      color: 'red',
+      padding: 5,
+      right: 0
     }
   }
 })

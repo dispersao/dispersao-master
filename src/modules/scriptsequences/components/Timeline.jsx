@@ -1,8 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import sortBy from 'lodash/sortBy'
-import DropableFactory from '../../../utils/dnd/DropableFactory.jsx'
 import Scriptsequence from './ScriptSequence.jsx'
 import { toJS } from '../../../utils/immutableToJs.jsx'
 
@@ -11,9 +9,13 @@ import useStyles from './styles'
 import { GridList, Typography, CircularProgress } from '@material-ui/core'
 import { getCurrentScriptScriptsequencesIds, getLoading } from '../selectors.js'
 
+import Sortable from '../../../utils/dnd/Sortable.jsx'
+import WithContextProps from '../../../utils/dnd/HOC/WithContextProps.jsx'
+
 const Timeline = React.memo(({ scriptsequences, loading = false }) => {
   const classes = useStyles()
-
+  console.log('rendering timeline')
+  
   const getSequencesComps = () =>
     scriptsequences.map((scriptseq, idx) => {
       return <Scriptsequence key={scriptseq} id={scriptseq} index={idx} />
@@ -24,15 +26,20 @@ const Timeline = React.memo(({ scriptsequences, loading = false }) => {
         Timeline
       </Typography>
       <div className={classes.root}>
-        <GridList
-          cellHeight={120}
-          component={DropableFactory('scriptsequences', false)}
-          className={classes.list}
+        <ScriptSequenceSortable
+          id="timeline"
+          tag={GridList}
+          list={scriptsequences.map(ssc => ({id:`${ssc}_ssc`}))}
+          setList={(list)=> {}}
+          ghostClass={classes.ghostDrag}
+          groupName="shared"
+          sort={true}
+          clone={false}
         >
-          {!loading && getSequencesComps()}
-          {(loading && <CircularProgress className={classes.loading} />) ||
-            null}
-        </GridList>
+          {getSequencesComps()}
+          {/**(loading && <CircularProgress className={classes.loading} />) ||
+            null**/}
+        </ScriptSequenceSortable>
       </div>
     </div>
   )
@@ -48,3 +55,7 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(mapStateToProps, null)(toJS(Timeline))
+
+const ScriptSequenceSortable = WithContextProps(Sortable, {
+  onEnd: 'onDropScriptsequence'
+})

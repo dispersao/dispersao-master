@@ -6,26 +6,22 @@ import { GridListTile, GridList } from '@material-ui/core'
 
 import useStyles from './styles'
 import Sequence from '../../sequences/components/Sequence.jsx'
-import DraggableFactory from '../../../utils/dnd/DraggableFactory.jsx'
-import { getScriptsequenceSequenceIdById } from '../selectors.js'
+import { getScriptsequenceFieldByFieldName, getScriptsequenceSequenceIdById } from '../selectors.js'
 import ScriptsequenceTimelineProgress from './ScriptsequenceTimelineProgress.jsx'
 
 const Scriptsequence = React.memo(({
   id,
-  index,
+  sentToPlayer,
   sequence
 }) => {
   const classes = useStyles()
   const classesnames = [classes.item]
+  if(sentToPlayer){
+    classesnames.push('dragDisabled')
+  }
 
   return (
-    <GridListTile className={classesnames.join(' ')} component={ DraggableFactory(
-      `${id}_scrseq`,
-      index,
-      false,
-      false
-      //scriptseq.sentToPlayer
-    )}>
+    <GridListTile className={classesnames.join(' ')} >
       <GridList cellHeight="auto" cols={1}>
         <Sequence id={sequence}  />
         <ScriptsequenceTimelineProgress id={id}/>
@@ -36,12 +32,16 @@ const Scriptsequence = React.memo(({
 
 Scriptsequence.propTypes = {
   id: PropTypes.number,
-  index: PropTypes.number,
+  sentToPlayer: PropTypes.bool,
   sequence: PropTypes.number
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  sequence: getScriptsequenceSequenceIdById(state, ownProps)
+  sequence: getScriptsequenceSequenceIdById(state, ownProps),
+  sentToPlayer: getScriptsequenceFieldByFieldName(state, {
+    ...ownProps,
+    field: 'sentToPlayer'
+  })
 })
 
 export default connect(mapStateToProps, null)(Scriptsequence)

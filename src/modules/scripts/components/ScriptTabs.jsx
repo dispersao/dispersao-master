@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 
 import { Paper, Tabs, Tab, Divider } from '@material-ui/core'
 
@@ -12,7 +11,7 @@ import Timeline from '../../scriptsequences/components/Timeline.jsx'
 
 import SessioncontentsGrid from '../../sessioncontents/componentes/SessioncontentsGrid.jsx'
 
-import DragContext from '../../../utils/dnd/DragContext.jsx'
+import SortableContext from '../../../utils/dnd/SortableContext.jsx'
 
 const ScriptTabs = () => {
   const [value, setValue] = useState(0)
@@ -21,7 +20,6 @@ const ScriptTabs = () => {
     setValue(val)
   }
 
-  // const { id, sessioncontents, scriptsequences } = script
 
   const classes = useStyles()
 
@@ -37,23 +35,19 @@ const ScriptTabs = () => {
         <Tab label="Posts & Comments" />
       </Tabs>
       <ScriptTab index={0} value={value}>
-        <DragContext>
+        <SortableContext>
           <Timeline />
           <Divider />
           <Sequences />
-        </DragContext>
+        </SortableContext>
       </ScriptTab>
       <ScriptTab index={1} value={value}>
         <UnpublishedPosts />
         <Divider />
-        <SessioncontentsGrid/>
+        <SessioncontentsGrid />
       </ScriptTab>
     </Paper>
   )
 }
-
-// ScriptTabs.propTypes = {
-//   script: PropTypes.object
-// }
 
 export default ScriptTabs

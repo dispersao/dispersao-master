@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Sequence from './Sequence.jsx'
-import DraggableFactory from '../../../utils/dnd/DraggableFactory.jsx'
 
 import PlayedIcon from '@material-ui/icons/ClearOutlined'
 
@@ -30,7 +29,6 @@ const SequenceBucketItem = React.memo(
       <Sequence
         id={id}
         classNames={classes[classname]}
-        component={DraggableFactory(id.toString(), index, true, loading)}
       >
         {inCurrentScript && <PlayedIcon className={classes.playedIcon} />}
       </Sequence>
