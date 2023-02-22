@@ -43,7 +43,7 @@ const Sequences = React.memo(({ sequences }) => {
             <SequencesSortable
               id="sequences"
               tag={GridList}
-              list={sequences.map((sq) => ({ id: `${sq}_sq` }))}
+              list={sequences}
               ghostClass={classes.ghostDrag}
               setList={(list) => {}}
               groupName="shared"

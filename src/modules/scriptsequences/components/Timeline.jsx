@@ -28,7 +28,7 @@ const Timeline = React.memo(({ scriptsequences, loading = false }) => {
           <ScriptSequenceSortable
             id="timeline"
             tag={GridList}
-            list={scriptsequences.map((ssc) => ({ id: `${ssc}_ssc` }))}
+            list={scriptsequences}
             setList={(list) => {}}
             ghostClass={classes.ghostDrag}
             groupName="shared"

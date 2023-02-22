@@ -10,7 +10,10 @@ import {
 import { getCurrentScriptId } from '../../modules/scripts/selectors'
 import { getSequenceList } from '../../modules/sequences/selectors'
 import { toJS } from '../immutableToJs.jsx'
-import { getCurrentScriptScriptsequencesIds, getHighestIndexSentToPlay } from '../../modules/scriptsequences/selectors'
+import {
+  getCurrentScriptScriptsequencesIds,
+  getHighestIndexSentToPlay
+} from '../../modules/scriptsequences/selectors'
 
 export const Context = createContext()
 
@@ -20,16 +23,20 @@ const SortableContext = ({
   createUpdateDelete,
   orderedScriptsequences = [],
   sequences = [],
-  lastIndexSentToPlayer = 0
+  lastIndexSentToPlayer = -1
 }) => {
   const onDropSequence = ({ newIndex, oldIndex, to }) => {
-    if (to.id === 'timeline') {
+    if (to.id === 'timeline' && newIndex > lastIndexSentToPlayer) {
       createScriptsequence(oldIndex, newIndex)
     }
   }
 
   const onDropScriptsequence = ({ newIndex, oldIndex, to }) => {
-    if (to.id === 'timeline' && newIndex > lastIndexSentToPlayer) {
+    if (
+      to.id === 'timeline' &&
+      newIndex > lastIndexSentToPlayer &&
+      newIndex !== oldIndex
+    ) {
       reorderScriptsequences(oldIndex, newIndex)
     }
   }
@@ -131,4 +138,7 @@ SortableContext.propTypes = {
   lastIndexSentToPlayer: PropTypes.number
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(toJS(SortableContext))
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(toJS(SortableContext))

@@ -87,7 +87,6 @@ const WithScriptsequenceTimer = (WrappedComponent) => {
     }
 
     useEffect(() => {
-      //console.log(id, 'state change', state, stateRef.current)
       const now = performance.now()
       switch (state) {
         case 'play':
@@ -129,10 +128,8 @@ const WithScriptsequenceTimer = (WrappedComponent) => {
     }, [state])
 
     useEffect(() => {
-      //console.log(id, 'component mounting', state)
       return (
       () => {
-        //console.log(id, 'component unmount')
         endTimeout(true)
       })
     }, [])
