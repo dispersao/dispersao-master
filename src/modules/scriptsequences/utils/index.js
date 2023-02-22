@@ -37,7 +37,7 @@ const getScriptSequenceByIndex = (id, index) => {
   let script = getScriptById(store.getState(), { id })
   if (script) {
     script = script.toJS()
-    const scriptSequence = script.scriptsequences[index]
+    const scriptSequence = script.scriptsequences.find(el => el.index === index)
     if (scriptSequence) {
       return scriptSequence
     } else {

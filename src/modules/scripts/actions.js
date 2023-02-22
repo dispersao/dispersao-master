@@ -6,6 +6,8 @@ export const CREATE_SCRIPT = "CREATE_SCRIPT"
 export const CREATE_SCRIPT_SUCCESS = "CREATE_SCRIPT_SUCCESS"
 export const CREATE_SCRIPT_ERROR = "CREATE_SCRIPT_ERROR"
 
+export const SET_CURRENTSCRIPT = "SET_CURRENTSCRIPT"
+
 export const UPDATE_SCRIPT = 'UPDATE_SCRIPT'
 export const UPDATE_SCRIPT_SUCCESS = 'UPDATE_SCRIPT_SUCCESS'
 export const UPDATE_SCRIPT_ERROR = 'UPDATE_SCRIPT_ERROR'
@@ -23,11 +25,9 @@ export const CONNECT_SCRIPT = 'CONNECT_SCRIPT'
 export const CONNECT_SCRIPT_SUCCESS = 'CONNECT_SCRIPT_SUCCESS'
 export const CONNECT_SCRIPT_ERROR = 'CONNECT_SCRIPT_ERROR'
 
-import states from './utils/stateConstants'
+export const SET_SCRIPT_MANUAL = 'SET_SCRIPT_MANUAL'
 
-// export const CREATE_RANDOM_SCRIPTSEQUENCE = 'CREATE_RANDOM_SCRIPTSEQUENCE'
-// export const CREATE_RANDOM_SCRIPTSEQUENCE_SUCCESS = 'CREATE_RANDOM_SCRIPTSEQUENCE_SUCCESS'
-// export const CREATE_RANDOM_SCRIPTSEQUENCE_ERROR = 'CREATE_RANDOM_SCRIPTSEQUENCE_ERROR'
+import states from './utils/stateConstants'
 
 export const fetchScripts = () => ({
   type: FETCH_SCRIPTS
@@ -65,6 +65,13 @@ export const createScriptError = (error) => ({
   type: CREATE_SCRIPT_ERROR,
   payload: {
     error
+  }
+})
+
+export const setCurrentScript = (script) => ({
+  type: SET_CURRENTSCRIPT,
+  payload: {
+    script
   }
 })
 
@@ -112,10 +119,7 @@ export const resetSession = (script) => ({
   payload: {
     script: {
       ...script,
-      // scriptsequences: [],
-      // sessioncontents: [],
-      state: states.IDLE,
-      // token: null
+      state: states.IDLE
     }
   }
 })
@@ -177,6 +181,13 @@ export const connectScriptSuccess = (script) => ({
 
 export const connectScriptError = (script) => ({
   type: CONNECT_SCRIPT_ERROR,
+  payload: {
+    script
+  }
+})
+
+export const setScriptManual = (script) => ({
+  type: SET_SCRIPT_MANUAL,
   payload: {
     script
   }

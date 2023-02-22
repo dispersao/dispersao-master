@@ -1,7 +1,7 @@
 import React from 'react'
 import { Iterable } from 'immutable'
 
-export const toJS = WrappedComponent => wrappedComponentProps => {
+export const toJS = (WrappedComponent) => (wrappedComponentProps) => {
   const KEY = 0
   const VALUE = 1
 

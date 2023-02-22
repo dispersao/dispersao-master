@@ -2,8 +2,6 @@ import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 
 const getState = (state) => state.types
-const getId = (state, props) => props.id
-const getTypeId = (state, props) => props.type
 
 export const getTypesList = createSelector(
   [getState], (state) => {
@@ -14,18 +12,11 @@ export const getTypesList = createSelector(
   }
 )
 
-const fetchTypeById = (list, id) => {
-  if (!list || !list.size || !id) {
-    return
+export const getTypesListAsArray = createSelector(
+  [getTypesList], (list) => {
+    if(!list || !list.size) {
+      return
+    }
+    return list.valueSeq()
   }
-  return list.get(id.toString())
-}
-
-export const getTypeById = createCachedSelector(
-  [getTypesList, getId], fetchTypeById
-)(getId)
-
-export const getTypeByTypeId = createCachedSelector(
-  [getTypesList, getTypeId], fetchTypeById
-)(getTypeId)
-
+)

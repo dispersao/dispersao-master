@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 
 import { updateSessioncontentState } from '../../actions'
 
-import { toJS } from '../../../../utils/immutableToJs.jsx'
 
 const WithSessioncontentPublisher = WrappedComponent => {
   const SessioncontentPublisher = (props) => {
@@ -38,7 +37,7 @@ const WithSessioncontentPublisher = WrappedComponent => {
   }
 
   SessioncontentPublisher.propTypes = {
-    id: PropTypes.number,
+    id: PropTypes.any,
     state: PropTypes.string,
     publishContent: PropTypes.func,
     unpublishContent: PropTypes.func,
@@ -58,7 +57,7 @@ const WithSessioncontentPublisher = WrappedComponent => {
   return connect(
     null,
     mapDispatchToProps
-  )(toJS(SessioncontentPublisher))
+  )(SessioncontentPublisher)
 }
 
 export default WithSessioncontentPublisher

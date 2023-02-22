@@ -5,43 +5,104 @@ import { fromJS, List } from 'immutable'
 
 import { sortEntity } from '../../utils/listUtils'
 
-import { getSessioncontentsIdsByType } from '../sessioncontents/utils/listUtils'
-
 import { getContentcreatorsList } from '../contentcreators/selectors'
 import { getCommentsList } from '../comments/selectors'
 import { getCategoriesList } from '../categories/selectors'
 
 import { getApiUrl } from '../config/selectors'
+import { createArraySelector } from '../../utils/selectorUtils'
 
 const getState = (state) => state.posts
 const getId = (state, props) => props.id
 const getPostId = (state, props) => props.post
-const getSessioncontents = (state, props) => props.sessioncontents
+const getCurrentScriptId = (state) => state.scripts.get('current')
+const getSessioncontents = (state) => state.sessioncontents.get('data')
 
-export const getPosts = createSelector(
-  [getState], (state) => {
-    if (!state) {
-      return 
-    }
-    return state.get('data')
+export const getPosts = createSelector([getState], (state) => {
+  if (!state) {
+    return
   }
-)
+  return state.get('data')
+})
 
-export const getPostList = createSelector(
-  [getPosts], (posts) => {
-    if (!posts) {
-      return 
-    }
-    return posts.valueSeq()
+export const getPostsIds = createArraySelector([getPosts], (posts) => {
+  if (!posts) {
+    return
   }
-)
+  return posts.map((post) => post.get('id')).valueSeq()
+})
+
+export const getPostContentcreatorByPostId = createCachedSelector(
+  [getId, getPosts, getContentcreatorsList],
+  (id, posts, contentcreators) => {
+    if (!id || !posts || !contentcreators) {
+      return
+    }
+    return contentcreators.get(
+      posts.get(id.toString()).get('contentcreator').toString()
+    )
+  }
+)(getId)
+
+export const getPostCommentsIdsById = createCachedSelector(
+  [getId, getCommentsList],
+  (id, comments) => {
+    if (!id || !comments) {
+      return
+    }
+    return comments
+      .filter((comment) => comment.get('post').toString() === id.toString())
+      .map((el) => el.get('id'))
+  }
+)(getId)
+
+export const isPostPublished = createCachedSelector(
+  [getId, getCurrentScriptId, getSessioncontents, getPosts, getCommentsList],
+  (id, script, sessioncontents) => {
+    if (!id || !script || !sessioncontents) {
+      return
+    }
+    return Boolean(
+      sessioncontents.find(
+        (sescon) =>
+          sescon.get('script').toString() === script.toString() &&
+          sescon.get('post') &&
+          sescon.get('post').toString() === id.toString()
+      )
+    )
+  }
+)(getId)
+
+export const getPostPublishedComment = createCachedSelector(
+  [ getCurrentScriptId, getSessioncontents, getPostCommentsIdsById],
+  (script, sessioncontents, comments) => {
+    if ( !script || !sessioncontents || !comments) {
+      return
+    }
+   
+    return comments.filter((comment) => {
+      return sessioncontents.find(
+        (sescon) =>
+          sescon.get('script').toString() === script.toString() &&
+          sescon.get('comment') &&
+          sescon.get('comment').toString() === comment.toString()
+      )
+    })
+  }
+)(getId)
+
+export const getPostList = createSelector([getPosts], (posts) => {
+  if (!posts) {
+    return
+  }
+  return posts.valueSeq()
+})
 
 export const getPostsListFormatted = createSelector(
   [getPosts, getCategoriesList, getContentcreatorsList],
   (posts, categories, contentcreators) => {
-    
     const lists = [posts, categories, contentcreators]
-    const anyEmpty = lists.some(list => !list || !list.size)
+    const anyEmpty = lists.some((list) => !list || !list.size)
 
     if (anyEmpty) {
       return
@@ -50,80 +111,25 @@ export const getPostsListFormatted = createSelector(
     return posts
       .valueSeq()
       .sort(sortEntity)
-      .map(post => formatPostForAlgorithm(
-        post, 
-        contentcreators, 
-        categories
-      ))
+      .map((post) => formatPostForAlgorithm(post, contentcreators, categories))
   }
 )
-
-export const getPostsListNotInSession = createSelector(
-  [getPosts, getSessioncontents, getCommentsList, getContentcreatorsList, getApiUrl],
-  ( posts, sessioncontents, comments, contentcreators, url) => {
-    if ( !posts || !posts.size || !comments || !sessioncontents || !comments.size || !contentcreators || !contentcreators.size || !url) {
-      return
-    }
-    let formattedPosts = posts
-      .valueSeq()
-      .sort(sortEntity)
-      .map(post => formatPost(post, comments, contentcreators, url))
-
-    return formattedPosts
-      .map(post => addPublishedValue(post, sessioncontents))
-      .filter(post => {
-        return !(post.get('disabled') && post.get('comments').every(com => com.get('disabled')))
-      })
-  }
-)
-
-const addPublishedValue = (post, publishedcontent) => {
-  // return post
-
-  const publishedComments = getSessioncontentsIdsByType(publishedcontent, 'comment')
-  const publishedPosts = getSessioncontentsIdsByType(publishedcontent, 'post')
-
-  const comments = post.get('comments').map(com => {
-    const published = publishedComments.includes(com.get('id'))
-    return com.setIn(['disabled'], published)
-  })
-
-  const published = publishedPosts.includes(post.get('id'))
-
-  return post
-    .setIn(['comments', comments])
-    .setIn(['disabled'], published)
-  
-}
 
 const fetchPostById = (list, id) => {
-  if (!list || !list.size || !id) {
+  if (!list || !id) {
     return
   }
   return list.get(id.toString())
 }
 
 export const getPostById = createCachedSelector(
-  [getPostList, getId], fetchPostById
+  [getPosts, getId],
+  fetchPostById
 )(getId)
 
 export const getPostByPostId = createCachedSelector(
-  [getPostList, getPostId], fetchPostById
-)(getPostId)
-
-export const getPostByPostIdFormatted = createCachedSelector(
-  [getPostId, getPosts, getCommentsList, getContentcreatorsList, getApiUrl], 
-  (id, posts, comments, contentcreators, url) => {
-    if (!id || !posts || !posts.size || !comments || !contentcreators || !contentcreators.size || !url) {
-      return
-    }
-    return formatPost(
-      posts.get(id.toString()), 
-      comments,
-      contentcreators,
-      url
-    )
-  }
+  [getPostList, getPostId],
+  fetchPostById
 )(getPostId)
 
 
@@ -137,19 +143,23 @@ export const formatPost = (post, commentsList, contentcreatorsList, url) => {
     media = media.setIn(['url'], `${url}${media.get('url')}`)
   }
 
-  const comments = post.get('comments')
-    .map(com => commentsList.get(com.toString()))
+  const comments = post
+    .get('comments')
+    .map((com) => commentsList.get(com.toString()))
     .filter(Boolean)
-    .map(comment => {
+    .map((comment) => {
       return comment.mergeDeep({
-        contentcreator: contentcreatorsList.get(comment.get('contentcreator').toString()),
+        contentcreator: contentcreatorsList.get(
+          comment.get('contentcreator').toString()
+        )
       })
     })
-  return post.setIn(['comments'], comments)
-    .mergeDeep(fromJS({
+  return post.setIn(['comments'], comments).mergeDeep(
+    fromJS({
       contentcreator,
       media
-    }))
+    })
+  )
 }
 
 const formatPostForAlgorithm = (post, contentcreatorsList, categoriesList) => {
@@ -157,7 +167,7 @@ const formatPostForAlgorithm = (post, contentcreatorsList, categoriesList) => {
     post.get('contentcreator').toString()
   )
 
-  const categories = post.get('categories').map(catId => {
+  const categories = post.get('categories').map((catId) => {
     return categoriesList.get(catId.toString())
   })
 

@@ -1,30 +1,34 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { connect } from 'react-redux'
+
 import { Publish, Refresh, Delete } from '@material-ui/icons'
 
 import PostListItem from '../../posts/components/PostListItem.jsx'
 import SessioncontentCommentItem from './SessioncontentCommentItem.jsx'
+import { toJS } from '../../../utils/immutableToJs.jsx'
 
-import SessioncontentPublisher from './HOC/SessioncontentPublisher.jsx'
+import {
+  getPostSessioncontentCommentSessioncontentsIdsById,
+  getSessioncontentById
+} from '../selectors'
+
 
 import {
   GridListTile,
   GridList,
   Typography,
   Grid,
-  IconButton
 } from '@material-ui/core'
 
 import { toHHMMSS } from '../../../utils/stringUtils'
 import useStyles from './styles/'
+import Republisher from './Republisher.jsx'
 
 const SessioncontentGridItem = ({
-  post,
-  state,
-  programmed_at,
-  onRepublish,
-  onUnpublish
+  postSessioncontent: {id, programmed_at, state, post },
+  commentsSessioncontents
 }) => {
   const allow_republish = ALLOW_REPUBLISH
 
@@ -51,25 +55,18 @@ const SessioncontentGridItem = ({
                 {text}
               </Typography>
             </Grid>
-            {(allow_republish && (
-              <Grid item xs>
-                <IconButton fontSize="small" onClick={onRepublish}>
-                  {(state === 'pending' && <Publish />) || null}
-                  {(state === 'published' && <Refresh />) || null}
-                </IconButton>
-                {(state === 'published' && (
-                  <IconButton fontSize="small" onClick={onUnpublish}>
-                    <Delete />
-                  </IconButton>
-                )) ||
-                  null}
-              </Grid>
-            )) ||
+            {(allow_republish && 
+              <Republisher id={id} state={state}/>
+            ) ||
               null}
           </Grid>
         </Grid>
         <GridList cellHeight="auto" cols={1}>
-          <PostListItem {...post} CommentComp={SessioncontentCommentItem} />
+          <PostListItem id={post}>
+            {Object.keys(commentsSessioncontents).map((commentSescon, key) => (
+              <SessioncontentCommentItem id={commentSescon} key={key}/>
+            ))}
+          </PostListItem>
         </GridList>
       </Grid>
     </GridListTile>
@@ -77,12 +74,23 @@ const SessioncontentGridItem = ({
 }
 
 SessioncontentGridItem.propTypes = {
-  post: PropTypes.object.isRequired,
-  state: PropTypes.string,
-  programmed_at: PropTypes.number,
-  script: PropTypes.number,
+  postSessioncontent: PropTypes.shape({
+    post: PropTypes.number.isRequired,
+    state: PropTypes.string.isRequired,
+    programmed_at: PropTypes.number
+  }).isRequired,
+  commentsSessioncontents: PropTypes.object,
   onRepublish: PropTypes.func,
   onUnpublish: PropTypes.func
 }
 
-export default SessioncontentPublisher(SessioncontentGridItem)
+const mapStateToProps = (state, ownProps) => ({
+  postSessioncontent: getSessioncontentById(state, ownProps),
+  commentsSessioncontents: getPostSessioncontentCommentSessioncontentsIdsById(
+    state,
+    ownProps
+  )
+})
+
+export default connect(mapStateToProps, null)(toJS(SessioncontentGridItem))
+

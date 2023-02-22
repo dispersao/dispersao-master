@@ -10,7 +10,6 @@ import {
   createScriptSuccess,
   createScriptError,
   UPDATE_SCRIPT,
-  // updateScriptLocalState,
   updateScriptSuccess,
   updateScriptError,
   START_SESSION,

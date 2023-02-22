@@ -3,27 +3,29 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import states from '../../utils/stateConstants'
 import { finishScript } from '../../actions'
+import {
+  getCurrentScript,
+  getCurrentScriptElapsedTime,
+  getCurrentSCriptLastScriptsequence,
+  getCurrentScriptTotalTime
+} from '../../selectors'
+import { toJS } from '../../../../utils/immutableToJs.jsx'
 
-
-const WithScriptManager = WrappedComponent => {
-
+const WithScriptManager = (WrappedComponent) => {
   const ScriptManager = (props) => {
-    const { 
-      id,
+    const {
+      script: { id, state, manual },
+      lastScriptSequence,
       elapsedTime,
       totalTime,
-      state,
-      scriptsequences,
       endScript
     } = props
 
-
-    const lastScriptSequences = scriptsequences.find(({ isLast }) => isLast)
-    const isLastScriptSequenceOver = lastScriptSequences?.state === 'finished'
+    const isLastScriptSequenceOver = lastScriptSequence?.state === 'finished'
 
     useEffect(() => {
       if (isLastScriptSequenceOver) {
-        if (elapsedTime >= totalTime && state !== states.FINISHED) {
+        if ((manual || elapsedTime >= totalTime) && state !== states.FINISHED) {
           endScript(id)
         }
       }
@@ -32,30 +34,38 @@ const WithScriptManager = WrappedComponent => {
     const wrappedProps = {
       ...props
     }
-  
 
     return <WrappedComponent {...wrappedProps} />
   }
-  
+
   ScriptManager.propTypes = {
-    id: PropTypes.number.isRequired,
-    scriptsequences: PropTypes.array,
+    script: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      state: PropTypes.string,
+      manual: PropTypes.bool
+    }),
     elapsedTime: PropTypes.number,
     totalTime: PropTypes.number,
-    endScript: PropTypes.func.isRequired,
-    state: PropTypes.string,
+    endScript: PropTypes.func.isRequired
   }
-  
-  const mapDispatchToProps = (dispatch) => ({
-    endScript: (id) => dispatch(finishScript({
-      id: id
-    }))
+
+  const mapStateToProps = (state) => ({
+    script: getCurrentScript(state),
+    elapsedTime: getCurrentScriptElapsedTime(state),
+    totalTime: getCurrentScriptTotalTime(state),
+    lastScriptSequence: getCurrentSCriptLastScriptsequence(state)
   })
-  
-  return connect(
-    null,
-    mapDispatchToProps
-  )(ScriptManager)
+
+  const mapDispatchToProps = (dispatch) => ({
+    endScript: (id) =>
+      dispatch(
+        finishScript({
+          id: id
+        })
+      )
+  })
+
+  return connect(mapStateToProps, mapDispatchToProps)(toJS(ScriptManager))
 }
 
 export default WithScriptManager

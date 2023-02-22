@@ -1,17 +1,16 @@
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
-import { List } from 'immutable'
+import { createArraySelector } from '../../utils/selectorUtils'
 
-import { getPostByPostIdFormatted } from '../posts/selectors'
+import { getPosts } from '../posts/selectors'
+import { getComments } from '../comments/selectors'
 
-const getCleanState = (state) => state
+const getCurrentScriptId = (state, props) => state.scripts.get('current')
 const getState = (state) => state.sessioncontents
-const getIds = (state, props) =>
-  props.sessioncontents.map((sescon) => sescon.id)
-const getScript = (state, props) => props.id
+
+const getId = (state, props) => props.id
 const getType = (state, props) => props.type
 const getTypes = (state, props) => props.types
-const getIdsAsJson = (state, props) => JSON.stringify(props.sessioncontents)
 
 export const getSessioncontents = createSelector([getState], (state) => {
   if (!state) {
@@ -20,18 +19,32 @@ export const getSessioncontents = createSelector([getState], (state) => {
   return state.get('data')
 })
 
-export const getSessioncontentsList = createSelector(
-  [getSessioncontents],
-  (sessioncontents) => {
-    if (!sessioncontents) {
+
+export const getCurrentScriptPostSessioncontents = createArraySelector(
+  [getCurrentScriptId, getSessioncontents],
+  (script, sessioncontents) => {
+    if (!script || !sessioncontents) {
       return
     }
-    return sessioncontents.valueSeq()
+    return sessioncontents
+      .filter((sescon) => sescon.get('script').toString() === script && sescon.get('post'))
+      .sortBy(el => el.get('programmed_at'))
+      .valueSeq()
   }
 )
 
-export const getSessioncontentsListByType = createCachedSelector(
-  [getSessioncontents, getType, getScript],
+export const getCurrentScriptPostSessioncontentsIds = createArraySelector(
+  [getCurrentScriptPostSessioncontents],
+  (sessioncontents) => {
+    if(!sessioncontents){
+      return
+    }
+    return sessioncontents.map(sescon => sescon.get('id'))
+  }
+)
+
+export const getCurrentScriptSessioncontentsListByType = createCachedSelector(
+  [getSessioncontents, getType, getCurrentScriptId],
   (sessioncontents, type, script) => {
     if (!sessioncontents || !type || !script) {
       return
@@ -41,64 +54,56 @@ export const getSessioncontentsListByType = createCachedSelector(
       .filter((sescon) => sescon.get(type))
       .valueSeq()
   }
-)(getScript)
+)(getType)
 
-export const getSessioncontentByScriptId = createCachedSelector(
-  [getSessioncontents, getScript],
-  (sessioncontents, script) => {
-    if (!sessioncontents || !script) {
+export const getSessioncontentById = createSelector(
+  [getSessioncontents, getId],
+  (sessioncontents, id) => {
+    if (!sessioncontents || !id) {
       return
+    } else {
+      return sessioncontents.get(id.toString())
     }
-    return sessioncontents
-      .filter((sescon) => sescon.get('script') === script)
-      .valueSeq()
   }
-)(getScript)
+)
 
-export const getSessioncontentsListAsPosts = createCachedSelector(
-  [getIds, getSessioncontents, getCleanState],
-  (ids, sessioncontents, state) => {
-    if (!ids || !sessioncontents || !sessioncontents.size) {
-      return
+export const getPostSessioncontentCommentSessioncontentsById =
+  createCachedSelector(
+    [getId, getSessioncontents, getPosts, getComments],
+    (id, sessioncontents, posts, comments) => {
+      if (!id || !sessioncontents || !posts || !comments) {
+        return
+      }
+      const sessioncontent = sessioncontents.get(id.toString())
+      const postId = sessioncontent.get('post').toString()
+      const scriptId = sessioncontent.get('script').toString()
+      if (postId && scriptId) {
+        const relatedComments = comments
+          .filter((c) => c.get('post').toString() === postId)
+          .map((c) => c.get('id'))
+        return sessioncontents.filter(
+          (sc) =>
+            sc.get('script').toString() === scriptId &&
+            relatedComments.includes(sc.get('comment'))
+        )
+      }
     }
-    const list = ids.map((id) => sessioncontents.get(id.toString()))
+  )(getId)
 
-    const publishedComents = list
-      .map((sescon) => sescon.get('comment'))
-      .filter(Boolean)
+export const getPostSessioncontentCommentSessioncontentsIdsById =
+  createCachedSelector(
+    [getPostSessioncontentCommentSessioncontentsById],
+    (commentSessioncontents) => {
+      if (!commentSessioncontents) {
+        return
+      }
+      return commentSessioncontents.map((sc) => sc.get('id'))
+    }
+  )(getId)
 
-    const ret = list
-      .filter((sescon) => sescon.get('post'))
-      .map((sescon) => {
-        const post = sescon.get('post')
-        return sescon.mergeDeep({
-          post: getPostByPostIdFormatted(state, { post })
-        })
-      })
-      .map((sescon) => {
-        const comments = sescon
-          .get('post')
-          .get('comments')
-          .filter((comment) => {
-            return publishedComents.includes(comment.get('id'))
-          })
-          .map((comment) => {
-            const sesconCom = list.find(
-              (ssco) => ssco.get('comment') === comment.get('id')
-            )
-            return sesconCom.mergeDeep({
-              comment
-            })
-          })
 
-        return sescon.setIn(['post', 'comments'], comments)
-      })
-    return List(ret)
-  }
-)(getIdsAsJson)
-
-export const getNextContentToPublish = createCachedSelector(
-  [getSessioncontents, getTypes, getScript],
+export const getNextContentToPublish = createSelector(
+  [getSessioncontents, getTypes, getCurrentScriptId],
   (sessioncontents, types, script) => {
     if (!sessioncontents || !types || !script) {
       return
@@ -110,4 +115,4 @@ export const getNextContentToPublish = createCachedSelector(
       .sort((a, b) => a.get('programmed_at') - b.get('programmed_at'))
       .first()
   }
-)(getScript)
+)
