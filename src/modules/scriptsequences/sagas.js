@@ -205,7 +205,6 @@ function* sendScriptsequence(action) {
 
 function* createScriptsequencesListeners() {
   yield call(addListener, '/getScene', onMessageCallback)
-  //yield call(addListener, '/sceneProgress', onMessageCallback)
   yield call(addListener, '/updateScene', onMessageCallback)
 }
 

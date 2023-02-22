@@ -29,10 +29,6 @@ export const SET_SCRIPT_MANUAL = 'SET_SCRIPT_MANUAL'
 
 import states from './utils/stateConstants'
 
-// export const CREATE_RANDOM_SCRIPTSEQUENCE = 'CREATE_RANDOM_SCRIPTSEQUENCE'
-// export const CREATE_RANDOM_SCRIPTSEQUENCE_SUCCESS = 'CREATE_RANDOM_SCRIPTSEQUENCE_SUCCESS'
-// export const CREATE_RANDOM_SCRIPTSEQUENCE_ERROR = 'CREATE_RANDOM_SCRIPTSEQUENCE_ERROR'
-
 export const fetchScripts = () => ({
   type: FETCH_SCRIPTS
 })
@@ -123,10 +119,7 @@ export const resetSession = (script) => ({
   payload: {
     script: {
       ...script,
-      // scriptsequences: [],
-      // sessioncontents: [],
-      state: states.IDLE,
-      // token: null
+      state: states.IDLE
     }
   }
 })

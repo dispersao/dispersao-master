@@ -135,7 +135,8 @@ SortableContext.propTypes = {
   children: PropTypes.node,
   orderedScriptsequences: PropTypes.array,
   createUpdateDelete: PropTypes.func,
-  lastIndexSentToPlayer: PropTypes.number
+  lastIndexSentToPlayer: PropTypes.number,
+  sequences: PropTypes.array
 }
 
 export default connect(

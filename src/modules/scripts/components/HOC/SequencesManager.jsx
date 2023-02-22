@@ -47,18 +47,10 @@ const WithSequenceManager = WrappedComponent => {
     }
     delete wrappedProps['createRandomScriptsequence']
     
-    // const scriptsequencesProgressManagers = scriptsequences.map((scrseq, key) => {
-    //   return <ScriptsequenceUpdate 
-    //     key={key}
-    //     speed={speed}
-    //     {...scrseq} />
-    // })
+   
 
     return (
-      <>
-        {/* {scriptsequencesProgressManagers} */}
-        <WrappedComponent {...wrappedProps} />
-      </>
+      <WrappedComponent {...wrappedProps} />
     )
   }
   

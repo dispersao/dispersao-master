@@ -27,9 +27,6 @@ const ScriptList = ({ scripts }) => {
       </Container>
     </>
   )
-  /*} else {
-    return <Redirect to="/scripts/new" />
-  }*/
 }
 
 ScriptList.propTypes = {
