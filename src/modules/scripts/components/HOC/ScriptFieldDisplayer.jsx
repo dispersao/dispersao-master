@@ -49,7 +49,7 @@ const ScriptFieldUpdateComp = (WrappedComponent, field, isSynch = true, extraFie
         const action = isSynch ? updateScript : updateScriptLocalState
         dispatch(
           action({
-            id,
+            id: parseInt(id),
             [field]: value
           })
         )

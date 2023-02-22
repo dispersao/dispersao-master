@@ -18,6 +18,7 @@
     "connected-react-router": "^6.9.1",
     "decimal.js": "^10.2.1",
     "lodash": "^4.17.21",
+    "newrelic": "^9.8.1",
     "normalizr": "^3.6.1",
     "osc": "^2.4.2",
     "random-js": "^2.1.0",
