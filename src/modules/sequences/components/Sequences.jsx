@@ -29,7 +29,7 @@ const Sequences = React.memo(({ sequences }) => {
 
   return (
     <div className={classes.root}>
-      <Accordion>
+      <Accordion className={classes.accordion}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -38,7 +38,7 @@ const Sequences = React.memo(({ sequences }) => {
           <Typography className={classes.heading}>Sequences Bucket</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Grid>
+          <Grid className={classes.sequencesContent}>
             <SequencesFilter />
             <SequencesSortable
               id="sequences"
