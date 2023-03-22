@@ -27,10 +27,16 @@ const useStyles = makeStyles((theme) => ({
     opacity: 1
   },
   disabled: {
-    opacity: 0.5
+    display: "none"
   },
   icon: {
     color: 'rgba(255, 255, 255, 0.34)'
+  },
+  accordion: {
+    width: '100%'
+  },
+  sequencesContent: {
+    width: '100%'
   },
   tilebar: {
     '&:hover': {
