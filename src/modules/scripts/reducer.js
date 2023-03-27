@@ -24,6 +24,7 @@ import {
 } from '../scriptsequences/actions'
 
 import { CREATE_SESSIONCONTENT_SUCCESS } from '../sessioncontents/actions'
+import { FETCH_APPUSERS_SUCCESS } from '../appusers/actions'
 
 let script
 
@@ -198,6 +199,9 @@ const reducer = (
         }
       )
       return state
+
+    case FETCH_APPUSERS_SUCCESS:
+      return state.setIn(['data', action.payload.script.toString(), 'appusers'], action.payload.total)
 
     default:
       return state
