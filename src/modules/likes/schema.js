@@ -1,5 +1,15 @@
 import { schema } from 'normalizr'
+import { normalize } from 'normalizr'
 
-const likesSchema = new schema.Entity('likes')
 
-export default likesSchema
+const likeSchema = new schema.Entity('likes')
+
+export const likesListSchema = [likeSchema]
+
+export const normalizeLike = (data) => {
+  return normalize(data, likeSchema)
+}
+
+export const normalizeLikeList = (data) => {
+  return normalize(data, likesListSchema)
+}

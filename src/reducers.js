@@ -16,6 +16,7 @@ import comments from './modules/comments/reducer'
 import contentcreators from './modules/contentcreators/reducer'
 import sessioncontents from './modules/sessioncontents/reducer'
 import filters from './modules/filters/reducer'
+import likes from './modules/likes/reducer'
 
 const reducer = combineReducers({
   router,
@@ -33,7 +34,8 @@ const reducer = combineReducers({
   comments,
   contentcreators,
   sessioncontents,
-  filters
+  filters,
+  likes
 })
 
 export default reducer

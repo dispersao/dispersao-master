@@ -7,7 +7,6 @@ import {
   delay
 } from 'redux-saga/effects'
 import { fetchAppusersTotal as fetchAppusersTotalAPI } from '../api/appusers'
-import { getCurrentScriptId } from '../scripts/selectors'
 import {
   FETCH_APPUSERS,
   STOP_FETCH_APPUSERS,
@@ -24,10 +23,10 @@ export function* watchPollFetchAppUsers() {
 }
 
 function* pollFetchAppusers({ payload }) {
-  yield race([call(pollAppUsers, payload), take(STOP_FETCH_APPUSERS)])
+  yield race([call(fetchAppusers, payload), take(STOP_FETCH_APPUSERS)])
 }
 
-function* pollAppUsers({ script }) {
+function* fetchAppusers({ script }) {
   while (true) {
     try {
       const total = yield fetchAppusersTotalAPI({ script })
