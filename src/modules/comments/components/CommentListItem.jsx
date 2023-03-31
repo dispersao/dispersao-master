@@ -12,7 +12,8 @@ import { getCommentById, getCommentContentcreatorByCommentId } from '../selector
 
 const CommentListItem = ({
   contentcreator: { name },
-  comment: { content }
+  comment: { content },
+  children
 }) => {
   const classes = useStyles()
 
@@ -27,6 +28,7 @@ const CommentListItem = ({
             {content}
           </Typography>
         </Grid>
+        {children}
       </Grid>
     </GridListTile>
   )

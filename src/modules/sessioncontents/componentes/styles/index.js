@@ -8,9 +8,6 @@ const useStyles = makeStyles(theme => {
       overflow: 'hidden',
       backgroundColor: theme.palette.background.paper
     },
-    pending: {
-      backgroundColor: 'red'
-    },
     published: {
       backgroundColor: 'black'
     },
@@ -19,15 +16,48 @@ const useStyles = makeStyles(theme => {
       flex:1,
       minWidth: 400,
       maxWidth: 500,
-      padding: 2
-    },
-    "item-pending": {
-      flexGrow: 1,
-      flex:1,
-      minWidth: 400,
-      maxWidth: 500,
       padding: 2,
-      opacity: 0.7
+      '&.pending': {
+        opacity: 0.7
+
+      }
+    },
+    republisherButton: {
+      marginInline: 5,
+      color: 'white',
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      borderRadius: 5,
+      padding: 1,
+      '& .MuiSvgIcon-root': {
+        fontSize: 15
+      }
+    },
+    sesconInfoContainer: {
+      height: "min-content",
+      flex:1,
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    likesBox: {
+      height: 'fit-content',
+      width: 'fit-content',
+    },
+    likeIconContainer: {
+      height: "fit-content",
+      flexDirection: "row",
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      width: "fit-content",
+      marginInline: 5,
+      color: '#aaa',
+      '&.disabled': {
+        opacity: 0.7
+      }
+    },
+    likeIcon: {
+      padding: 1,
+      fontSize: 15
     }
   }
 })

@@ -4,16 +4,26 @@ import { connect } from 'react-redux'
 import { Grid, IconButton } from '@material-ui/core'
 import { Publish, Refresh, Delete } from '@material-ui/icons'
 import { updateSessioncontentState } from '../actions'
+import makeStyles from './styles'
 
 const Republisher = ({ publishContent, unpublishContent, state }) => {
+  const classes = makeStyles()
   return (
     <Grid item xs>
-      <IconButton fontSize="small" onClick={publishContent}>
+      <IconButton
+        fontSize="small"
+        onClick={publishContent}
+        className={classes.republisherButton}
+      >
         {(state === 'pending' && <Publish />) || null}
         {(state === 'published' && <Refresh />) || null}
       </IconButton>
       {(state === 'published' && (
-        <IconButton fontSize="small" onClick={unpublishContent}>
+        <IconButton
+          fontSize="small"
+          className={classes.republisherButton}
+          onClick={unpublishContent}
+        >
           <Delete />
         </IconButton>
       )) ||
@@ -30,13 +40,13 @@ Republisher.propTypes = {
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   publishContent: () => {
-    console.log(ownProps.id)
     dispatch(
       updateSessioncontentState({
         id: ownProps.id,
         state: 'published'
       })
-    )},
+    )
+  },
   unpublishContent: () => {
     dispatch(
       updateSessioncontentState({

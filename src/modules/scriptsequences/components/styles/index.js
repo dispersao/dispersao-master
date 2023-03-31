@@ -94,7 +94,6 @@ const useStyles = makeStyles((theme) => {
       backgroundColor: 'rgba(0,0,0,0.3)',
       borderRadius: 5,
       padding: 1,
-      fontSize: 10,
       '& .MuiSvgIcon-root': {
         fontSize: 15
       }

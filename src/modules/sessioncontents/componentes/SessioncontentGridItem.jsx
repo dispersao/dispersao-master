@@ -12,52 +12,49 @@ import {
   getSessioncontentById
 } from '../selectors'
 
-import { GridListTile, GridList, Typography, Grid } from '@material-ui/core'
+import { GridListTile, GridList } from '@material-ui/core'
 
-import { toHHMMSS } from '../../../utils/stringUtils'
 import useStyles from './styles/'
-import Republisher from './Republisher.jsx'
+import CommentList from '../../comments/components/CommentList.jsx'
+import SessioncontentInfo from './SessioncontentInfo.jsx'
+import { getDislikesCountBySessioncontentId, getLikesCountBySessioncontentId } from '../../likes/selectors.js'
+import { getCurrentScriptIdFieldByFieldname } from '../../scripts/selectors.js'
 
 const SessioncontentGridItem = ({
-  postSessioncontent: { id, programmed_at, state, post },
-  commentsSessioncontents
+  postSessioncontent,
+  commentsSessioncontents,
+  sessioncontentLikes,
+  sessioncontentDislikes,
+  appusers
 }) => {
-  const allow_republish = ALLOW_REPUBLISH
+  const { post, state } = postSessioncontent
 
   const classes = useStyles()
 
-  let color, text, classname
+  const classnames = [
+    classes.item,
+    state === 'pending' ? 'pending' : ''
+  ].filter(Boolean)
 
-  if (state === 'pending') {
-    color = 'secondary'
-    text = `programmed to: ${toHHMMSS(programmed_at)}`
-    classname = 'item-pending'
-  } else {
-    color = 'primary'
-    text = `published at: ${toHHMMSS(programmed_at)}`
-    classname = 'item'
-  }
   return (
-    <GridListTile className={classes[classname]}>
-      <Grid container direction="column">
-        <Grid item xs>
-          <Grid container direction="row">
-            <Grid item xs>
-              <Typography variant="body2" color={color}>
-                {text}
-              </Typography>
-            </Grid>
-            {(allow_republish && <Republisher id={id} state={state} />) || null}
-          </Grid>
-        </Grid>
-        <GridList cellHeight="auto" cols={1}>
-          <PostListItem id={post}>
-            {Object.keys(commentsSessioncontents).map((commentSescon, key) => (
-              <SessioncontentCommentItem id={commentSescon} key={key} />
-            ))}
-          </PostListItem>
-        </GridList>
-      </Grid>
+    <GridListTile className={classnames.join(' ')}>
+      <GridList cellHeight="auto" cols={1}>
+        <PostListItem id={post}>
+          <SessioncontentInfo
+            {...postSessioncontent}
+          />
+          {(Object.keys(commentsSessioncontents).length && (
+            <CommentList>
+              {Object.keys(commentsSessioncontents).map(
+                (commentSescon, key) => (
+                  <SessioncontentCommentItem id={commentSescon} key={key} />
+                )
+              )}
+            </CommentList>
+          )) ||
+            null}
+        </PostListItem>
+      </GridList>
     </GridListTile>
   )
 }
@@ -69,8 +66,7 @@ SessioncontentGridItem.propTypes = {
     programmed_at: PropTypes.number
   }).isRequired,
   commentsSessioncontents: PropTypes.object,
-  onRepublish: PropTypes.func,
-  onUnpublish: PropTypes.func
+  
 }
 
 const mapStateToProps = (state, ownProps) => ({

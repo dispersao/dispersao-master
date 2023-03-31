@@ -11,6 +11,7 @@ import {
 
 import PostListItem from './PostListItem.jsx'
 import CommentListItem from '../../comments/components/CommentListItem.jsx'
+import CommentList from '../../comments/components/CommentList.jsx'
 
 const UnpublishedPostItem = ({
   id,
@@ -23,13 +24,18 @@ const UnpublishedPostItem = ({
   } else {
     return (
       <PostListItem id={id} disabled={isPublished}>
-        {comments.map((comment, key) => (
-          <CommentListItem
-            id={comment}
-            key={key}
-            disabled={publishedComments.includes(comment)}
-          />
-        ))}
+        
+        {(comments.length && (
+          <CommentList>
+            {comments.map((comment, key) => (
+              <CommentListItem
+                id={comment}
+                key={key}
+                disabled={publishedComments.includes(comment)}
+              />
+            ))}
+          </CommentList>
+        ))|| null}
       </PostListItem>
     )
   }

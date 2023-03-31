@@ -60,18 +60,7 @@ const PostListGridItem = ({
               </Grid>
             </Grid>
           </Grid>
-          {children && (children.length || '') &&
-            <Grid 
-              item 
-              container 
-              spacing={2} 
-              direction="column" 
-            >
-              <GridList className={classes.commentContainer}>
-                {children}
-              </GridList>
-            </Grid>
-          }
+          {children}
         </Grid>
       </Paper>
     </GridListTile>
