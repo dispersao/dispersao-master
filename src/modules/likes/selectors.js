@@ -1,5 +1,10 @@
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
+import { getCurrentScriptId } from '../scripts/selectors'
+import {
+  getCurrentScriptPublishedSessioncontentsIds,
+  getCurrentScriptSessioncontentsListByType
+} from '../sessioncontents/selectors'
 
 const getState = (state) => state.likes.get('data')
 const getSessioncontentId = (state, props) => props.id
@@ -20,7 +25,7 @@ export const getDislikesCountBySessioncontentId = createCachedSelector(
     if (!likes) {
       return 0
     }
-    
+
     return likes.filter((like) => like.get('dislike')).size
   }
 )(getSessioncontentId)
@@ -35,9 +40,35 @@ export const getLikesCountBySessioncontentId = createCachedSelector(
   }
 )(getSessioncontentId)
 
-export const getLikesAppusersCount = createSelector([getState], (likes) => {
-  if (!likes) {
-    return
+export const getCurrentscriptLikes = createSelector(
+  [getState, getCurrentScriptPublishedSessioncontentsIds ],
+  (likes, sessioncontents) => {
+    if (!likes || !likes.size || !sessioncontents || !sessioncontents.size) {
+      return 
+    }
+    return likes
+      .filter((like) => sessioncontents.includes(like.get('sessioncontent')))
   }
-  return likes.map((like) => like.get('appuser')).toSet().size
-})
+)
+export const getCurrentscriptLikesUniqueUsersCount = createSelector(
+  [getCurrentscriptLikes],
+  (likes) => {
+    if (!likes || !likes.size) {
+      return 0
+    }
+    return likes
+      .map((like) => like.get('appuser'))
+      .toSet().size
+  }
+)
+
+export const getCurrentScriptTotalLikes = createSelector(
+  [getCurrentscriptLikes],
+  (likes) => {
+    if (!likes || !likes.size) {
+      return 0
+    }
+    return likes.size
+  
+  }
+)

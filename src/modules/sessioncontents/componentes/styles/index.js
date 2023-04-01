@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     root: {
       display: 'flex',
@@ -13,13 +13,12 @@ const useStyles = makeStyles(theme => {
     },
     item: {
       flexGrow: 1,
-      flex:1,
+      flex: 1,
       minWidth: 400,
       maxWidth: 500,
       padding: 2,
       '&.pending': {
         opacity: 0.7
-
       }
     },
     republisherButton: {
@@ -33,22 +32,22 @@ const useStyles = makeStyles(theme => {
       }
     },
     sesconInfoContainer: {
-      height: "min-content",
-      flex:1,
+      height: 'min-content',
+      flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between'
     },
     likesBox: {
       height: 'fit-content',
-      width: 'fit-content',
+      width: 'fit-content'
     },
     likeIconContainer: {
-      height: "fit-content",
-      flexDirection: "row",
+      height: 'fit-content',
+      flexDirection: 'row',
       flex: 1,
-      display: "flex",
-      alignItems: "center",
-      width: "fit-content",
+      display: 'flex',
+      alignItems: 'center',
+      width: 'fit-content',
       marginInline: 5,
       color: '#aaa',
       '&.disabled': {
@@ -58,6 +57,24 @@ const useStyles = makeStyles(theme => {
     likeIcon: {
       padding: 1,
       fontSize: 15
+    },
+    sessioncontentHeaderContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    sessioncontentStatsContainer: {
+      width: 'fit-content',
+      color: '#aaa'
+    },
+    statsContainer: {
+      display: 'flex',
+      marginInline: 5,
+      alignItems: 'center'
+    },
+    statsIcon: {
+      padding: 1,
+      fontSize: 20
     }
   }
 })

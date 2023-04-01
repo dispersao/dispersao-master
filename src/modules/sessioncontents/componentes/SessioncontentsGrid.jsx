@@ -10,15 +10,19 @@ import SessioncontentGridItem from './SessioncontentGridItem.jsx'
 import useStyles from './styles/'
 
 import { GridList, Typography } from '@material-ui/core'
+import SessioncontentStats from './SessioncontentStats.jsx'
 
 const SessioncontentsGrid = ({ postSessioncontents }) => {
   const classes = useStyles()
 
   return (
     <div>
+      <div className={classes.sessioncontentHeaderContainer}>
       <Typography variant="h4" component="h2">
         Session content
       </Typography>
+      <SessioncontentStats />
+      </div>
       <div className={classes.root}>
         <GridList cellHeight={180}>
           {postSessioncontents.map((sescon, key) => (
