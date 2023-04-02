@@ -13,7 +13,6 @@ const Contentcreator = React.memo(
     size = 'medium'
   }) => {
     const classes = useStyles()
-    console.log(size)
 
     return (
       <div className={classes.container}>

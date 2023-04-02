@@ -12,7 +12,10 @@ import { GridListTile, Grid, GridList } from '@material-ui/core'
 import { getSessioncontentById } from '../selectors.js'
 import SessioncontentInfo from './SessioncontentInfo.jsx'
 
-const SessioncontentCommentItem = ({ commentSessioncontent }) => {
+const SessioncontentCommentItem = ({
+  commentSessioncontent,
+  isParentPublished = false
+}) => {
   const { comment, state } = commentSessioncontent
   const classes = useStyles()
 
@@ -26,7 +29,9 @@ const SessioncontentCommentItem = ({ commentSessioncontent }) => {
       <GridList cellHeight="auto" cols={1}>
         <CommentListItem id={comment}>
           <SessioncontentInfo
-            {...commentSessioncontent} renderLikes={false}
+            {...commentSessioncontent}
+            renderLikes={false}
+            renderRepublish={isParentPublished}
           />
         </CommentListItem>
       </GridList>
@@ -49,15 +54,3 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 export default connect(mapStateToProps)(toJS(SessioncontentCommentItem))
-
-/***
- *  <Grid container direction="row">
-            <Grid item xs>
-              <Typography variant="body2" color={color}>
-                {text}
-              </Typography>
-            </Grid>
-            {(allow_republish && <Republisher id={id} state={state} />) ||
-              null}
-          </Grid>
- */

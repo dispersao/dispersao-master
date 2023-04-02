@@ -42,7 +42,7 @@ const SessioncontentGridItem = ({
             <CommentList>
               {Object.keys(commentsSessioncontents).map(
                 (commentSescon, key) => (
-                  <SessioncontentCommentItem id={commentSescon} key={key} />
+                  <SessioncontentCommentItem id={commentSescon} key={key} isParentPublished={state === 'published'} />
                 )
               )}
             </CommentList>

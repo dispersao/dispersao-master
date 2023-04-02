@@ -78,6 +78,9 @@ const useStyles = makeStyles((theme) => {
     statsIcon: {
       padding: 1,
       fontSize: 20
+    },
+    republisherContainer: {
+      //padding: "0px 0px 5px 0px !important"
     }
   }
 })

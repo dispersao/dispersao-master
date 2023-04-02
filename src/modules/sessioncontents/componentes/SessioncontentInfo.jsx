@@ -6,9 +6,14 @@ import LikesBox from './LikesBox.jsx'
 import useStyles from './styles'
 
 const SessioncontentInfo = React.memo(
-  ({ state, id, programmed_at, renderLikes = true }) => {
-    const allow_republish = ALLOW_REPUBLISH
-
+  ({
+    state,
+    id,
+    programmed_at,
+    renderLikes = true,
+    renderRepublish = true
+  }) => {
+    const allow_republish = ALLOW_REPUBLISH && renderRepublish
     const classes = useStyles()
 
     let color, text, classname
