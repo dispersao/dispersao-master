@@ -6,7 +6,10 @@ const useStyles = makeStyles((theme) => {
       display: 'flex',
       flexWrap: 'wrap',
       overflow: 'hidden',
-      backgroundColor: theme.palette.background.paper
+      backgroundColor: theme.palette.background.paper,
+      '&> *:not(:last-child)': {
+        marginBottom: '5px !important'
+      }
     },
     published: {
       backgroundColor: 'black'

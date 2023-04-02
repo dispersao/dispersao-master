@@ -11,6 +11,11 @@ const useStyles = makeStyles(() => ({
   },
   commentContainer: {
     backgroundColor: '#ccc'
+  },
+  content: {
+    '&> *:not(:last-child)': {
+      marginBottom: 3
+    }
   }
 }))
 

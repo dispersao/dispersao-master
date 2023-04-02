@@ -1,8 +1,9 @@
+import React from 'react'
 import { Grid, Typography } from '@material-ui/core'
+import PropTypes from 'prop-types'
 import GroupIcon from '@material-ui/icons/Group'
 import TouchAppIcon from '@material-ui/icons/TouchApp'
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown'
-import React from 'react'
 import { getCurrentScriptIdFieldByFieldname } from '../../scripts/selectors'
 import { connect } from 'react-redux'
 import {
@@ -31,6 +32,12 @@ const SessioncontentStats = React.memo(({ users, activeusers, totallikes }) => {
     </Grid>
   )
 })
+
+SessioncontentStats.propTypes = {
+  users: PropTypes.number,
+  activeusers: PropTypes.number,
+  totallikes: PropTypes.number
+}
 
 const mapStateToProps = (state) => ({
   users: getCurrentScriptIdFieldByFieldname(state, { field: 'appusers' }),

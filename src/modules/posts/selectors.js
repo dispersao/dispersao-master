@@ -173,5 +173,5 @@ const formatPostForAlgorithm = (post, contentcreatorsList, categoriesList) => {
 
   return post
     .setIn(['categories'], List(categories))
-    .setIn(['contentcrator'], fromJS(contentcreator))
+    .setIn(['contentcreator'], fromJS(contentcreator))
 }

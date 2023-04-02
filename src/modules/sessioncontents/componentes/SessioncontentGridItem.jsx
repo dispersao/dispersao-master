@@ -17,15 +17,10 @@ import { GridListTile, GridList } from '@material-ui/core'
 import useStyles from './styles/'
 import CommentList from '../../comments/components/CommentList.jsx'
 import SessioncontentInfo from './SessioncontentInfo.jsx'
-import { getDislikesCountBySessioncontentId, getLikesCountBySessioncontentId } from '../../likes/selectors.js'
-import { getCurrentScriptIdFieldByFieldname } from '../../scripts/selectors.js'
 
 const SessioncontentGridItem = ({
   postSessioncontent,
-  commentsSessioncontents,
-  sessioncontentLikes,
-  sessioncontentDislikes,
-  appusers
+  commentsSessioncontents
 }) => {
   const { post, state } = postSessioncontent
 

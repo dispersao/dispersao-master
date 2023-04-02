@@ -13,8 +13,9 @@ import {
   Grid,
   Paper,
   Typography,
-  GridList
+  Avatar
 } from '@material-ui/core'
+import Contentcreator from '../../contentcreators/components/Contentcreator.jsx'
 
 const PostListGridItem = ({
   post: { content, media },
@@ -49,10 +50,13 @@ const PostListGridItem = ({
             )}
             <Grid item xs={12} sm container>
               <Grid item xs container direction="column" spacing={2}>
-                <Grid item xs>
-                  <Typography variant="body2" color="textSecondary">
-                    {contentcreator.name} sayd...
-                  </Typography>
+                <Grid item xs className={classes.content}>
+                  <Contentcreator
+                    {...contentcreator}
+                    text="said"
+                    mediaUrl={mediaUrl}
+                    size="small"
+                  />
                   <Typography variant="body2" gutterBottom>
                     {content}
                   </Typography>

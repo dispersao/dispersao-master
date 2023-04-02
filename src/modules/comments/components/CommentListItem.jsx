@@ -8,10 +8,16 @@ import { toJS } from '../../../utils/immutableToJs.jsx'
 import useStyles from './styles/'
 
 import { GridListTile, Typography, Grid } from '@material-ui/core'
-import { getCommentById, getCommentContentcreatorByCommentId } from '../selectors'
+import {
+  getCommentById,
+  getCommentContentcreatorByCommentId
+} from '../selectors'
+import { getApiUrl } from '../../config/selectors.js'
+import Contentcreator from '../../contentcreators/components/Contentcreator.jsx'
 
 const CommentListItem = ({
-  contentcreator: { name },
+  contentcreator,
+  mediaUrl,
   comment: { content },
   children
 }) => {
@@ -20,10 +26,13 @@ const CommentListItem = ({
   return (
     <GridListTile className={classes.item}>
       <Grid container direction="column" spacing={2}>
-        <Grid item xs>
-          <Typography variant="body2" color="textSecondary">
-            {name} commented:
-          </Typography>
+        <Grid item xs className={classes.content}>
+          <Contentcreator
+            {...contentcreator}
+            mediaUrl={mediaUrl}
+            text="commented"
+            size="small"
+          />
           <Typography variant="body2" gutterBottom>
             {content}
           </Typography>
@@ -38,14 +47,14 @@ CommentListItem.propTypes = {
   comment: PropTypes.shape({
     content: PropTypes.string
   }),
-  contentcreator: PropTypes.shape({
-    name: PropTypes.string
-  }).isRequired
+  mediaUrl: PropTypes.string,
+  contentcreator: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state, ownProps) => ({
   comment: getCommentById(state, ownProps),
-  contentcreator: getCommentContentcreatorByCommentId(state, ownProps)
+  contentcreator: getCommentContentcreatorByCommentId(state, ownProps),
+  mediaUrl: getApiUrl(state)
 })
 
 export default connect(mapStateToProps)(toJS(CommentListItem))
