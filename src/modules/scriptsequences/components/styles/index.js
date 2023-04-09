@@ -108,6 +108,10 @@ const useStyles = makeStyles((theme) => {
       marginRight: 'auto',
       width: 10,
       padding: 5
+    },
+    timeline: {
+      minHeight: 120,
+      width: '100%'
     }
   }
 })
