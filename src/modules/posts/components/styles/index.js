@@ -47,6 +47,9 @@ const useStyles = makeStyles(theme => ({
     '&> *:not(:last-child)': {
       marginBottom: 3
     }
+  },
+  headerContainer: {
+    display: 'flex'
   }
   
 }))

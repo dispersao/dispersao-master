@@ -16,6 +16,9 @@ const useStyles = makeStyles(() => ({
     '&> *:not(:last-child)': {
       marginBottom: 3
     }
+  },
+  headerContainer: {
+    display: 'flex'
   }
 }))
 

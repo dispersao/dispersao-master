@@ -22,7 +22,8 @@ const PostListGridItem = ({
   mediaUrl,
   contentcreator,
   disabled = false,
-  children
+  children,
+  headerComponent = null,
 }) => {
   const classes = useStyles()
 
@@ -51,12 +52,15 @@ const PostListGridItem = ({
             <Grid item xs={12} sm container>
               <Grid item xs container direction="column" spacing={2}>
                 <Grid item xs className={classes.content}>
+                  <div className={classes.headerContainer}>
                   <Contentcreator
                     {...contentcreator}
                     text="said"
                     mediaUrl={mediaUrl}
                     size="small"
                   />
+                  {headerComponent}
+                  </div>
                   <Typography variant="body2" gutterBottom>
                     {content}
                   </Typography>
@@ -82,7 +86,8 @@ PostListGridItem.propTypes = {
     name: PropTypes.string
   }),
   disabled: PropTypes.bool,
-  children: PropTypes.node
+  children: PropTypes.node,
+  headerComponent: PropTypes.node
 }
 
 const mapStateToProps = (state, ownProps) => ({

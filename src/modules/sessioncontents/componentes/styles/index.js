@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => {
       fontSize: 20
     },
     republisherContainer: {
-      //padding: "0px 0px 5px 0px !important"
+      textAlign: 'right'
     }
   }
 })

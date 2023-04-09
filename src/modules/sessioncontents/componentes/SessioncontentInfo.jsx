@@ -13,7 +13,6 @@ const SessioncontentInfo = React.memo(
     renderLikes = true,
     renderRepublish = true
   }) => {
-    const allow_republish = ALLOW_REPUBLISH && renderRepublish
     const classes = useStyles()
 
     let color, text, classname
@@ -41,7 +40,6 @@ const SessioncontentInfo = React.memo(
             {text}
           </Typography>
         </Grid>
-        {(allow_republish && <Republisher id={id} state={state} />) || null}
         {(renderLikes && (
           <Grid item xs>
             <LikesBox id={id} />

@@ -11,11 +11,14 @@ import { GridListTile, Grid, GridList } from '@material-ui/core'
 
 import { getSessioncontentById } from '../selectors.js'
 import SessioncontentInfo from './SessioncontentInfo.jsx'
+import Republisher from './Republisher.jsx'
 
 const SessioncontentCommentItem = ({
   commentSessioncontent,
   isParentPublished = false
 }) => {
+  const allow_republish = ALLOW_REPUBLISH
+
   const { comment, state } = commentSessioncontent
   const classes = useStyles()
 
@@ -27,12 +30,16 @@ const SessioncontentCommentItem = ({
   return (
     <GridListTile className={classnames.join(' ')}>
       <GridList cellHeight="auto" cols={1}>
-        <CommentListItem id={comment}>
-          <SessioncontentInfo
-            {...commentSessioncontent}
-            renderLikes={false}
-            renderRepublish={isParentPublished}
-          />
+        <CommentListItem
+          id={comment}
+          headerComponent={
+            (isParentPublished && allow_republish && (
+              <Republisher {...commentSessioncontent} />
+            )) ||
+            null
+          }
+        >
+          <SessioncontentInfo {...commentSessioncontent} renderLikes={false} />
         </CommentListItem>
       </GridList>
     </GridListTile>

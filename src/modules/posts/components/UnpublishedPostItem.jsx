@@ -26,11 +26,16 @@ const UnpublishedPostItem = ({
     return null
   } else {
     return (
-      <PostListItem id={id} disabled={isPublished}>
-        {(allow_republish && !isPublished && (
-          <Republisher contentType="post" contentId={id} />
-        )) ||
-          null}
+      <PostListItem
+        id={id}
+        disabled={isPublished}
+        headerComponent={
+          (allow_republish && !isPublished && (
+            <Republisher contentType="post" contentId={id} />
+          )) ||
+          null
+        }
+      >
         {(comments.length && (
           <CommentList>
             {comments.map((comment, key) => (
@@ -38,12 +43,13 @@ const UnpublishedPostItem = ({
                 id={comment}
                 key={key}
                 disabled={publishedComments.includes(comment)}
-              >
-                {(isPublished && allow_republish && (
-                  <Republisher contentType="comment" contentId={comment} />
-                )) ||
-                  null}
-              </CommentListItem>
+                headerComponent={
+                  (isPublished && allow_republish && (
+                    <Republisher contentType="comment" contentId={comment} />
+                  )) ||
+                  null
+                }
+              ></CommentListItem>
             ))}
           </CommentList>
         )) ||

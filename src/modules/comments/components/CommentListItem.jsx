@@ -19,7 +19,8 @@ const CommentListItem = ({
   contentcreator,
   mediaUrl,
   comment: { content },
-  children
+  children,
+  headerComponent = null
 }) => {
   const classes = useStyles()
 
@@ -27,12 +28,15 @@ const CommentListItem = ({
     <GridListTile className={classes.item}>
       <Grid container direction="column" spacing={2}>
         <Grid item xs className={classes.content}>
-          <Contentcreator
-            {...contentcreator}
-            mediaUrl={mediaUrl}
-            text="commented"
-            size="small"
-          />
+          <div className={classes.headerContainer}>
+            <Contentcreator
+              {...contentcreator}
+              mediaUrl={mediaUrl}
+              text="commented"
+              size="small"
+            />
+            {headerComponent}
+          </div>
           <Typography variant="body2" gutterBottom>
             {content}
           </Typography>
@@ -48,7 +52,8 @@ CommentListItem.propTypes = {
     content: PropTypes.string
   }),
   mediaUrl: PropTypes.string,
-  contentcreator: PropTypes.object.isRequired
+  contentcreator: PropTypes.object.isRequired,
+  headerComponent: PropTypes.node
 }
 
 const mapStateToProps = (state, ownProps) => ({
