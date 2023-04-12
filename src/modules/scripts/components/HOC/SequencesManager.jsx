@@ -17,7 +17,6 @@ const WithSequenceManager = WrappedComponent => {
         id, 
         connected,
         state,
-        speed = 1,
         scriptsequences,
         averagetime,
         manual

@@ -26,7 +26,7 @@ const auto_publish = AUTO_PUBLISH
 const WithAppContentManager = (WrappedComponent) => {
   const AppContentManager = (props) => {
     const {
-      script: { id, connected, state, scriptsequences },
+      script: { id, connected, state, scriptsequences, manual },
       createRandomAppContent,
       profileSessioncontent,
       profiles,
@@ -38,6 +38,7 @@ const WithAppContentManager = (WrappedComponent) => {
 
     useEffect(() => {
       if (
+        !manual &&
         scriptsequences &&
         scriptsequences.length &&
         connected === 'connected'

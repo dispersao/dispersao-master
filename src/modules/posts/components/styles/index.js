@@ -42,7 +42,16 @@ const useStyles = makeStyles(theme => ({
   },
   commentContainer: {
     backgroundColor: '#ccc'
+  },
+  content: {
+    '&> *:not(:last-child)': {
+      marginBottom: 3
+    }
+  },
+  headerContainer: {
+    display: 'flex'
   }
+  
 }))
 
 

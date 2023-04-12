@@ -5,56 +5,43 @@ import { toJS } from '../../../utils/immutableToJs.jsx'
 
 import CommentListItem from '../../comments/components/CommentListItem.jsx'
 
-import { toHHMMSS } from '../../../utils/stringUtils'
 import useStyles from './styles/'
 
-import {
-  GridListTile,
-  GridList,
-  Typography,
-  Grid,
-  IconButton
-} from '@material-ui/core'
+import { GridListTile, Grid, GridList } from '@material-ui/core'
+
 import { getSessioncontentById } from '../selectors.js'
+import SessioncontentInfo from './SessioncontentInfo.jsx'
 import Republisher from './Republisher.jsx'
 
 const SessioncontentCommentItem = ({
-  commentSessioncontent: { comment, state, programmed_at, id },
+  commentSessioncontent,
+  isParentPublished = false
 }) => {
   const allow_republish = ALLOW_REPUBLISH
 
+  const { comment, state } = commentSessioncontent
   const classes = useStyles()
 
-  let color, text, classname
-
-  if (state === 'pending') {
-    color = 'secondary'
-    text = `programmed to: ${toHHMMSS(programmed_at)}`
-    classname = 'item-pending'
-  } else {
-    color = 'primary'
-    text = `published at: ${toHHMMSS(programmed_at)}`
-    classname = 'item'
-  }
+  const classnames = [
+    classes.item,
+    state === 'pending' ? classes.pending : ''
+  ].filter(Boolean)
 
   return (
-    <GridListTile className={classes[classname]}>
-      <Grid container direction="column">
-        <Grid item xs>
-          <Grid container direction="row">
-            <Grid item xs>
-              <Typography variant="body2" color={color}>
-                {text}
-              </Typography>
-            </Grid>
-            {(allow_republish && <Republisher id={id} state={state} />) ||
-              null}
-          </Grid>
-        </Grid>
-        <GridList cellHeight="auto" cols={1}>
-          <CommentListItem id={comment} />
-        </GridList>
-      </Grid>
+    <GridListTile className={classnames.join(' ')}>
+      <GridList cellHeight="auto" cols={1}>
+        <CommentListItem
+          id={comment}
+          headerComponent={
+            (isParentPublished && allow_republish && (
+              <Republisher {...commentSessioncontent} />
+            )) ||
+            null
+          }
+        >
+          <SessioncontentInfo {...commentSessioncontent} renderLikes={false} />
+        </CommentListItem>
+      </GridList>
     </GridListTile>
   )
 }
@@ -74,4 +61,3 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 export default connect(mapStateToProps)(toJS(SessioncontentCommentItem))
-

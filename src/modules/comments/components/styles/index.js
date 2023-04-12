@@ -8,6 +8,17 @@ const useStyles = makeStyles(() => ({
     flex:1,
     minWidth: 400,
     padding: 10
+  },
+  commentContainer: {
+    backgroundColor: '#ccc'
+  },
+  content: {
+    '&> *:not(:last-child)': {
+      marginBottom: 3
+    }
+  },
+  headerContainer: {
+    display: 'flex'
   }
 }))
 

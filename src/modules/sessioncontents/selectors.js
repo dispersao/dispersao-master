@@ -19,6 +19,28 @@ export const getSessioncontents = createSelector([getState], (state) => {
   return state.get('data')
 })
 
+export const getCurrentScriptPublishedSessioncontents = createArraySelector(
+  [getCurrentScriptId, getSessioncontents],
+  (script, sessioncontents) => {
+    if (!script || !sessioncontents) {
+      return
+    }
+    return sessioncontents
+      .filter((sescon) => sescon.get('script').toString() === script && sescon.get('state') === 'published')
+      .valueSeq()
+  }
+)
+
+export const getCurrentScriptPublishedSessioncontentsIds = createArraySelector(
+  [getCurrentScriptPublishedSessioncontents],
+  (sessioncontents) => {
+    if(!sessioncontents){
+      return
+    }
+    return sessioncontents.map(sescon => sescon.get('id'))
+  }
+)
+
 
 export const getCurrentScriptPostSessioncontents = createArraySelector(
   [getCurrentScriptId, getSessioncontents],
@@ -35,6 +57,30 @@ export const getCurrentScriptPostSessioncontents = createArraySelector(
 
 export const getCurrentScriptPostSessioncontentsIds = createArraySelector(
   [getCurrentScriptPostSessioncontents],
+  (sessioncontents) => {
+    if(!sessioncontents){
+      return
+    }
+    return sessioncontents.map(sescon => sescon.get('id'))
+  }
+)
+
+
+export const getCurrentScriptProfileSessioncontents = createArraySelector(
+  [getCurrentScriptId, getSessioncontents],
+  (script, sessioncontents) => {
+    if (!script || !sessioncontents) {
+      return
+    }
+    return sessioncontents
+      .filter((sescon) => sescon.get('script').toString() === script && sescon.get('profile'))
+      .sortBy(el => el.get('programmed_at'))
+      .valueSeq()
+  }
+)
+
+export const getCurrentScriptProfileSessioncontentsIds = createArraySelector(
+  [getCurrentScriptProfileSessioncontents],
   (sessioncontents) => {
     if(!sessioncontents){
       return

@@ -30,6 +30,8 @@ import {
   watchCreateSessioncontent,
   watchUpdateSessioncontent
 } from './modules/sessioncontents/sagas'
+import { watchPollFetchAppUsers } from './modules/appusers/sagas'
+import { watchPollFetchLikes } from './modules/likes/sagas'
 
 export default function* rootSaga() {
   yield all([
@@ -49,6 +51,8 @@ export default function* rootSaga() {
     watchCreateRandomSessioncontent(),
     watchCreateSessioncontent(),
     watchUpdateSessioncontent(),
-    watchFetchProfiles()
+    watchFetchProfiles(),
+    watchPollFetchAppUsers(),
+    watchPollFetchLikes()
   ])
 }

@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { toJS } from '../../../utils/immutableToJs.jsx'
 import {
   getCurrentScriptId,
-  getScriptById,
   getScriptIsLoaded
 } from '../selectors.js'
 
@@ -29,6 +28,7 @@ const Script = ({
   useEffect(() => {
     if (id && isScriptLoaded && setCurrentScript && id !== currentScript) {
       setCurrentScript(id)
+      
     }
   }, [id, isScriptLoaded, setCurrentScript, currentScript])
 

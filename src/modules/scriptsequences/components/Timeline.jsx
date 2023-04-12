@@ -34,6 +34,7 @@ const Timeline = React.memo(({ scriptsequences, loading = false }) => {
             groupName="shared"
             sort={true}
             clone={false}
+            className={classes.timeline}
           >
             {getSequencesComps()}
           </ScriptSequenceSortable>

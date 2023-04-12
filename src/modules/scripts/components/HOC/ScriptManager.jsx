@@ -10,6 +10,8 @@ import {
   getCurrentScriptTotalTime
 } from '../../selectors'
 import { toJS } from '../../../../utils/immutableToJs.jsx'
+import { fetchAppusers, stopFetchAppusers } from '../../../appusers/actions'
+import { fetchLikes, stopFetchLikes } from '../../../likes/actions'
 
 const WithScriptManager = (WrappedComponent) => {
   const ScriptManager = (props) => {
@@ -18,7 +20,9 @@ const WithScriptManager = (WrappedComponent) => {
       lastScriptSequence,
       elapsedTime,
       totalTime,
-      endScript
+      endScript,
+      startPollingData,
+      stopPollingData
     } = props
 
     const isLastScriptSequenceOver = lastScriptSequence?.state === 'finished'
@@ -30,6 +34,18 @@ const WithScriptManager = (WrappedComponent) => {
         }
       }
     }, [isLastScriptSequenceOver, totalTime, elapsedTime, state])
+
+    useEffect(() => {
+      if (
+        state === states.STARTED ||
+        state === states.PLAYING ||
+        state === states.PAUSED
+      ) {
+        startPollingData(id)
+      } else {
+        stopPollingData()
+      }
+    }, [state])
 
     const wrappedProps = {
       ...props
@@ -62,7 +78,15 @@ const WithScriptManager = (WrappedComponent) => {
         finishScript({
           id: id
         })
-      )
+      ),
+    startPollingData: (id) => {
+      dispatch(fetchAppusers(id))
+      dispatch(fetchLikes())
+    },
+    stopPollingData: () => {
+      dispatch(stopFetchAppusers())
+      dispatch(stopFetchLikes())
+    }
   })
 
   return connect(mapStateToProps, mapDispatchToProps)(toJS(ScriptManager))

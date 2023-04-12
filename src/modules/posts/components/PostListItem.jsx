@@ -13,15 +13,17 @@ import {
   Grid,
   Paper,
   Typography,
-  GridList
+  Avatar
 } from '@material-ui/core'
+import Contentcreator from '../../contentcreators/components/Contentcreator.jsx'
 
 const PostListGridItem = ({
   post: { content, media },
   mediaUrl,
   contentcreator,
   disabled = false,
-  children
+  children,
+  headerComponent = null,
 }) => {
   const classes = useStyles()
 
@@ -49,10 +51,16 @@ const PostListGridItem = ({
             )}
             <Grid item xs={12} sm container>
               <Grid item xs container direction="column" spacing={2}>
-                <Grid item xs>
-                  <Typography variant="body2" color="textSecondary">
-                    {contentcreator.name} sayd...
-                  </Typography>
+                <Grid item xs className={classes.content}>
+                  <div className={classes.headerContainer}>
+                  <Contentcreator
+                    {...contentcreator}
+                    text="said"
+                    mediaUrl={mediaUrl}
+                    size="small"
+                  />
+                  {headerComponent}
+                  </div>
                   <Typography variant="body2" gutterBottom>
                     {content}
                   </Typography>
@@ -60,18 +68,7 @@ const PostListGridItem = ({
               </Grid>
             </Grid>
           </Grid>
-          {children && (children.length || '') &&
-            <Grid 
-              item 
-              container 
-              spacing={2} 
-              direction="column" 
-            >
-              <GridList className={classes.commentContainer}>
-                {children}
-              </GridList>
-            </Grid>
-          }
+          {children}
         </Grid>
       </Paper>
     </GridListTile>
@@ -89,7 +86,8 @@ PostListGridItem.propTypes = {
     name: PropTypes.string
   }),
   disabled: PropTypes.bool,
-  children: PropTypes.node
+  children: PropTypes.node,
+  headerComponent: PropTypes.node
 }
 
 const mapStateToProps = (state, ownProps) => ({

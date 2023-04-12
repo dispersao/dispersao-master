@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 
 import { connect } from 'react-redux'
 
-import { Publish, Refresh, Delete } from '@material-ui/icons'
-
 import PostListItem from '../../posts/components/PostListItem.jsx'
 import SessioncontentCommentItem from './SessioncontentCommentItem.jsx'
 import { toJS } from '../../../utils/immutableToJs.jsx'
@@ -14,61 +12,54 @@ import {
   getSessioncontentById
 } from '../selectors'
 
+import { GridListTile, GridList } from '@material-ui/core'
 
-import {
-  GridListTile,
-  GridList,
-  Typography,
-  Grid,
-} from '@material-ui/core'
-
-import { toHHMMSS } from '../../../utils/stringUtils'
 import useStyles from './styles/'
+import CommentList from '../../comments/components/CommentList.jsx'
+import SessioncontentInfo from './SessioncontentInfo.jsx'
 import Republisher from './Republisher.jsx'
 
 const SessioncontentGridItem = ({
-  postSessioncontent: {id, programmed_at, state, post },
+  postSessioncontent,
   commentsSessioncontents
 }) => {
   const allow_republish = ALLOW_REPUBLISH
 
+  const { post, state } = postSessioncontent
+
   const classes = useStyles()
 
-  let color, text, classname
+  const classnames = [
+    classes.item,
+    state === 'pending' ? 'pending' : ''
+  ].filter(Boolean)
 
-  if (state === 'pending') {
-    color = 'secondary'
-    text = `programmed to: ${toHHMMSS(programmed_at)}`
-    classname = 'item-pending'
-  } else {
-    color = 'primary'
-    text = `published at: ${toHHMMSS(programmed_at)}`
-    classname = 'item'
-  }
   return (
-    <GridListTile className={classes[classname]}>
-      <Grid container direction="column">
-        <Grid item xs>
-          <Grid container direction="row">
-            <Grid item xs>
-              <Typography variant="body2" color={color}>
-                {text}
-              </Typography>
-            </Grid>
-            {(allow_republish && 
-              <Republisher id={id} state={state}/>
-            ) ||
-              null}
-          </Grid>
-        </Grid>
-        <GridList cellHeight="auto" cols={1}>
-          <PostListItem id={post}>
-            {Object.keys(commentsSessioncontents).map((commentSescon, key) => (
-              <SessioncontentCommentItem id={commentSescon} key={key}/>
-            ))}
-          </PostListItem>
-        </GridList>
-      </Grid>
+    <GridListTile className={classnames.join(' ')}>
+      <GridList cellHeight="auto" cols={1}>
+        <PostListItem
+          id={post}
+          headerComponent={
+            (allow_republish && <Republisher {...postSessioncontent} />) || null
+          }
+        >
+          <SessioncontentInfo {...postSessioncontent} />
+          {(Object.keys(commentsSessioncontents).length && (
+            <CommentList>
+              {Object.keys(commentsSessioncontents).map(
+                (commentSescon, key) => (
+                  <SessioncontentCommentItem
+                    id={commentSescon}
+                    key={key}
+                    isParentPublished={state === 'published'}
+                  />
+                )
+              )}
+            </CommentList>
+          )) ||
+            null}
+        </PostListItem>
+      </GridList>
     </GridListTile>
   )
 }
@@ -79,9 +70,7 @@ SessioncontentGridItem.propTypes = {
     state: PropTypes.string.isRequired,
     programmed_at: PropTypes.number
   }).isRequired,
-  commentsSessioncontents: PropTypes.object,
-  onRepublish: PropTypes.func,
-  onUnpublish: PropTypes.func
+  commentsSessioncontents: PropTypes.object
 }
 
 const mapStateToProps = (state, ownProps) => ({
@@ -93,4 +82,3 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 export default connect(mapStateToProps, null)(toJS(SessioncontentGridItem))
-

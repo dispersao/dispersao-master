@@ -11,6 +11,8 @@ import {
 
 import PostListItem from './PostListItem.jsx'
 import CommentListItem from '../../comments/components/CommentListItem.jsx'
+import CommentList from '../../comments/components/CommentList.jsx'
+import Republisher from '../../sessioncontents/componentes/Republisher.jsx'
 
 const UnpublishedPostItem = ({
   id,
@@ -18,18 +20,40 @@ const UnpublishedPostItem = ({
   comments = [],
   publishedComments = []
 }) => {
+  const allow_republish = ALLOW_REPUBLISH
+
   if (isPublished && comments.length === publishedComments.length) {
     return null
   } else {
     return (
-      <PostListItem id={id} disabled={isPublished}>
-        {comments.map((comment, key) => (
-          <CommentListItem
-            id={comment}
-            key={key}
-            disabled={publishedComments.includes(comment)}
-          />
-        ))}
+      <PostListItem
+        id={id}
+        disabled={isPublished}
+        headerComponent={
+          (allow_republish && !isPublished && (
+            <Republisher contentType="post" contentId={id} />
+          )) ||
+          null
+        }
+      >
+        {(comments.length && (
+          <CommentList>
+            {comments.map((comment, key) => (
+              <CommentListItem
+                id={comment}
+                key={key}
+                disabled={publishedComments.includes(comment)}
+                headerComponent={
+                  (isPublished && allow_republish && (
+                    <Republisher contentType="comment" contentId={comment} />
+                  )) ||
+                  null
+                }
+              ></CommentListItem>
+            ))}
+          </CommentList>
+        )) ||
+          null}
       </PostListItem>
     )
   }
