@@ -3,7 +3,8 @@ const states = {
   STARTED: 'started',
   PLAYING: 'playing',
   PAUSED: 'paused',
-  FINISHED: 'finished'
+  FINISHED: 'finished',
+  RESETING: 'reseting'
 }
 
 export default states

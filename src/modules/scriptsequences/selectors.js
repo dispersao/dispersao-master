@@ -63,6 +63,7 @@ export const getCurrentScriptScriptsequencesIds = createArraySelector(
     }
   }
 )
+
 export const getHighestIndexSentToPlay = createSelector(
   [getCurrentScriptScriptsequences],
   (scriptsequences) => {

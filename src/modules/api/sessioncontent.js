@@ -28,3 +28,8 @@ export const updateSessionContentState = async (content) => {
   )
   return normalizeSessioncontent(sessioncontents.data)
 }
+
+export const deleteSessioncontent = async (id) => {
+  const sessioncontent = await axios.delete(`/sessioncontents/${id}`)
+  return normalizeSessioncontent(sessioncontent.data)
+}

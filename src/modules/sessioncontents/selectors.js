@@ -19,7 +19,6 @@ export const getSessioncontents = createSelector([getState], (state) => {
   return state.get('data')
 })
 
-
 export const getCurrentScriptPostSessioncontents = createArraySelector(
   [getCurrentScriptId, getSessioncontents],
   (script, sessioncontents) => {
@@ -27,8 +26,11 @@ export const getCurrentScriptPostSessioncontents = createArraySelector(
       return
     }
     return sessioncontents
-      .filter((sescon) => sescon.get('script').toString() === script && sescon.get('post'))
-      .sortBy(el => el.get('programmed_at'))
+      .filter(
+        (sescon) =>
+          sescon.get('script').toString() === script && sescon.get('post')
+      )
+      .sortBy((el) => el.get('programmed_at'))
       .valueSeq()
   }
 )
@@ -36,10 +38,10 @@ export const getCurrentScriptPostSessioncontents = createArraySelector(
 export const getCurrentScriptPostSessioncontentsIds = createArraySelector(
   [getCurrentScriptPostSessioncontents],
   (sessioncontents) => {
-    if(!sessioncontents){
+    if (!sessioncontents) {
       return
     }
-    return sessioncontents.map(sescon => sescon.get('id'))
+    return sessioncontents.map((sescon) => sescon.get('id'))
   }
 )
 
@@ -101,7 +103,6 @@ export const getPostSessioncontentCommentSessioncontentsIdsById =
     }
   )(getId)
 
-
 export const getNextContentToPublish = createSelector(
   [getSessioncontents, getTypes, getCurrentScriptId],
   (sessioncontents, types, script) => {
@@ -114,5 +115,20 @@ export const getNextContentToPublish = createSelector(
       .filter((sescon) => sescon.get('state') === 'pending')
       .sort((a, b) => a.get('programmed_at') - b.get('programmed_at'))
       .first()
+  }
+)
+
+export const getCurrentScriptSessioncontentsIds = createArraySelector(
+  [getCurrentScriptId, getSessioncontents],
+  (script, sessioncontents) => {
+    if (!script || !sessioncontents) {
+      return
+    }
+    return sessioncontents
+      .filter((sescon) => {
+        return sescon.get('script').toString() === script.toString()
+      })
+      .map((sescon) => sescon.get('id'))
+      .valueSeq()
   }
 )

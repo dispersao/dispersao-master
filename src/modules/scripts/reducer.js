@@ -8,6 +8,7 @@ import {
   CREATE_SCRIPT_SUCCESS,
   CREATE_SCRIPT_ERROR,
   UPDATE_SCRIPT,
+  RESET_SESSION,
   UPDATE_SCRIPT_SUCCESS,
   UPDATE_SCRIPT_ERROR,
   CONNECT_SCRIPT,
@@ -66,6 +67,7 @@ const reducer = (
       return state.setIn(['current'], action.payload.script)
 
     case UPDATE_SCRIPT:
+    case RESET_SESSION:
       return state.mergeDeep(
         fromJS({
           data: {

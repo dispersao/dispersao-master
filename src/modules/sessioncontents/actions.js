@@ -17,6 +17,11 @@ export const UPDATE_SESSIONCONTENT_STATE_SUCCESS =
 export const UPDATE_SESSIONCONTENT_STATE_ERROR =
   'UPDATE_SESSIONCONTENT_STATE_ERROR'
 
+
+export const DELETE_SESSIONCONTENT = 'DELETE_SESSIONCONTENT'
+export const DELETE_SESSIONCONTENT_SUCCESS = 'DELETE_SESSIONCONTENT_SUCCESS'
+export const DELETE_SESSIONCONTENT_ERROR = 'DELETE_SESSIONCONTENT_ERROR'
+
 export const fetchSessioncontentsSuccess = (sessioncontents) => ({
   type: FETCH_SESSIONCONTENTS_SUCCESS,
   payload: {
@@ -100,3 +105,27 @@ export const updateSessioncontentStateError = (error) => ({
     error
   }
 })
+
+export const deleteSessioncontent = (sessioncontent) => ({
+  type: DELETE_SESSIONCONTENT,
+  payload: {
+    sessioncontent
+  }
+})
+
+export const deleteSessioncontentSuccess = (sessioncontent) => ({
+  type: DELETE_SESSIONCONTENT_SUCCESS,
+  payload: {
+    sessioncontent
+  }
+})
+
+export const deleteSessioncontentError = (error) => ({
+  type: DELETE_SESSIONCONTENT_ERROR,
+  payload: {
+    error
+  }
+})
+
+
+

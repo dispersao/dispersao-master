@@ -22,11 +22,15 @@ import {
   FINISH_SCRIPT
 } from './actions'
 
-import { fetchScriptsequencesSuccess } from '../scriptsequences/actions'
+import {
+  deleteScriptsequenceSuccess,
+  fetchScriptsequencesSuccess
+} from '../scriptsequences/actions'
 
 import {
   fetchSessioncontentsSuccess,
-  createSessioncontentSuccess
+  createSessioncontentSuccess,
+  deleteSessioncontentSuccess
 } from '../sessioncontents/actions'
 
 import {
@@ -39,6 +43,10 @@ import {
 import { sendMessage, notify } from '../../utils/managers/osc'
 
 import { getScriptByScriptId } from './selectors'
+import { getCurrentScriptScriptsequencesIds } from '../scriptsequences/selectors'
+import { deleteScriptsequence } from '../api/scriptsequence'
+import { getCurrentScriptSessioncontentsIds } from '../sessioncontents/selectors'
+import { deleteSessioncontent } from '../api/sessioncontent'
 
 export function* watchFetchScripts() {
   yield takeLeading(FETCH_SCRIPTS, fetchScripts)
@@ -108,8 +116,40 @@ function* updateScriptState(action) {
   }
 }
 
+function* clearScriptsequences() {
+  const scriptsequences = yield select(getCurrentScriptScriptsequencesIds)
+  yield* scriptsequences.map(function* (scriptsequence) {
+    try {
+      // console.log('to delete scriptsequence', scriptsequence)
+      const response = yield deleteScriptsequence(scriptsequence)
+      // console.log('api deleted scrseq', response)
+      yield put(deleteScriptsequenceSuccess(response.entities.scriptsequences))
+      // console.log('action delete scrseq', response)
+    } catch (e) {
+      console.log(e)
+    }
+  })
+}
+
+function* clearSessioncontents() {
+  const sessioncontents = yield select(getCurrentScriptSessioncontentsIds)
+  yield* sessioncontents.map(function* (scriptsequence) {
+    try {
+      // console.log('to delete sessioncontents', scriptsequence)
+      const response = yield deleteSessioncontent(scriptsequence)
+      // console.log('api deleted sescon', response)
+      yield put(deleteSessioncontentSuccess(response.entities.sessioncontents))
+      // console.log('action deleted sescon', response)
+    } catch (e) {
+      console.log(e)
+    }
+  })
+}
+
 function* resetSession(action) {
   try {
+    yield clearScriptsequences(action)
+    yield clearSessioncontents(action)
     yield updateScriptState(action)
 
     yield call(notify, {

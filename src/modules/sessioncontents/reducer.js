@@ -4,7 +4,8 @@ import {
   FETCH_SESSIONCONTENTS_SUCCESS,
   CREATE_SESSIONCONTENT_SUCCESS,
   UPDATE_SESSIONCONTENT_SUCCESS,
-  UPDATE_SESSIONCONTENT_STATE_SUCCESS
+  UPDATE_SESSIONCONTENT_STATE_SUCCESS,
+  DELETE_SESSIONCONTENT_SUCCESS
 } from './actions'
 
 import { UPDATE_SCRIPT_SUCCESS } from '../scripts/actions'
@@ -57,6 +58,13 @@ const reducer = (
           data: action.payload.sessioncontents
         })
       )
+
+    case DELETE_SESSIONCONTENT_SUCCESS:
+      return state.deleteIn([
+        'data',
+        Object.keys(action.payload.sessioncontent)[0]
+      ])
+
     default:
       return state
   }
