@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import states from '../../utils/stateConstants'
-import { finishScript } from '../../actions'
-import {
-  getCurrentScript,
-  getCurrentScriptElapsedTime,
-  getCurrentSCriptLastScriptsequence,
-  getCurrentScriptTotalTime
-} from '../../selectors'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
 import { toJS } from '../../../../utils/immutableToJs.jsx'
 import { fetchAppusers, stopFetchAppusers } from '../../../appusers/actions'
 import { fetchLikes, stopFetchLikes } from '../../../likes/actions'
+import { finishScript } from '../../actions'
+import {
+  getCurrentSCriptLastScriptsequence,
+  getCurrentScript,
+  getCurrentScriptElapsedTime,
+  getCurrentScriptTotalTime
+} from '../../selectors'
+import states from '../../utils/stateConstants'
 
 const WithScriptManager = (WrappedComponent) => {
   const ScriptManager = (props) => {

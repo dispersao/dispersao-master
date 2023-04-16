@@ -12,7 +12,8 @@ import { toJS } from '../../../../utils/immutableToJs.jsx'
 
 import {
   getCurrentScript,
-  getCurrentScriptElapsedTime
+  getCurrentScriptElapsedTime,
+  getCurrentScriptIdFieldByFieldname
 } from '../../../scripts/selectors'
 
 import { getProfileList } from '../../../profiles/selectors'
@@ -33,7 +34,8 @@ const WithAppContentManager = (WrappedComponent) => {
       createContent,
       publishContent,
       elapsedTime,
-      nextContentToPublish
+      nextContentToPublish,
+      synching
     } = props
 
     useEffect(() => {
@@ -59,7 +61,7 @@ const WithAppContentManager = (WrappedComponent) => {
     }, [state, elapsedTime, nextContentToPublish])
 
     useEffect(() => {
-      if (state === states.STARTED) {
+      if (state === states.STARTED && !synching) {
         if (!profileSessioncontent || !profileSessioncontent.length) {
           if (profiles) {
             const profileContent = profiles.map((p) => ({
@@ -116,6 +118,10 @@ const WithAppContentManager = (WrappedComponent) => {
     nextContentToPublish: getNextContentToPublish(state, {
       ...ownProps,
       types: ['post', 'comment']
+    }),
+    synching: getCurrentScriptIdFieldByFieldname(state, {
+      ...ownProps,
+      field: 'synching'
     })
   })
 

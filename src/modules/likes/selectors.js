@@ -1,9 +1,7 @@
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
-import { getCurrentScriptId } from '../scripts/selectors'
 import {
   getCurrentScriptPublishedSessioncontentsIds,
-  getCurrentScriptSessioncontentsListByType
 } from '../sessioncontents/selectors'
 
 const getState = (state) => state.likes.get('data')

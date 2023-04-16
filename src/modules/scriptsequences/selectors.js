@@ -1,4 +1,3 @@
-import { sortBy } from 'lodash'
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 import { createArraySelector } from '../../utils/selectorUtils'
@@ -44,7 +43,7 @@ export const getCurrentScriptScriptsequences = createArraySelector(
       return
     } else {
       const mapped = scriptSequences
-        .filter((ss) => ss.get('script').toString() === script)
+        .filter((ss) => ss.get('script').toString() === script.toString())
         .sortBy((el) => el.get('index'))
         .valueSeq()
 

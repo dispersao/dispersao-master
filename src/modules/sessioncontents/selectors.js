@@ -26,7 +26,7 @@ export const getCurrentScriptPublishedSessioncontents = createArraySelector(
       return
     }
     return sessioncontents
-      .filter((sescon) => sescon.get('script').toString() === script && sescon.get('state') === 'published')
+      .filter((sescon) => sescon.get('script').toString() === script.toString() && sescon.get('state') === 'published')
       .valueSeq()
   }
 )
@@ -49,7 +49,7 @@ export const getCurrentScriptPostSessioncontents = createArraySelector(
       return
     }
     return sessioncontents
-      .filter((sescon) => sescon.get('script').toString() === script && sescon.get('post'))
+      .filter((sescon) => sescon.get('script').toString() === script.toString() && sescon.get('post'))
       .sortBy(el => el.get('programmed_at'))
       .valueSeq()
   }
@@ -73,7 +73,7 @@ export const getCurrentScriptProfileSessioncontents = createArraySelector(
       return
     }
     return sessioncontents
-      .filter((sescon) => sescon.get('script').toString() === script && sescon.get('profile'))
+      .filter((sescon) => sescon.get('script').toString() === script.toString() && sescon.get('profile'))
       .sortBy(el => el.get('programmed_at'))
       .valueSeq()
   }
@@ -96,7 +96,7 @@ export const getCurrentScriptSessioncontentsListByType = createCachedSelector(
       return
     }
     return sessioncontents
-      .filter((sescon) => sescon.get('script') === script)
+      .filter((sescon) => sescon.get('script').toString() === script.toString())
       .filter((sescon) => sescon.get(type))
       .valueSeq()
   }
@@ -155,7 +155,7 @@ export const getNextContentToPublish = createSelector(
       return
     }
     return sessioncontents
-      .filter((sescon) => sescon.get('script') === script)
+      .filter((sescon) => sescon.get('script').toString() === script.toString())
       .filter((sescon) => types.some((type) => sescon.get(type)))
       .filter((sescon) => sescon.get('state') === 'pending')
       .sort((a, b) => a.get('programmed_at') - b.get('programmed_at'))

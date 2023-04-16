@@ -30,4 +30,6 @@ export const getFilterByProps = createCachedSelector(
       })
     }
   }
-)((filters, data, type, script) => JSON.stringify([script, data, type]))
+)((state, props) =>
+  JSON.stringify({ ...props, script: state.scripts.get('current') })
+)
