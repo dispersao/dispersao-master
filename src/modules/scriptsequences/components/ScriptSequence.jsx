@@ -20,16 +20,20 @@ const Scriptsequence = React.memo(({
   if(sentToPlayer){
     classesnames.push('dragDisabled')
   }
-
-  return (
-    <GridListTile className={classesnames.join(' ')} >
-      <GridList cellHeight="auto" cols={1}>
-        <Sequence id={sequence}  />
-        <ScriptsequenceTimelineProgress id={id}/>
-        {!sentToPlayer && <DeleteScriptsequence id={id} />}
-      </GridList>
-    </GridListTile>
-  )
+  if(sequence){
+    return (
+      <GridListTile className={classesnames.join(' ')} >
+        <GridList cellHeight="auto" cols={1}>
+          <Sequence id={sequence}  />
+          <ScriptsequenceTimelineProgress id={id}/>
+          {!sentToPlayer && <DeleteScriptsequence id={id} />}
+        </GridList>
+      </GridListTile>
+    )
+  } else {
+    return null
+  }
+  
 })
 
 Scriptsequence.propTypes = {
