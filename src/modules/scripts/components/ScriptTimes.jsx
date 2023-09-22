@@ -15,8 +15,8 @@ import {
 import states from '../utils/stateConstants'
 const MIN_UNPLANNED_TIME = 50
 
-const ScriptTimes = ({ elapsedTime, totalTime, remainingTime, state }) => {
-  const warningClass = remainingTime <= MIN_UNPLANNED_TIME && state === states.PLAYING ? 'warning' : ''
+const ScriptTimes = ({ elapsedTime, totalTime, remainingTime, state, manual }) => {
+  const warningClass = manual && remainingTime <= MIN_UNPLANNED_TIME && state === states.PLAYING ? 'warning' : ''
   return (
     <Grid item xs>
       <Grid container spacing={2}>
@@ -49,14 +49,16 @@ ScriptTimes.propTypes = {
   totalTime: PropTypes.number,
   elapsedTime: PropTypes.number,
   remainingTime: PropTypes.number,
-  state: PropTypes.string
+  state: PropTypes.string,
+  manual: PropTypes.bool
 }
 
 const mapStateToProps = (state) => ({
   totalTime: getCurrentScriptTotalTime(state),
   elapsedTime: getCurrentScriptElapsedTime(state),
   remainingTime: getCurrentScriptRemainingTime(state),
-  state: getCurrentScriptIdFieldByFieldname(state, {field: 'state'})
+  state: getCurrentScriptIdFieldByFieldname(state, {field: 'state'}),
+  manual: getCurrentScriptIdFieldByFieldname(state, {field: 'manual'})
 })
 
 export default connect(mapStateToProps)(ScriptTimes)
