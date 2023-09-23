@@ -1,8 +1,4 @@
-import {
-  map,
-  uniq,
-  intersection
-} from 'lodash'
+import { map, uniq, intersection } from 'lodash'
 
 import {
   getEntityCategoriesByType,
@@ -12,38 +8,53 @@ import {
 
 const categories = {
   block: 'blocks',
-  blockNext:'blocks-next',
+  blockNext: 'blocks-next',
   block2ndNext: 'blocks-2nd-next',
   require: 'requires'
 }
 
-export const filterSequences = (scriptSequences, unselectedSequences) => {
+export const filterSequences = (
+  scriptSequences,
+  unselectedSequences,
+  creditSequences
+) => {
   let availableSequences = filterByBlock(scriptSequences, unselectedSequences)
   availableSequences = filterByRequire(scriptSequences, availableSequences)
   availableSequences = filterByBlockGroups(scriptSequences, availableSequences)
-  availableSequences = filterByCharsAndLocation(scriptSequences, availableSequences)
+  availableSequences = filterByCharsAndLocation(
+    scriptSequences,
+    availableSequences
+  )
+  /** temp */
+  availableSequences = filterCredits(availableSequences, creditSequences)
   return availableSequences
 }
 
-/*-- FILTER OUT BLOCKED SEQUENCES BY SCRIPT SEQUENCES --*/    
+/*-- FILTER OUT BLOCKED SEQUENCES BY SCRIPT SEQUENCES --*/
 const filterByBlock = (scriptSequences, availableSequences) => {
-  let blockCategories = scriptSequences.map(seq => {
-    return getEntityCategoriesByType(seq, categories.block)
-  }).flatten()
+  let blockCategories = scriptSequences
+    .map((seq) => {
+      return getEntityCategoriesByType(seq, categories.block)
+    })
+    .flatten()
   blockCategories = uniq(mapCategoryToText(blockCategories))
 
-  return availableSequences.filter(seq => !blockCategories.includes(seq.sceneNumber))
+  return availableSequences.filter(
+    (seq) => !blockCategories.includes(seq.sceneNumber)
+  )
 }
 
 /*-- FILTER OUT SEQUENCES THAT REQUIRE UNSELECTED SEQUENCES --*/
 const filterByRequire = (scriptSequences, availableSequences) => {
   let scriptSequencesSceneNumbers = map(scriptSequences, 'sceneNumber')
 
-  return availableSequences.filter(seq => {
+  return availableSequences.filter((seq) => {
     let required = getEntityCategoriesByType(seq, categories.require)
     required = mapCategoryToText(required)
 
-    return required.every(reqId => scriptSequencesSceneNumbers.includes(reqId))
+    return required.every((reqId) =>
+      scriptSequencesSceneNumbers.includes(reqId)
+    )
   })
 }
 
@@ -52,22 +63,30 @@ const filterByBlockGroups = (scriptSequences, availableSequences) => {
   const lastSeq = getSequenceInPosition(scriptSequences, -1)
   const secondLastSeq = getSequenceInPosition(scriptSequences, -2)
 
-  let avSequences = filterByBlockGroup([lastSeq], categories.blockNext, availableSequences)
-  avSequences = filterByBlockGroup([secondLastSeq, lastSeq], categories.block2ndNext, availableSequences)
+  let avSequences = filterByBlockGroup(
+    [lastSeq],
+    categories.blockNext,
+    availableSequences
+  )
+  avSequences = filterByBlockGroup(
+    [secondLastSeq, lastSeq],
+    categories.block2ndNext,
+    availableSequences
+  )
   return avSequences
 }
 
 const filterByBlockGroup = (checkSequences, field, availableSequences) => {
-  if (checkSequences.some(seq => !seq)) {
+  if (checkSequences.some((seq) => !seq)) {
     return availableSequences
   }
 
   let checkValues = checkSequences
-    .map(seq => getEntityCategoriesByType(seq, field))
-    .map(cats => map(cats, 'id'))
+    .map((seq) => getEntityCategoriesByType(seq, field))
+    .map((cats) => map(cats, 'id'))
     .flatten()
 
-  return availableSequences.filter(seq => {
+  return availableSequences.filter((seq) => {
     const seqCheckValue = map(getEntityCategoriesByType(seq, field), 'id')
     return !intersection(seqCheckValue, checkValues).length
   })
@@ -83,14 +102,25 @@ const filterByCharsAndLocation = (scriptSequences, availableSequences) => {
   const lastLocation = lastSeq.location.id
   const lastCharacters = map(lastSeq.characters, 'id')
 
-  return availableSequences.filter(seq => {
+  return availableSequences.filter((seq) => {
     const seqLocation = seq.location.id
     const seqCharacters = map(seq.characters, 'id')
 
     const sameLocation = seqLocation === lastLocation
-    const sameCharacters = intersection(lastCharacters, seqCharacters).length === lastCharacters.length
+    const sameCharacters =
+      intersection(lastCharacters, seqCharacters).length ===
+      lastCharacters.length
 
     return !(sameLocation && sameCharacters)
   })
 }
 
+const filterCredits = (availableSequences, creditSequences) => {
+  return availableSequences.filter((seq) => {
+    const id = seq.id.toString()
+    return (
+      id !== creditSequences.opening.get('id').toString() &&
+      id !== creditSequences.closing.get('id').toString()
+    )
+  })
+}

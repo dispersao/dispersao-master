@@ -1,9 +1,11 @@
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
+import { createArraySelector } from '../../utils/selectorUtils'
 
 const getState = (state) => state.locations
 const getId = (state, props) => props.id
 const getLocationId = (state, props) => props.location
+const getCreditsLocationPosition = (state, props) => props.creditsPosition
 
 export const getLocationsList = createSelector(
   [getState], (state) => {
@@ -33,3 +35,23 @@ const fetchLocationById = (list, id) => {
 export const getLocationByLocationId = createCachedSelector(
   [getLocationsList, getLocationId], fetchLocationById
 )(getLocationId)
+
+export const getCreditsLocations = createArraySelector(
+  [getLocationsList], 
+  (list) => {
+    if(!list || !list.size) {
+      return
+    }
+    return list.filter(location => location.get('creditsPosition')).valueSeq()
+  }
+)
+
+export const getCreditsLocationByPosition = createArraySelector(
+  [getCreditsLocationPosition, getLocationsList], 
+  (position, list) => {
+    if(!list || !list.size || !position ) {
+      return
+    }
+    return list.find(location => location.get('creditsPosition') === position)
+  }
+)

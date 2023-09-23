@@ -38,6 +38,7 @@ import { PLAY_SCRIPT } from '../scripts/actions'
 import { getScriptById } from '../scripts/selectors'
 
 import {
+  getCreditSequenceByPosition,
   getSequenceListFormatted
 } from '../sequences/selectors'
 
@@ -94,9 +95,20 @@ function* createRandomScriptSequence(action) {
     })
 
     const formatedSequences = yield select(getSequenceListFormatted)
+    const openingCreditsSequence = yield select(getCreditSequenceByPosition, {
+      creditsPosition: 'opening'
+    })
+    const closingCreditsSequence = yield select(getCreditSequenceByPosition, {
+      creditsPosition: 'closing'
+    })
+
     const nextScriptSequence = yield getNextRandomSequence(
       script,
-      formatedSequences
+      formatedSequences,
+      {
+        opening: openingCreditsSequence,
+        closing: closingCreditsSequence
+      }
     )
 
     const scriptsequence = yield createScriptsequenceAPI(nextScriptSequence)

@@ -24,7 +24,7 @@ import {
   getRandomSessiontontents
 } from './probabilities/sessioncontent'
 
-export const getNextRandomSequence = (script, sequences) => {
+export const getNextRandomSequence = (script, sequences, creditsSequences) => {
   let {
     scriptSequences, 
     availableSequences
@@ -32,7 +32,7 @@ export const getNextRandomSequence = (script, sequences) => {
 
   const position = calculateNextPosition(scriptSequences, availableSequences, script)
 
-  availableSequences = filterSequences(scriptSequences, availableSequences)
+  availableSequences = filterSequences(scriptSequences, availableSequences, creditsSequences)
   availableSequences = calculateSequencesProbability(position, availableSequences)
   const selectedSequence = getRandomSequenceBasedonProbability(availableSequences)
 

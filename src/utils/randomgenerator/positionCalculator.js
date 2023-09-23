@@ -9,6 +9,7 @@ export const calculateNextPosition = (scriptequences, availablesequences, script
   const highestPosition = Math.max(...uniq(
     scriptequences.concat(availablesequences)
       .map(seq => getEntityCategoriesByType(seq, 'pos'))
+      .filter(Boolean)
       .map(mapCategoryToText)
       .flatten()
   ).map(Number))

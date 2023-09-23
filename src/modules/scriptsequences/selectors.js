@@ -1,7 +1,7 @@
-import { sortBy } from 'lodash'
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 import { createArraySelector } from '../../utils/selectorUtils'
+import { getCreditSequenceByPosition } from '../sequences/selectors'
 
 const getState = (state) => state.scriptsequences
 const getSequences = (state) => state.sequences.get('data')
@@ -50,6 +50,20 @@ export const getCurrentScriptScriptsequences = createArraySelector(
 
       return mapped
     }
+  }
+)
+
+export const getCurrentScriptCreditsScriptsequenceByPosition = createSelector(
+  [getCurrentScriptScriptsequences, getCreditSequenceByPosition],
+  (scriptSequences, creditSequence) => {
+    if (!scriptSequences || !creditSequence) {
+      return
+    }
+    return scriptSequences.find(
+      (scrseq) =>
+        scrseq.get('sequence').toString() ===
+        creditSequence.get('id').toString()
+    )
   }
 )
 
