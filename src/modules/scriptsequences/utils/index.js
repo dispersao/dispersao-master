@@ -6,9 +6,9 @@ import {
 
 import { 
   sendScriptsequence,
-  updateProgressScriptsequence,
-  updateScriptsequenceLocalState
+  updateProgressScriptsequence
 } from '../actions'
+import { onUpdateScriptSequenceState } from './ScriptsequenceStateManager'
 
 export const onGetScene = (script, index) => {
   console.log('onGetScene: ', script, index)
@@ -26,17 +26,21 @@ export const onSceneProgress = (script, index, progress) => {
 
 export const onSceneUpdateState = (script, index, state, prog) => {
   const scriptequence = getScriptSequenceByIndex(script, index)
-  store.dispatch(updateScriptsequenceLocalState({
-    id: scriptequence.id,
-    state
-  }))
+  const { speed } = getScript(script)
+  onUpdateScriptSequenceState(scriptequence, speed, state)
+}
+
+const getScript = (id) => {
+  let script = getScriptById(store.getState(), { id })
+  if (script) {
+    return script.toJS()
+  }
 }
 
 
 const getScriptSequenceByIndex = (id, index) => {
-  let script = getScriptById(store.getState(), { id })
+  let script = getScript(id)
   if (script) {
-    script = script.toJS()
     const scriptSequence = script.scriptsequences.find(el => el.index === index)
     if (scriptSequence) {
       return scriptSequence
