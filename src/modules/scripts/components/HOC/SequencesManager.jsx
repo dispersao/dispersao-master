@@ -4,23 +4,20 @@ import PropTypes from 'prop-types'
 import states from '../../utils/stateConstants'
 import { createRandomScriptsequence } from '../../../scriptsequences/actions'
 
-import { getCurrentScript, getCurrentScriptRemainingTime, getCurrentScriptTotalTime } from '../../selectors'
+import {
+  getCurrentScript,
+  getCurrentScriptIdFieldByFieldname,
+  getCurrentScriptRemainingTime,
+  getCurrentScriptTotalTime
+} from '../../selectors'
 import { toJS } from '../../../../utils/immutableToJs.jsx'
 
 const MIN_PLANNED_TIME = 120
 
-const WithSequenceManager = WrappedComponent => {
-
+const WithSequenceManager = (WrappedComponent) => {
   const SequenceManager = (props) => {
     const {
-      script: {
-        id, 
-        connected,
-        state,
-        scriptsequences,
-        averagetime,
-        manual
-      },
+      script: { id, connected, state, scriptsequences, averagetime, manual },
       remainingTime,
       totalTime,
       createRandomScriptsequence
@@ -31,11 +28,14 @@ const WithSequenceManager = WrappedComponent => {
     const [lastCreatedIndex, setLastCreatedIndex] = useState(null)
 
     useEffect(() => {
-      if (!manual && connected === 'connected' && 
-          state !== states.IDLE && 
-          remainingTime < MIN_PLANNED_TIME && 
-          totalTime < averageSeconds && 
-          lastCreatedIndex !== scriptsequences.length) {
+      if (
+        !manual &&
+        connected === 'connected' &&
+        state !== states.IDLE &&
+        remainingTime < MIN_PLANNED_TIME &&
+        totalTime < averageSeconds &&
+        lastCreatedIndex !== scriptsequences.length
+      ) {
         setLastCreatedIndex(scriptsequences.length)
         createRandomScriptsequence(id)
       }
@@ -45,14 +45,10 @@ const WithSequenceManager = WrappedComponent => {
       ...props
     }
     delete wrappedProps['createRandomScriptsequence']
-    
-   
 
-    return (
-      <WrappedComponent {...wrappedProps} />
-    )
+    return <WrappedComponent {...wrappedProps} />
   }
-  
+
   SequenceManager.propTypes = {
     remainingTime: PropTypes.number,
     totalTime: PropTypes.number,
@@ -60,7 +56,7 @@ const WithSequenceManager = WrappedComponent => {
     script: PropTypes.shape({
       id: PropTypes.number.isRequired,
       scriptsequences: PropTypes.array,
-      connected:PropTypes.string,
+      connected: PropTypes.string,
       state: PropTypes.string,
       speed: PropTypes.string,
       averagetime: PropTypes.number
@@ -70,19 +66,20 @@ const WithSequenceManager = WrappedComponent => {
   const mapStateToProps = (state) => ({
     script: getCurrentScript(state),
     totalTime: getCurrentScriptTotalTime(state),
-    remainingTime: getCurrentScriptRemainingTime(state)
+    remainingTime: getCurrentScriptRemainingTime(state),
+    synching: getCurrentScriptIdFieldByFieldname(state, { field: 'synching' })
   })
-  
+
   const mapDispatchToProps = (dispatch) => ({
-    createRandomScriptsequence: (id) => dispatch(createRandomScriptsequence({
-      script: id
-    }))
+    createRandomScriptsequence: (id) =>
+      dispatch(
+        createRandomScriptsequence({
+          script: id
+        })
+      )
   })
-  
-  return connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(toJS(SequenceManager))
+
+  return connect(mapStateToProps, mapDispatchToProps)(toJS(SequenceManager))
 }
 
 export default WithSequenceManager
