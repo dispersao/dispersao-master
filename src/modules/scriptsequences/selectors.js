@@ -1,10 +1,9 @@
 import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
 import { createArraySelector } from '../../utils/selectorUtils'
-import { getCreditSequenceByPosition } from '../sequences/selectors'
+import { getCreditSequenceByPosition, getSequences } from '../sequences/selectors'
 
 const getState = (state) => state.scriptsequences
-const getSequences = (state) => state.sequences.get('data')
 const getId = (state, props) => props.id
 const getCurrentScriptId = (state, props) => state.scripts.get('current')
 export const getLoading = (state) => state.scriptsequences.get('loading')

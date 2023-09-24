@@ -71,11 +71,7 @@ const reducer = (
       return state.mergeDeep(
         fromJS({
           error: null,
-          data: {
-            [Object.keys(action.payload.scriptsequence)[0]]: {
-              ...Object.values(action.payload.scriptsequence)[0]
-            }
-          }
+          data: action.payload.scriptsequences
         })
       )
 

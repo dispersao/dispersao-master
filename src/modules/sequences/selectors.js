@@ -12,7 +12,6 @@ import {
   getCreditsLocationByPosition
 } from '../locations/selectors'
 import { getPartsList } from '../parts/selectors'
-// import { getScriptsequences } from '../scriptsequences/selectors'
 import { getCreditsType, getTypesList } from '../types/selectors'
 import { getCharactersList } from '../characters/selectors'
 
@@ -193,7 +192,6 @@ export const getCreditsSequences = createArraySelector(
 export const getCreditSequenceByPosition = createSelector(
   [getSequenceList, getCreditsType, getCreditsLocationByPosition],
   (sequences, type, location) => {
-    console.log(type, location)
     if (
       !sequences ||
       !sequences.size ||

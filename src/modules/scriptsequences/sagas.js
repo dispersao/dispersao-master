@@ -102,7 +102,7 @@ function* createRandomScriptSequence(action) {
       creditsPosition: 'closing'
     })
 
-    const nextScriptSequence = yield getNextRandomSequence(
+    const nextScriptSequences = yield getNextRandomSequence(
       script,
       formatedSequences,
       {
@@ -111,12 +111,24 @@ function* createRandomScriptSequence(action) {
       }
     )
 
-    const scriptsequence = yield createScriptsequenceAPI(nextScriptSequence)
-    const scriptsequenceData = scriptsequence.entities.scriptsequences
+    let scriptsequenceData = yield* createScriptsequences(nextScriptSequences)
     yield put(createScriptsequenceSuccess(scriptsequenceData))
+    
   } catch (e) {
     console.log(e)
   }
+}
+
+function* createScriptsequences(sequences = []) {
+  let scriptsequences = {}
+  yield* sequences.map(function*(sequence) {
+    const scriptsequence =  yield createScriptsequenceAPI(sequence)
+    scriptsequences = {
+      ...scriptsequences,
+      ...scriptsequence.entities.scriptsequences
+    }
+  })
+  return scriptsequences
 }
 
 function* createUpdateScriptsequences(action) {
