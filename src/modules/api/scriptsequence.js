@@ -2,6 +2,10 @@ import axios from 'axios'
 import { normalizeScriptsequence, normalizeScriptsequenceList } from '../scriptsequences/schema'
 
 export const createScriptsequence = async (options) => {
+  /*const scriptsequence = options
+  options.id = 500 + options.index
+  return normalizeScriptsequence(scriptsequence)*/
+
   const scriptsequence = await axios.post('/scriptsequences', options)
   return normalizeScriptsequence(scriptsequence.data)
 }

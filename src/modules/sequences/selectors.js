@@ -189,6 +189,16 @@ export const getCreditsSequences = createArraySelector(
   }
 )
 
+export const getCreditSequencesTime = createSelector(
+  [getCreditsSequences],
+  (creditSequences) => {
+    if (!creditSequences) {
+      return
+    }
+    return creditSequences.reduce((acc, cur) => acc + cur.get('duration'), 0)
+  }
+)
+
 export const getCreditSequenceByPosition = createSelector(
   [getSequenceList, getCreditsType, getCreditsLocationByPosition],
   (sequences, type, location) => {

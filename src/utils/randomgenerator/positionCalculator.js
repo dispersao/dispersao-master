@@ -34,15 +34,20 @@ export const calculateNextPosition = (
 }
 
 export const getOpeningCreditSequence = (scriptSequences, { opening }) => {
-  if (!scriptSequences.length && opening) {
+  const openingScriptSequence = scriptSequences.find(scrseq =>scrseq.id === opening?.get('id'))
+  if (!openingScriptSequence && opening) {
     return opening.get('id')
   }
 }
 
 export const getClosingCreditSequence = (script, nextSequence, { closing }) => {
   const timeSum =
-    script.get('totalTime') + nextSequence.duration + closing.get('duration')
+    script.get('totalTime') + (nextSequence?.duration || 0) + closing.get('duration')
   if (closing && timeSum >= script.get('averageSeconds')) {
     return closing.get('id')
   }
+}
+
+export const shouldCreateRegularSequence = (script, credits) => {
+  return !getClosingCreditSequence(script, null, credits)
 }

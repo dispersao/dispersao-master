@@ -6,6 +6,7 @@ import { createRandomScriptsequence } from '../../../scriptsequences/actions'
 
 import { getCurrentScript, getCurrentScriptRemainingTime, getCurrentScriptTotalTime } from '../../selectors'
 import { toJS } from '../../../../utils/immutableToJs.jsx'
+import { getCurrentScriptCreditsScriptsequenceByPosition } from '../../../scriptsequences/selectors'
 
 const MIN_PLANNED_TIME = 120
 
@@ -23,7 +24,8 @@ const WithSequenceManager = WrappedComponent => {
       },
       remainingTime,
       totalTime,
-      createRandomScriptsequence
+      createRandomScriptsequence,
+      closingCreditsScriptsequence
     } = props
 
     const averageSeconds = parseInt(averagetime) * 60
@@ -34,7 +36,7 @@ const WithSequenceManager = WrappedComponent => {
       if (!manual && connected === 'connected' && 
           state !== states.IDLE && 
           remainingTime < MIN_PLANNED_TIME && 
-          totalTime < averageSeconds && 
+          (totalTime < averageSeconds || !closingCreditsScriptsequence) && 
           lastCreatedIndex !== scriptsequences.length) {
         setLastCreatedIndex(scriptsequences.length)
         createRandomScriptsequence(id)
@@ -57,6 +59,7 @@ const WithSequenceManager = WrappedComponent => {
     remainingTime: PropTypes.number,
     totalTime: PropTypes.number,
     createRandomScriptsequence: PropTypes.func.isRequired,
+    closingCreditsScriptsequence: PropTypes.object,
     script: PropTypes.shape({
       id: PropTypes.number.isRequired,
       scriptsequences: PropTypes.array,
@@ -70,7 +73,8 @@ const WithSequenceManager = WrappedComponent => {
   const mapStateToProps = (state) => ({
     script: getCurrentScript(state),
     totalTime: getCurrentScriptTotalTime(state),
-    remainingTime: getCurrentScriptRemainingTime(state)
+    remainingTime: getCurrentScriptRemainingTime(state),
+    closingCreditsScriptsequence: getCurrentScriptCreditsScriptsequenceByPosition(state, {creditsPosition: 'closing'})
   })
   
   const mapDispatchToProps = (dispatch) => ({

@@ -37,9 +37,11 @@ const LikesBox = React.memo(({ likes, dislikes, totalUsers }) => {
       </Grid>
       <Grid item className={classes.likeIconContainer}>
         <RecentActorsIcon className={classes.likeIcon} />
-        <Typography variant="body2">
-          {Math.round(((likes + dislikes) / totalUsers) * 100)}%
-        </Typography>
+        {totalUsers && (
+          <Typography variant="body2">
+            {Math.round(((likes + dislikes) / totalUsers) * 100)}%
+          </Typography>
+        )}
       </Grid>
     </Grid>
   )

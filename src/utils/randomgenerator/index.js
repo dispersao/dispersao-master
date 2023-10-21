@@ -10,7 +10,8 @@ import { filterSessioncontent } from './filterSessioncontent'
 import {
   calculateNextPosition,
   getOpeningCreditSequence,
-  getClosingCreditSequence
+  getClosingCreditSequence,
+  shouldCreateRegularSequence
 } from './positionCalculator'
 
 import {
@@ -29,62 +30,67 @@ export const getNextRandomSequence = (script, sequences, creditsSequences) => {
     creditsSequences
   )
 
-  const position = calculateNextPosition(
-    scriptSequences,
-    availableSequences,
-    script
-  )
+  let selectedNextSequence, position
 
-  availableSequences = filterSequences(
-    scriptSequences,
-    availableSequences,
-    creditsSequences
-  )
-  availableSequences = calculateSequencesProbability(
-    position,
-    availableSequences
-  )
-  const selectedSequence =
-    getRandomSequenceBasedonProbability(availableSequences)
+  if (shouldCreateRegularSequence(script, creditsSequences)) {
+    position = calculateNextPosition(
+      scriptSequences,
+      availableSequences,
+      script
+    )
+
+    availableSequences = filterSequences(
+      scriptSequences,
+      availableSequences,
+      creditsSequences
+    )
+    availableSequences = calculateSequencesProbability(
+      position,
+      availableSequences
+    )
+    selectedNextSequence =
+      getRandomSequenceBasedonProbability(availableSequences)
+  }
 
   const closingCreditsSequence = getClosingCreditSequence(
     script,
-    selectedSequence,
+    selectedNextSequence,
     creditsSequences
   )
-
-  console.log(
-    `%c index ${scriptSequences.length + 1}
+  if (selectedNextSequence) {
+    console.log(
+      `%c index ${scriptSequences.length + 1}
   cat pos: ${position}
-  selected sequence: ${selectedSequence.sceneNumber} 
-  with probability:${selectedSequence.probability * 100}
-  with closest position: ${selectedSequence.closestPosition} (distance: ${
-      selectedSequence.positionDistance
-    })
+  selected sequence: ${selectedNextSequence.sceneNumber} 
+  with probability:${selectedNextSequence.probability * 100}
+  with closest position: ${selectedNextSequence.closestPosition} (distance: ${
+        selectedNextSequence.positionDistance
+      })
   opening sequence: ${openingCreditsSequence}
   closing sequence: ${closingCreditsSequence}`,
-    'color:#00bada'
-  )
+      'color:#00bada'
+    )
+  }
 
   const returnValue = []
 
   if (openingCreditsSequence) {
     returnValue.push({
-      index: scriptSequences.length + 1,
+      index: scriptSequences.length,
       sequence: openingCreditsSequence,
       script: script.get('id')
     })
   }
   returnValue.push({
-    index: scriptSequences.length + 1 + returnValue.length,
+    index: scriptSequences.length + returnValue.length,
     position,
-    sequence: selectedSequence.id,
+    sequence: selectedNextSequence.id,
     script: script.get('id')
   })
 
   if (closingCreditsSequence) {
     returnValue.push({
-      index: scriptSequences.length + 1 + returnValue.length,
+      index: scriptSequences.length + returnValue.length,
       sequence: closingCreditsSequence,
       script: script.get('id')
     })
