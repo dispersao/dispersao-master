@@ -251,13 +251,24 @@ export const getCurrentScriptRemainingTime = createSelector(
   }
 )
 
+export const getCurrentScriptAverageSeconds = createSelector(
+  [getCurrentScript],
+  (currentScript) => {
+    if(!currentScript){
+      return
+    }
+    return parseInt(currentScript.get('averagetime')) * 60
+  }
+)
+
 export const getCurrentSCriptLastScriptsequence = createSelector(
   [
     getCurrentScript,
     getCurrentScriptTotalTime,
-    getCurrentScriptScriptsequences
+    getCurrentScriptScriptsequences,
+    getCurrentScriptAverageSeconds
   ],
-  (currentScript, totalTime, scriptsequences) => {
+  (currentScript, totalTime, scriptsequences, averageSeconds) => {
     if (
       !currentScript ||
       !totalTime ||
@@ -266,8 +277,6 @@ export const getCurrentSCriptLastScriptsequence = createSelector(
     ) {
       return
     }
-
-    const averageSeconds = parseInt(currentScript.get('averagetime')) * 60
 
     if (averageSeconds <= totalTime || currentScript.get('manual')) {
       return scriptsequences.get(scriptsequences.size - 1)
