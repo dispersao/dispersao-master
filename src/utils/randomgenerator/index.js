@@ -32,7 +32,7 @@ export const getNextRandomSequence = (script, sequences, creditsSequences) => {
 
   let selectedNextSequence, position
 
-  if (shouldCreateRegularSequence(script, creditsSequences)) {
+  if (shouldCreateRegularSequence(script, scriptSequences, creditsSequences)) {
     position = calculateNextPosition(
       scriptSequences,
       availableSequences,
@@ -54,6 +54,7 @@ export const getNextRandomSequence = (script, sequences, creditsSequences) => {
 
   const closingCreditsSequence = getClosingCreditSequence(
     script,
+    scriptSequences,
     selectedNextSequence,
     creditsSequences
   )
@@ -81,12 +82,14 @@ export const getNextRandomSequence = (script, sequences, creditsSequences) => {
       script: script.get('id')
     })
   }
-  returnValue.push({
-    index: scriptSequences.length + returnValue.length,
-    position,
-    sequence: selectedNextSequence.id,
-    script: script.get('id')
-  })
+  if(selectedNextSequence){
+    returnValue.push({
+      index: scriptSequences.length + returnValue.length,
+      position,
+      sequence: selectedNextSequence.id,
+      script: script.get('id')
+    })
+  }
 
   if (closingCreditsSequence) {
     returnValue.push({

@@ -40,14 +40,17 @@ export const getOpeningCreditSequence = (scriptSequences, { opening }) => {
   }
 }
 
-export const getClosingCreditSequence = (script, nextSequence, { closing }) => {
+export const getClosingCreditSequence = (script, scriptSequences, nextSequence, creditSequences) => {
+  const closing = creditSequences?.closing
   const timeSum =
-    script.get('totalTime') + (nextSequence?.duration || 0) + closing.get('duration')
-  if (closing && timeSum >= script.get('averageSeconds')) {
+    script.get('totalTime') + (nextSequence?.duration || 0) + closing?.get('duration')
+  const closingScriptSequence = scriptSequences.find(scrseq =>scrseq.id === closing?.get('id'))
+
+  if (!closingScriptSequence && closing && timeSum >= script.get('averageSeconds')) {
     return closing.get('id')
   }
 }
 
-export const shouldCreateRegularSequence = (script, credits) => {
-  return !getClosingCreditSequence(script, null, credits)
+export const shouldCreateRegularSequence = (script, scriptSequences, credits) => {
+  return !getClosingCreditSequence(script, scriptSequences, null, credits)
 }
