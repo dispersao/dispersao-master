@@ -53,11 +53,11 @@ export const createScriptsequence = (scriptsequence) => ({
   }
 })
 
-export const createScriptsequenceSuccess = (scriptsequence) => {
+export const createScriptsequenceSuccess = (scriptsequences) => {
   return {
     type: CREATE_SCRIPTSEQUENCE_SUCCESS,
     payload: {
-      scriptsequence
+      scriptsequences
     }
   }
 }

@@ -6,15 +6,15 @@ import ScriptFieldUpdateComp from './HOC/ScriptFieldDisplayer.jsx'
 import states from '../utils/stateConstants'
 
 
-const ScriptSpeed = ({ save, val, state }) => {
+const ScriptSpeed = ({ save, value, state }) => {
   return (
-    <Speed onSelect={save} value={val} disabled={state === states.PLAYING}  />
+    <Speed onSelect={save} value={value} disabled={state === states.PLAYING}  />
   )
 }
 
 ScriptSpeed.propTypes = {
   save: PropTypes.func,
-  val: PropTypes.string,
+  value: PropTypes.string,
   state: PropTypes.string
 }
 

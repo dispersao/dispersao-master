@@ -7,15 +7,17 @@ import { sortEntity } from '../../utils/listUtils'
 import { createArraySelector } from '../../utils/selectorUtils'
 import { getCategoriesList } from '../categories/selectors'
 import { getCurrentScriptIdFilters } from '../filters/selectors'
-import { getLocationsList } from '../locations/selectors'
+import {
+  getLocationsList,
+  getCreditsLocationByPosition
+} from '../locations/selectors'
 import { getPartsList } from '../parts/selectors'
-import { getScriptsequences } from '../scriptsequences/selectors'
-import { getTypesList } from '../types/selectors'
+import { getCreditsType, getTypesList } from '../types/selectors'
 import { getCharactersList } from '../characters/selectors'
 
 const getId = (state, props) => props.id
 const getState = (state) => state.sequences
-
+const getScriptsequences = (state) => state.scriptsequences.get('data')
 const getCurrentScriptId = (state) => state.scripts.get('current')
 
 export const getSequences = createSelector([getState], (state) => {
@@ -30,7 +32,6 @@ export const getSequenceList = createSelector([getSequences], (sequences) => {
   }
   return sequences.valueSeq().sort(sortEntity)
 })
-
 
 export const getSequencesIds = createSelector([getSequences], (sequences) => {
   if (!sequences) {
@@ -77,7 +78,8 @@ export const getSequenceCategoriesById = createCachedSelector(
       return
     }
     return categories
-      .filter((cat) => sequence.get('categories').includes(cat.get('id'))).valueSeq()
+      .filter((cat) => sequence.get('categories').includes(cat.get('id')))
+      .valueSeq()
   }
 )({
   selectorCreator: createArraySelector,
@@ -119,9 +121,9 @@ export const getSequenceIsFiltered = createCachedSelector(
         if (option === 'and') {
           ret = filterValue.every((el) => list.includes(el))
         } else if (option === 'or') {
-          ret =  filterValue.some((el) => list.includes(el))
+          ret = filterValue.some((el) => list.includes(el))
         } else if (option === 'exclude') {
-          ret =  filterValue.every((el) => !list.includes(el))
+          ret = filterValue.every((el) => !list.includes(el))
         }
         return ret
       })
@@ -136,11 +138,12 @@ export const getSequenceIsInCurrentScript = createCachedSelector(
       return
     }
     return scriptsequences.some(
-      (sseq) => sseq.get('sequence').toString() === id.toString() && sseq.get('script').toString() === script.toString()
+      (sseq) =>
+        sseq.get('sequence').toString() === id.toString() &&
+        sseq.get('script').toString() === script.toString()
     )
   }
 )(getId)
-
 
 export const getSequenceListFormatted = createSelector(
   [
@@ -174,7 +177,48 @@ export const getSequenceListFormatted = createSelector(
       )
   }
 )
+export const getCreditsSequences = createArraySelector(
+  [getSequenceList, getCreditsType],
+  (sequences, type) => {
+    if (!sequences || !sequences.size || !type || !types.size) {
+      return
+    }
+    return sequences
+      .filter((seq) => seq.get('type') === type.get('id'))
+      .valueSeq()
+  }
+)
 
+export const getCreditSequencesTime = createSelector(
+  [getCreditsSequences],
+  (creditSequences) => {
+    if (!creditSequences) {
+      return
+    }
+    return creditSequences.reduce((acc, cur) => acc + cur.get('duration'), 0)
+  }
+)
+
+export const getCreditSequenceByPosition = createSelector(
+  [getSequenceList, getCreditsType, getCreditsLocationByPosition],
+  (sequences, type, location) => {
+    if (
+      !sequences ||
+      !sequences.size ||
+      !type ||
+      !type.size ||
+      !location ||
+      !location.size
+    ) {
+      return
+    }
+    return sequences.find(
+      (seq) =>
+        seq.get('type').toString() === type.get('id').toString() &&
+        seq.get('location').toString() === location.get('id').toString()
+    )
+  }
+)
 
 const formatSequenceForAlgorithm = (
   seq,
@@ -214,4 +258,3 @@ const formatSequenceForAlgorithm = (
 
   return mergedSeq
 }
-

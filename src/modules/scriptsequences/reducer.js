@@ -10,7 +10,9 @@ import {
   CREATE_UPDATE_DELETE_SCRIPTSEQUENCES,
   CREATE_UPDATE_DELETE_SCRIPTSEQUENCES_SUCCESS,
   CREATE_UPDATE_DELETE_SCRIPTSEQUENCES_ERROR,
-  SEND_SCRIPTSEQUENCE
+  SEND_SCRIPTSEQUENCE,
+  CREATE_RANDOM_SCRIPTSEQUENCE,
+  CREATE_SCRIPTSEQUENCE
 } from './actions'
 
 import { UPDATE_SCRIPT_SUCCESS } from '../scripts/actions'
@@ -46,6 +48,8 @@ const reducer = (
       )
 
     case CREATE_UPDATE_DELETE_SCRIPTSEQUENCES:
+    case CREATE_SCRIPTSEQUENCE:
+    case CREATE_RANDOM_SCRIPTSEQUENCE:
       return state.merge({
         loading: true
       })
@@ -70,12 +74,9 @@ const reducer = (
     case CREATE_SCRIPTSEQUENCE_SUCCESS:
       return state.mergeDeep(
         fromJS({
+          loading: false,
           error: null,
-          data: {
-            [Object.keys(action.payload.scriptsequence)[0]]: {
-              ...Object.values(action.payload.scriptsequence)[0]
-            }
-          }
+          data: action.payload.scriptsequences
         })
       )
 

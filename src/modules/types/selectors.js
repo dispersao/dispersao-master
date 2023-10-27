@@ -1,5 +1,6 @@
-import createCachedSelector from 're-reselect'
 import { createSelector } from 'reselect'
+
+const CREDITS = "CREDITO"
 
 const getState = (state) => state.types
 
@@ -18,5 +19,15 @@ export const getTypesListAsArray = createSelector(
       return
     }
     return list.valueSeq()
+  }
+)
+
+export const getCreditsType = createSelector(
+  [getTypesList], 
+  (list) => {
+    if(!list || !list.size) {
+      return
+    }
+    return list.find(type => type.get('credits'))
   }
 )

@@ -160,7 +160,7 @@ const reducer = (
       )
 
     case CREATE_SCRIPTSEQUENCE_SUCCESS:
-      Object.values(action.payload.scriptsequence).forEach((scriptsequence) => {
+      Object.values(action.payload.scriptsequences).forEach((scriptsequence) => {
         let scriptId = scriptsequence.script
         let newList = state
           .getIn(['data', scriptId.toString(), 'scriptsequences'])

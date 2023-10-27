@@ -38,6 +38,7 @@ import { PLAY_SCRIPT } from '../scripts/actions'
 import { getScriptById } from '../scripts/selectors'
 
 import {
+  getCreditSequenceByPosition,
   getSequenceListFormatted
 } from '../sequences/selectors'
 
@@ -94,17 +95,40 @@ function* createRandomScriptSequence(action) {
     })
 
     const formatedSequences = yield select(getSequenceListFormatted)
-    const nextScriptSequence = yield getNextRandomSequence(
+    const openingCreditsSequence = yield select(getCreditSequenceByPosition, {
+      creditsPosition: 'opening'
+    })
+    const closingCreditsSequence = yield select(getCreditSequenceByPosition, {
+      creditsPosition: 'closing'
+    })
+
+    const nextScriptSequences = yield getNextRandomSequence(
       script,
-      formatedSequences
+      formatedSequences,
+      {
+        opening: openingCreditsSequence,
+        closing: closingCreditsSequence
+      }
     )
 
-    const scriptsequence = yield createScriptsequenceAPI(nextScriptSequence)
-    const scriptsequenceData = scriptsequence.entities.scriptsequences
+    let scriptsequenceData = yield* createScriptsequences(nextScriptSequences)
     yield put(createScriptsequenceSuccess(scriptsequenceData))
+    
   } catch (e) {
     console.log(e)
   }
+}
+
+function* createScriptsequences(sequences = []) {
+  let scriptsequences = {}
+  yield* sequences.map(function*(sequence) {
+    const scriptsequence =  yield createScriptsequenceAPI(sequence)
+    scriptsequences = {
+      ...scriptsequences,
+      ...scriptsequence.entities.scriptsequences
+    }
+  })
+  return scriptsequences
 }
 
 function* createUpdateScriptsequences(action) {
