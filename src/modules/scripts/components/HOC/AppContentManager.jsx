@@ -52,7 +52,7 @@ const WithAppContentManager = (WrappedComponent) => {
         auto_publish &&
         state === states.PLAYING &&
         nextContentToPublish &&
-        elapsedTime >= nextContentToPublish.programmed_at
+        elapsedTime >= nextContentToPublish?.programmed_at
       ) {
         publishContent(nextContentToPublish.id)
       }

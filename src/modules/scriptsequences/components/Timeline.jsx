@@ -6,7 +6,12 @@ import { toJS } from '../../../utils/immutableToJs.jsx'
 
 import useStyles from './styles'
 
-import { Typography, CircularProgress } from '@material-ui/core'
+import {
+ 
+  Typography,
+  CircularProgress,
+  Button
+} from '@material-ui/core'
 import {
   getCurrentScripScriptSequencesSentToPlayer,
   getCurrentScriptScriptsequencesIds,
@@ -15,7 +20,7 @@ import {
 import SortableContainer from '../../../utils/dnd/SortableContainer.jsx'
 
 const Timeline = React.memo(
-  ({ scriptsequences, sentToPlayScriptSequences, loading = false }) => {
+  ({ scriptsequences, sentToPlayScriptSequences, headerChildren, loading = false }) => {
     const classes = useStyles()
     const getSequencesComps = () =>
       scriptsequences.map((scriptseq, idx) => {
@@ -23,10 +28,13 @@ const Timeline = React.memo(
       })
     return (
       <div>
+        <div className={classes.titleContainer}>
         <Typography variant="h4" component="h2">
-          Timeline
-        </Typography>
-        <div className={classes.root}>
+            Timeline
+          </Typography>
+          {headerChildren}
+      </div>
+      <div className={classes.root}>
           {!loading && (
             <SortableContainer
               id="timeline"

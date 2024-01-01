@@ -12,16 +12,20 @@ import useStyles from './styles/'
 import { GridList, Typography } from '@material-ui/core'
 import SessioncontentStats from './SessioncontentStats.jsx'
 import ProfileSessioncontentGridItem from './ProfileSessioncontentGridItem.jsx'
+import { getCurrentScriptIdFieldByFieldname } from '../../scripts/selectors.js'
 
-const SessioncontentsGrid = ({ postSessioncontents, profileSessioncontents }) => {
+const SessioncontentsGrid = ({ postSessioncontents, profileSessioncontents, token }) => {
   const classes = useStyles()
 
   return (
     <div>
       <div className={classes.sessioncontentHeaderContainer}>
-      <Typography variant="h4" component="h2">
+      <Typography variant="h5" component="h5">
         Session content
       </Typography>
+      {token && (
+        <Typography variant='caption' className={classes.startedText}>TOKEN {token}</Typography>
+      )}
       <SessioncontentStats />
       </div>
       
@@ -43,12 +47,14 @@ const SessioncontentsGrid = ({ postSessioncontents, profileSessioncontents }) =>
 
 SessioncontentsGrid.propTypes = {
   postSessioncontents: PropTypes.arrayOf(PropTypes.number),
-  profileSessioncontents: PropTypes.arrayOf(PropTypes.number)
+  profileSessioncontents: PropTypes.arrayOf(PropTypes.number),
+  token: PropTypes.string
 }
 
 const mapStateToProps = (state, ownprops) => ({
   postSessioncontents: getCurrentScriptPostSessioncontentsIds(state, ownprops),
-  profileSessioncontents : getCurrentScriptProfileSessioncontentsIds(state, ownprops)
+  profileSessioncontents : getCurrentScriptProfileSessioncontentsIds(state, ownprops),
+  token: getCurrentScriptIdFieldByFieldname(state, { field: 'token'})
 })
 
 export default connect(mapStateToProps, null)(toJS(SessioncontentsGrid))

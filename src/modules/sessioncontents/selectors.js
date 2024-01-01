@@ -151,11 +151,12 @@ export const getPostSessioncontentCommentSessioncontentsIdsById =
 export const getNextContentToPublish = createSelector(
   [getSessioncontents, getTypes, getCurrentScriptId],
   (sessioncontents, types, script) => {
+   
     if (!sessioncontents || !types || !script) {
       return
     }
     return sessioncontents
-      .filter((sescon) => sescon.get('script') === script)
+      .filter((sescon) => sescon.get('script').toString() === script.toString())
       .filter((sescon) => types.some((type) => sescon.get(type)))
       .filter((sescon) => sescon.get('state') === 'pending')
       .sort((a, b) => a.get('programmed_at') - b.get('programmed_at'))

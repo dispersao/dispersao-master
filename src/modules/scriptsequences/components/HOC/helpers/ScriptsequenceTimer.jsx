@@ -15,7 +15,7 @@ const WithScriptsequenceTimer = (WrappedComponent) => {
   const ScriptsequenceTimer = (props) => {
     const { scriptsequence, sequence, speed, updateProgress } = props
     const SEC_INTERVAL = 1000 / Number(speed)
-    let { id, state, index, elapsedTime = 0 } = scriptsequence
+    let { id, state, elapsedTime = 0 } = scriptsequence
     state = state || 'idle'
     const { duration, sceneNumber } = sequence
     const [ticker, setTicker] = useState()
