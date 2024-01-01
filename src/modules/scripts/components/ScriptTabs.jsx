@@ -1,51 +1,43 @@
 import React, { useState } from 'react'
 
-import { Paper, Tabs, Tab, Divider } from '@material-ui/core'
+import { Paper, Divider, Button } from '@material-ui/core'
 
 import useStyles from './styles'
 
-import UnpublishedPosts from '../../posts/components/UnpublishedPosts.jsx'
-import ScriptTab from './ScriptTab.jsx'
+
 import Sequences from '../../sequences/components/Sequences.jsx'
 import Timeline from '../../scriptsequences/components/Timeline.jsx'
 
-import SessioncontentsGrid from '../../sessioncontents/componentes/SessioncontentsGrid.jsx'
-
+import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import SortableContext from '../../../utils/dnd/SortableContext.jsx'
+import AppDrawer from './AppDrawer.jsx'
 
 const ScriptTabs = () => {
-  const [value, setValue] = useState(0)
+  const [drawerOpened, setDrawerOpened] = useState(false)
 
-  const handleChange = (evt, val) => {
-    setValue(val)
+  const openDrawer = () => {
+    setDrawerOpened(true)
   }
-
 
   const classes = useStyles()
 
   return (
     <Paper square className={classes.root}>
-      <Tabs
-        value={value}
-        indicatorColor="primary"
-        textColor="primary"
-        onChange={handleChange}
-      >
-        <Tab label="Sequences" />
-        <Tab label="Posts & Comments" />
-      </Tabs>
-      <ScriptTab index={0} value={value}>
-        <SortableContext>
-          <Timeline />
-          <Divider />
-          <Sequences />
-        </SortableContext>
-      </ScriptTab>
-      <ScriptTab index={1} value={value}>
-        <UnpublishedPosts />
-        <Divider />
-        <SessioncontentsGrid />
-      </ScriptTab>
+      <SortableContext>
+        <Timeline
+          headerChildren={
+            <Button variant="outlined" color="secondary" onClick={openDrawer}>
+              <PhoneIphoneIcon />
+            </Button>
+          }
+        />
+        <Divider className={classes.divider} />
+        <Sequences />
+        <AppDrawer
+          isOpened={drawerOpened}
+          onClose={() => setDrawerOpened(false)}
+        />
+      </SortableContext>
     </Paper>
   )
 }

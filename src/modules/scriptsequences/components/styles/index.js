@@ -8,6 +8,12 @@ const useStyles = makeStyles((theme) => {
       overflow: 'hidden',
       backgroundColor: theme.palette.background.paper
     },
+    titleContainer: {
+      display: 'flex',
+      justifyContent:'space-between',
+      marginTop: 5,
+      marginBottom: 5
+    },
     list: {
       width: '100%',
       minHeight: 120
