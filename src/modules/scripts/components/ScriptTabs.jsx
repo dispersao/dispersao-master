@@ -4,11 +4,10 @@ import { Paper, Divider, Button } from '@material-ui/core'
 
 import useStyles from './styles'
 
-
 import Sequences from '../../sequences/components/Sequences.jsx'
 import Timeline from '../../scriptsequences/components/Timeline.jsx'
 
-import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
+import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone'
 import SortableContext from '../../../utils/dnd/SortableContext.jsx'
 import AppDrawer from './AppDrawer.jsx'
 

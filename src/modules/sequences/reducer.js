@@ -2,12 +2,14 @@ import { fromJS } from 'immutable'
 
 import {
   FETCH_SEQUENCES_SUCCESS,
-  FETCH_SEQUENCES_ERROR
+  FETCH_SEQUENCES_ERROR,
+  SET_PLAYING_SEQUENCE
 } from './actions'
 
 const reducer = (state = fromJS({
   data: {},
-  error: {}
+  error: {},
+  playing: null
 }), action) => {
   switch (action.type) {
     case FETCH_SEQUENCES_SUCCESS:
@@ -23,6 +25,8 @@ const reducer = (state = fromJS({
           error: action.payload.error
         })
       )
+    case SET_PLAYING_SEQUENCE:
+      return state.setIn(['playing'], action.payload.sequence)
     default:
       return state
   }

@@ -91,6 +91,17 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     objectFit: 'cover'
   },
+  videoPlayer: {
+    width: 360,
+    height: 240,
+  },
+  videoPlayerContainer: {
+    padding: 15,
+    backgroundColor: '#ccc'
+  },
+  playerClose: {
+    float: 'right'
+  },
   sequenceinfoS: {
     height: 20,
     fontSize: '0.5rem'
