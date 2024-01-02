@@ -20,7 +20,14 @@ export const getCategoriesByCategoryType = createCachedSelector(
     if (!list || !list.size || !type) {
       return
     }
-    return list.filter((cat) => cat.get('type') === type).valueSeq()
+    return list.filter((cat) => cat.get('type') === type).valueSeq().sortBy(cat => {
+     const number = parseInt(cat.get('text'))
+     if(isNaN(number)) {
+       return cat.get('text')
+     } else {
+       return number
+     }
+    })
   }
 )(getCategoryType)
 

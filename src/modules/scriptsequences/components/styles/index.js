@@ -51,7 +51,8 @@ const useStyles = makeStyles((theme) => {
       left: 0,
       top: 0,
       right: 0,
-      margin: 4
+      margin: 4,
+      pointerEvents: 'none'
     },
     droppper: {
       width: 7,

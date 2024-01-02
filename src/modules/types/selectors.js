@@ -18,7 +18,7 @@ export const getTypesListAsArray = createSelector(
     if(!list || !list.size) {
       return
     }
-    return list.valueSeq()
+    return list.valueSeq().sortBy(type => type.get('name'))
   }
 )
 

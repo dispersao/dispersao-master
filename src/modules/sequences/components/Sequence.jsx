@@ -1,12 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { toHHMMSS } from '../../../utils/stringUtils'
-
 import useStyles from './styles'
 
-import { GridListTile, GridListTileBar } from '@material-ui/core'
+import { GridListTile } from '@material-ui/core'
 
 import { toJS } from '../../../utils/immutableToJs.jsx'
 import {
@@ -15,74 +13,127 @@ import {
   getSequenceLocationById,
   getSequenceTypeById
 } from '../selectors'
+import SequenceTileBar from './SequenceTileBar.jsx'
+
+const HOVER_TIME_FOR_PLAY = 1
 
 const padStart = require('lodash/padStart')
 
-const SequenceGridItem = React.memo(
-  ({
-    sequence,
-    location,
-    type,
-    categories,
-    children,
-    style = {},
-    classNames = ''
-  }) => {
-    const classes = useStyles()
+const SequenceGridItem = ({
+  sequence,
+  location,
+  type,
+  categories,
+  children,
+  component = 'li',
+  classNames = '',
+  onVideoChange = () => {}
+}) => {
+  const classes = useStyles()
+  const { sceneNumber } = sequence
 
-    const [hovered, setHovered] = useState(false)
 
-    const { sceneNumber, duration } = sequence
-    const positionCategories = categories.filter(({ type }) => type === 'pos')
-    const arcCategories = categories.filter(({ type }) => type === 'arc')
+  useEffect(() => {
+    return () => {
+      clearTimeout(hoverPlayTimer.current)
+    }
+  }, [])
+
+  const hoverPlayTimer = useRef(null)
+  const videoPlayer = useRef(null)
+  const elementRef = useRef(null)
+
+  const getCategoryByType = (categoryType) => {
+    return categories
+      .filter(({ type }) => type === categoryType)
+      .map(({ text }) => text)
+  }
+
+  const [tileSize, setTileSize] = useState('M')
+  const [displayVideo, setDisplayVideo] = useState(false)
 
     let padCount = isNaN(Number(sceneNumber.slice(-1))) ? 4 : 3
     let fileName = padStart(sceneNumber, padCount, '0')
 
-    const onMouseIn = () => {
-      setHovered(true)
+  const onDescriptionHovered = (hovered) => {
+    if (displayVideo) {
+      return
+    } else if (hovered) {
+      setTileSize('L')
+    } else {
+      setTileSize('M')
     }
-
-    const onMouseOut = () => {
-      setHovered(false)
-    }
-
-    const subtitleComponent = hovered ? (
-      <>
-        <div>{`${location.name}-${type.name}`}</div>
-        <div>
-          {[...new Set(positionCategories.map(({ text }) => text))].join(', ')}
-        </div>
-        <div>
-          {[...new Set(arcCategories.map(({ text }) => text))].join(', ')}
-        </div>
-      </>
-    ) : (
-      <span>{`${location.name}-${type.name}`}</span>
-    )
-
-    return (
-      <GridListTile
-        className={[classes.item, classNames].filter(Boolean).join(' ')}
-      >
-        <img
-          src={`/photos/${fileName}_0_1.jpg`}
-          alt={sceneNumber}
-          className={classes.image}
-          draggable={false}
-        />
-        {children}
-        <GridListTileBar
-          title={`${fileName} (${toHHMMSS(duration)})`}
-          subtitle={subtitleComponent}
-          className={classes.tilebar}
-          onMouseEnter={onMouseIn}
-          onMouseLeave={onMouseOut}
-        />
-      </GridListTile>
-    )
   }
-)
+
+  const onSequenceHovered = (e) => {
+
+    hoverPlayTimer.current = setTimeout(() => {
+      setDisplayVideo(true)
+      setTileSize('S')
+    }, HOVER_TIME_FOR_PLAY * 1000)
+  }
+
+  const onSequenceHoveredEnd = () => {
+    setDisplayVideo(false)
+    onVideoChange('stop')
+    setTileSize('M')
+    clearTimeout(hoverPlayTimer.current)
+    hoverPlayTimer.current = null
+  }
+
+  const infoRender = displayVideo ? (
+    <video
+      muted
+      src={`/videos/compressed/${fileName}.mov`}
+      className={classes.internalVideoPlayer}
+      autoPlay={true}
+      controls={false}
+      ref={videoPlayer}
+      onLoadStart={() => {
+        videoPlayer.current.defaultMuted = true
+      }}
+      onPlay={() => onVideoChange('play')}
+      onEnded={() => {
+        setDisplayVideo(false)
+        onVideoChange('stop')
+      }}
+    />
+  ) : (
+    <>
+      <img
+        src={`/photos/${fileName}_0_1.jpg`}
+        alt={sceneNumber}
+        className={classes.image}
+        draggable={false}
+      />
+      )
+    </>
+  )
+
+  return (
+    <GridListTile
+      ref={elementRef}
+      className={[classes.item, classNames].filter(Boolean).join(' ')}
+      component={component}
+      onMouseEnter={onSequenceHovered}
+      onMouseLeave={onSequenceHoveredEnd}
+    >
+      {infoRender}
+
+      {children}
+      <SequenceTileBar
+        name={fileName}
+        duration={sequence.duration}
+        location={location.name}
+        type={type.name}
+        categories1={getCategoryByType('pos')}
+        categories2={getCategoryByType('arc')}
+        onHover={onDescriptionHovered}
+        infoSize={tileSize}
+      />
+    </GridListTile>
+  )
+}
 
 SequenceGridItem.propTypes = {
   sequence: PropTypes.object.isRequired,

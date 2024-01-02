@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme) => ({
     width: 160,
     height: 120,
     padding: 2,
-    listStyleType: 'none'
+    listStyleType: 'none',
+    cursor: 'pointer'
   },
   image: {
     width: 160,
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: 1
   },
   disabled: {
-    display: "none"
+    display: 'none'
   },
   icon: {
     color: 'rgba(255, 255, 255, 0.34)'
@@ -56,14 +57,25 @@ const useStyles = makeStyles((theme) => ({
       'text-overflow': 'clip'
     }
   },
+  tileInfo: {},
+  tileInfoOpacity: {
+    opacity: 0.6
+  },
   playedIcon: {
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
     color: '#ccc',
     position: 'absolute',
-    fontSize: 80,
-    opacity: 0.75
+    opacity: 0.75,
+    '&.large': {
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      fontSize: 80
+    },
+    '&.small': {
+      top: 0,
+      right: 0,
+      fontSize: 40
+    }
   },
   sortableGhost: {
     opacity: 0.0,
@@ -74,6 +86,15 @@ const useStyles = makeStyles((theme) => ({
     '& image': {
       opacity: 0.3
     }
+  },
+  internalVideoPlayer: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover'
+  },
+  sequenceinfoS: {
+    height: 20,
+    fontSize: '0.5rem'
   }
 }))
 

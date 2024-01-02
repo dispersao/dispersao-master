@@ -20,7 +20,10 @@ const Scriptsequence = React.memo(
     if (sequence) {
       return (
         <GridList cellHeight="auto" cols={1} className={classes.item}>
-          <Sequence id={sequence} classNames={isPlaceholder ? classes.placeholder : ''} />
+          <Sequence
+            id={sequence}
+            classNames={isPlaceholder ? classes.placeholder : ''}
+          />
           {sentToPlayer && <ScriptsequenceTimelineProgress id={id} />}
         </GridList>
       )
