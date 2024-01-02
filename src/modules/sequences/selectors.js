@@ -20,6 +20,8 @@ const getState = (state) => state.sequences
 const getScriptsequences = (state) => state.scriptsequences.get('data')
 const getCurrentScriptId = (state) => state.scripts.get('current')
 
+export const getPlayingSequenceId = (state) => state.sequences.get('playing')
+
 export const getSequences = createSelector([getState], (state) => {
   if (!state) {
     return
@@ -85,6 +87,24 @@ export const getSequenceCategoriesById = createCachedSelector(
   selectorCreator: createArraySelector,
   keySelector: getId
 })
+
+export const getSequenceCharactersById = createCachedSelector(
+  [getSequenceById, getPartsList, getCharactersList],
+  (sequence, parts, characters) => {
+    if (!sequence || !parts || !characters) {
+      return
+    }
+
+    return sequence
+      .get('parts')
+      .map((partId) => parts.get(partId.toString()))
+      .map((part) => part.get('characters'))
+      .flatten()
+      .toSet()
+      .map((char) => characters.get(char.toString()))
+      .valueSeq()
+  }
+)(getId)
 
 export const getSequenceIsFiltered = createCachedSelector(
   [getSequenceById, getCurrentScriptIdFilters, getPartsList],

@@ -14,6 +14,7 @@ import {
   getSequenceTypeById
 } from '../selectors'
 import SequenceTileBar from './SequenceTileBar.jsx'
+import { setPlayingSequence } from '../actions.js'
 
 const HOVER_TIME_FOR_PLAY = 1
 
@@ -27,11 +28,11 @@ const SequenceGridItem = ({
   children,
   component = 'li',
   classNames = '',
+  onSetPlayingSequence,
   onVideoChange = () => {}
 }) => {
   const classes = useStyles()
   const { sceneNumber } = sequence
-
 
   useEffect(() => {
     return () => {
@@ -65,8 +66,7 @@ const SequenceGridItem = ({
     }
   }
 
-  const onSequenceHovered = (e) => {
-
+  const onSequenceHovered = () => {
     hoverPlayTimer.current = setTimeout(() => {
       setDisplayVideo(true)
       setTileSize('S')
@@ -117,6 +117,7 @@ const SequenceGridItem = ({
       component={component}
       onMouseEnter={onSequenceHovered}
       onMouseLeave={onSequenceHoveredEnd}
+      onClick={onSetPlayingSequence}
     >
       {infoRender}
 
@@ -142,7 +143,8 @@ SequenceGridItem.propTypes = {
   categories: PropTypes.array,
   children: PropTypes.node,
   component: PropTypes.any,
-  classNames: PropTypes.string
+  classNames: PropTypes.string,
+  onSetPlayingSequence: PropTypes.func
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -154,4 +156,10 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, null)(toJS(SequenceGridItem))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  onSetPlayingSequence: () => {
+    dispatch(setPlayingSequence(ownProps.id))
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(SequenceGridItem))
