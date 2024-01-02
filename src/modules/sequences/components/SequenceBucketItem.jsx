@@ -24,13 +24,26 @@ const SequenceBucketItem = React.memo(
   }) => {
     const classname = filtered ? 'enabled' : 'disabled'
     const classes = useStyles()
+    const [videoState, setVideoState] = useState('stop')
+
+    const onSequencePlayStopVideo = (videoState) => {
+      setVideoState(videoState)
+    }
 
     return (
       <Sequence
         id={id}
         classNames={classes[classname]}
+        onVideoChange={onSequencePlayStopVideo}
       >
-        {inCurrentScript && <PlayedIcon className={classes.playedIcon} />}
+        {inCurrentScript && (
+          <PlayedIcon
+            className={[
+              classes.playedIcon,
+              videoState === 'stop' ? 'large' : 'small'
+            ].join(' ')}
+          />
+        )}
       </Sequence>
     )
   }

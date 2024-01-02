@@ -47,7 +47,8 @@ const useStyles = makeStyles((theme) => {
       height: '100%',
       backgroundColor: 'grey',
       padding: 1,
-      opacity: 0.6
+      opacity: 0.6,
+      pointerEvents: 'none'
     },
     droppper: {
       width: 7,

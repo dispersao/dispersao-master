@@ -18,7 +18,6 @@ const ScriptConnecter = ({ connected, connect, id }) => {
     connect(parseInt(id))
   }
   const classToApply = connected === undefined ? 'connect' : 'retryConnect'
-  console.log(connected)
 
   if (!connected || connected === 'failed') {
     return (
