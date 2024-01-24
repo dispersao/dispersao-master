@@ -66,7 +66,7 @@ Script.propTypes = {
   isScriptLoaded: PropTypes.bool,
   setCurrentScript: PropTypes.func,
   currentScript: PropTypes.string,
-  playingSequence: PropTypes.number
+  playingSequence: PropTypes.string
 }
 
 const mapStateToProps = (state, { match }) => {
