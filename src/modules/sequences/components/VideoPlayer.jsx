@@ -80,7 +80,7 @@ const VideoPlayer = ({
 }
 
 VideoPlayer.propTypes = {
-  id: PropTypes.number,
+  id: PropTypes.string,
   sequence: PropTypes.object,
   location: PropTypes.object,
   type: PropTypes.object,
