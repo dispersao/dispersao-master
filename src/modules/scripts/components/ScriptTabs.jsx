@@ -10,8 +10,7 @@ import Sequences from '../../sequences/components/Sequences.jsx'
 import Timeline from '../../scriptsequences/components/Timeline.jsx'
 
 import SessioncontentsGrid from '../../sessioncontents/componentes/SessioncontentsGrid.jsx'
-
-import SortableContext from '../../../utils/dnd/SortableContext.jsx'
+import DNDManager from '../../../utils/dnd/DNDManager.jsx'
 
 const ScriptTabs = () => {
   const [value, setValue] = useState(0)
@@ -19,7 +18,6 @@ const ScriptTabs = () => {
   const handleChange = (evt, val) => {
     setValue(val)
   }
-
 
   const classes = useStyles()
 
@@ -35,11 +33,11 @@ const ScriptTabs = () => {
         <Tab label="Posts & Comments" />
       </Tabs>
       <ScriptTab index={0} value={value}>
-        <SortableContext>
+        <DNDManager>
           <Timeline />
           <Divider />
           <Sequences />
-        </SortableContext>
+        </DNDManager>
       </ScriptTab>
       <ScriptTab index={1} value={value}>
         <UnpublishedPosts />

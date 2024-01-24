@@ -200,6 +200,7 @@ function* bulkUpdateScriptsequence(action) {
 
 function* deleteScriptsequence(action) {
   try {
+    console.log('deleteScriptsequence', action.payload.scriptsequence)
     const scriptsequences = yield deleteScriptsequenceAPI(
       action.payload.scriptsequence
     )

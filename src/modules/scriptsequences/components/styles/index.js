@@ -21,7 +21,8 @@ const useStyles = makeStyles((theme) => {
     item: {
       width: 160,
       height: 120,
-      padding: 2
+      padding: 2,
+      position: 'relative'
     },
     sentMarker: {
       width: '20% !important',
@@ -37,11 +38,14 @@ const useStyles = makeStyles((theme) => {
     },
     played: {
       position: 'absolute',
-      width: '100%',
-      height: '100%',
       backgroundColor: 'grey',
       padding: 1,
-      opacity: 0.6
+      opacity: 0.6,
+      bottom: 0,
+      left: 0,
+      top: 0,
+      right: 0,
+      margin: 4
     },
     droppper: {
       width: 7,
@@ -60,12 +64,13 @@ const useStyles = makeStyles((theme) => {
       opacity: 0.5
     },
     progressDivLR: {
-      height: '100%',
       position: 'absolute',
-      top: 0,
-      left: 0,
       backgroundColor: 'red',
-      opacity: 0.5
+      opacity: 0.5,
+      bottom: 0,
+      left: 0,
+      top: 0,
+      margin: 4
     },
     progress: {
       root: {
@@ -112,6 +117,9 @@ const useStyles = makeStyles((theme) => {
     timeline: {
       minHeight: 120,
       width: '100%'
+    },
+    placeholder: {
+      opacity: 0.5
     }
   }
 })

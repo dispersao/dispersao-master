@@ -2,52 +2,59 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { GridListTile, GridList } from '@material-ui/core'
+import { GridList } from '@material-ui/core'
 
 import useStyles from './styles'
 import Sequence from '../../sequences/components/Sequence.jsx'
-import { getScriptsequenceFieldByFieldName, getScriptsequenceSequenceIdById } from '../selectors.js'
+import {
+  getScriptsequenceFieldByFieldName,
+  getScriptsequenceSequenceIdById,
+  getCurrentScriptPlaceholderScriptSequence
+} from '../selectors.js'
 import ScriptsequenceTimelineProgress from './ScriptsequenceTimelineProgress.jsx'
-import DeleteScriptsequence from './DeleteScriptsequence.jsx'
 
-const Scriptsequence = React.memo(({
-  id,
-  sentToPlayer,
-  sequence
-}) => {
-  const classes = useStyles()
-  const classesnames = [classes.item]
-  if(sentToPlayer){
-    classesnames.push('dragDisabled')
-  }
-  if(sequence){
-    return (
-      <GridListTile className={classesnames.join(' ')} >
-        <GridList cellHeight="auto" cols={1}>
-          <Sequence id={sequence}  />
-          <ScriptsequenceTimelineProgress id={id}/>
-          {!sentToPlayer && <DeleteScriptsequence id={id} />}
+const Scriptsequence = React.memo(
+  ({ id, sequence, sentToPlayer, isPlaceholder }) => {
+    const classes = useStyles()
+
+    if (sequence) {
+      return (
+        <GridList cellHeight="auto" cols={1} className={classes.item}>
+          <Sequence id={sequence} classNames={isPlaceholder ? classes.placeholder : ''} />
+          {sentToPlayer && <ScriptsequenceTimelineProgress id={id} />}
         </GridList>
-      </GridListTile>
-    )
-  } else {
-    return null
+      )
+    } else {
+      return null
+    }
   }
-  
-})
+)
 
 Scriptsequence.propTypes = {
   id: PropTypes.number,
   sentToPlayer: PropTypes.bool,
-  sequence: PropTypes.number
+  sequence: PropTypes.number,
+  isPlaceholder: PropTypes.bool
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  sequence: getScriptsequenceSequenceIdById(state, ownProps),
-  sentToPlayer: getScriptsequenceFieldByFieldName(state, {
-    ...ownProps,
-    field: 'sentToPlayer'
-  })
-})
+const mapStateToProps = (state, ownProps) => {
+  const placeholder = getCurrentScriptPlaceholderScriptSequence(state)
+  if (placeholder && placeholder.get('id') === ownProps.id) {
+    return {
+      sequence: placeholder.get('sequence'),
+      sentToPlayer: false,
+      isPlaceholder: true
+    }
+  } else {
+    return {
+      sequence: getScriptsequenceSequenceIdById(state, ownProps),
+      sentToPlayer: getScriptsequenceFieldByFieldName(state, {
+        ...ownProps,
+        field: 'sentToPlayer'
+      }),
+      isPlaceholder: false
+    }
+  }
+}
 
 export default connect(mapStateToProps, null)(Scriptsequence)
