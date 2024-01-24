@@ -17,7 +17,7 @@ export const getCharactersListAsArray = createSelector(
     if (!list || !list.size) {
       return
     }
-    return list.valueSeq()
+    return list.valueSeq().sortBy(char => char.get('name'))
   }
 )
 

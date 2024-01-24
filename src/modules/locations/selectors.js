@@ -21,7 +21,7 @@ export const getLocationListAsArray = createSelector(
     if(!list || !list.size) {
       return
     }
-    return list.valueSeq()
+    return list.valueSeq().sortBy(location => location.get('name'))
   }
 )
 

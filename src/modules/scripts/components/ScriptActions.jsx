@@ -5,16 +5,18 @@ import ScriptConnecter from './ScriptConnecter.jsx'
 import ScriptTimes from './ScriptTimes.jsx'
 
 import Grid from '@material-ui/core/Grid'
+import useStyles from './styles/index.js'
 
 const ScriptActions = () => {
+  const classes = useStyles()
   return (
     <Grid container spacing={3}>
-      <Grid item xs>
-        <ScriptConnecter />
+      <ScriptTimes />
+      <Grid item xs className={classes.connecterContainer}>
         <ScriptStarter />
         <ScriptPlayer />
+        <ScriptConnecter />
       </Grid>
-      <ScriptTimes />
     </Grid>
   )
 }

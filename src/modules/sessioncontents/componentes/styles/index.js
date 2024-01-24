@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme) => {
     item: {
       flexGrow: 1,
       flex: 1,
-      minWidth: 400,
-      maxWidth: 500,
+      minWidth: 350,
+      maxWidth: 350,
       padding: 2,
       '&.pending': {
         opacity: 0.7

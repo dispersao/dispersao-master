@@ -7,11 +7,12 @@ import { Typography, Button } from '@material-ui/core'
 import states from '../utils/stateConstants'
 import { getCurrentScript } from '../selectors'
 import { toJS } from '../../../utils/immutableToJs.jsx'
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 
 const ScriptStarter = ({
   script: {
     id,
-    token,
     state,
     connected,
     scriptsequences,
@@ -45,12 +46,10 @@ const ScriptStarter = ({
           disabled={!enabled}
           onClick={onHandleStart}
         >
-          start session
+          <ArrowUpwardIcon />
         </Button>
       )}
-      {token && (
-        <Typography className={classes.startedText}>{token}</Typography>
-      )}
+      
       {(resetAcceptedValues.includes(state) ||
         (state === states.IDLE && (scriptsequences.length || ''))) &&
         connected && (
@@ -60,7 +59,7 @@ const ScriptStarter = ({
             color="secondary"
             onClick={onHandleReset}
           >
-            reset Session
+            <RotateLeftIcon />
           </Button>
         )}
     </>

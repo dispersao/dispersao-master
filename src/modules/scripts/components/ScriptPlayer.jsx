@@ -13,6 +13,8 @@ import WithAppContentManager from './HOC/AppContentManager.jsx'
 import WithScriptManager from './HOC/ScriptManager.jsx'
 import { getCurrentScript } from '../selectors'
 import { toJS } from '../../../utils/immutableToJs.jsx'
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
 
 const ScriptPlayer = ({
   script: { id, state, speed = 1, manual, connected },
@@ -35,7 +37,7 @@ const ScriptPlayer = ({
   }
 
   const acceptedStates = [states.PLAYING, states.PAUSED, states.STARTED]
-  const enabled = acceptedStates.includes(state) && connected
+  const enabled = acceptedStates.includes(state) && connected === 'connected'
 
   return (
     <>
@@ -47,14 +49,14 @@ const ScriptPlayer = ({
           disabled={!enabled}
           onClick={onHandlePlayPause}
         >
-          {state === states.PLAYING ? 'pause' : 'play'}
+          {state === states.PLAYING ? <PauseCircleOutlineIcon /> : <PlayCircleOutlineIcon/>}
         </Button>
       )}
       <FormControlLabel
-        label="Automatic"
+        label="Auto"
         control={
           <Checkbox checked={!manual} onChange={modifyManual}>
-            Automatic
+            Auto
           </Checkbox>
         }
       />

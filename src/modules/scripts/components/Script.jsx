@@ -16,11 +16,14 @@ import ScriptTabs from './ScriptTabs.jsx'
 import Divider from '@material-ui/core/Divider'
 import { useEffect } from 'react'
 import { setCurrentScript } from '../actions.js'
+import VideoPlayer from '../../sequences/components/VideoPlayer.jsx'
+import { getPlayingSequenceId } from '../../sequences/selectors.js'
 
 const Script = ({
   isScriptLoaded,
   setCurrentScript,
   currentScript,
+  playingSequence,
   match: {
     params: { id }
   }
@@ -49,7 +52,10 @@ const Script = ({
           <ScriptHeader />
           <Divider />
           <ScriptActions />
-          <ScriptTabs />
+          <div style={{ display: 'flex' , direction: 'column'}}>
+            <ScriptTabs />
+            <VideoPlayer id={playingSequence} />
+          </div>
         </>
       )}
     </div>
@@ -59,7 +65,8 @@ const Script = ({
 Script.propTypes = {
   isScriptLoaded: PropTypes.bool,
   setCurrentScript: PropTypes.func,
-  currentScript: PropTypes.string
+  currentScript: PropTypes.string,
+  playingSequence: PropTypes.string
 }
 
 const mapStateToProps = (state, { match }) => {
@@ -69,9 +76,12 @@ const mapStateToProps = (state, { match }) => {
     isScriptLoaded = getScriptIsLoaded(state, { id })
   }
   const currentScript = getCurrentScriptId(state)
+
+  const playingSequence = getPlayingSequenceId(state)
   return {
     isScriptLoaded,
-    currentScript
+    currentScript,
+    playingSequence
   }
 }
 

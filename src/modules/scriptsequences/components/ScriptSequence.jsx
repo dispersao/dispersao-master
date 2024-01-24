@@ -10,7 +10,7 @@ import { getScriptsequenceFieldByFieldName, getScriptsequenceSequenceIdById } fr
 import ScriptsequenceTimelineProgress from './ScriptsequenceTimelineProgress.jsx'
 import DeleteScriptsequence from './DeleteScriptsequence.jsx'
 
-const Scriptsequence = React.memo(({
+const Scriptsequence = ({
   id,
   sentToPlayer,
   sequence
@@ -33,8 +33,7 @@ const Scriptsequence = React.memo(({
   } else {
     return null
   }
-  
-})
+}
 
 Scriptsequence.propTypes = {
   id: PropTypes.number,

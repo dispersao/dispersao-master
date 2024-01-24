@@ -6,13 +6,18 @@ import { toJS } from '../../../utils/immutableToJs.jsx'
 
 import useStyles from './styles'
 
-import { GridList, Typography, CircularProgress } from '@material-ui/core'
+import {
+  GridList,
+  Typography,
+  CircularProgress,
+  Button
+} from '@material-ui/core'
 import { getCurrentScriptScriptsequencesIds, getLoading } from '../selectors.js'
 
 import Sortable from '../../../utils/dnd/Sortable.jsx'
 import WithContextProps from '../../../utils/dnd/HOC/WithContextProps.jsx'
 
-const Timeline = React.memo(({ scriptsequences, loading = false }) => {
+const Timeline = React.memo(({ scriptsequences, headerChildren, loading = false }) => {
   const classes = useStyles()
   const getSequencesComps = () =>
     scriptsequences.map((scriptseq, idx) => {
@@ -20,9 +25,12 @@ const Timeline = React.memo(({ scriptsequences, loading = false }) => {
     })
   return (
     <div>
-      <Typography variant="h4" component="h2">
-        Timeline
-      </Typography>
+      <div className={classes.titleContainer}>
+        <Typography variant="h4" component="h2">
+          Timeline
+        </Typography>
+        {headerChildren}
+      </div>
       <div className={classes.root}>
         {!loading && (
           <ScriptSequenceSortable

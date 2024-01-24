@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   item: {
     flexGrow: 1,
     flex:1,
-    minWidth: 400,
+    minWidth: 300,
     padding: 2
   },
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
     margin: 'auto',
-    maxWidth: 500,
+    maxWidth: 350,
     backgroundColor: 'rgba(200,200,200,0.5)'
   },
   image: {

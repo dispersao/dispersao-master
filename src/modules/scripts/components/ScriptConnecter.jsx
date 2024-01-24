@@ -2,37 +2,32 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { connectScript } from '../actions'
-import { 
-  Typography, 
-  Button 
-} from '@material-ui/core'
+import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet'
+import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked'
+import { Typography, Button } from '@material-ui/core'
 
 import useStyles from './styles'
-import { getCurrentScriptId, getCurrentScriptIdFieldByFieldname } from '../selectors'
+import {
+  getCurrentScriptId,
+  getCurrentScriptIdFieldByFieldname
+} from '../selectors'
 
 const ScriptConnecter = ({ connected, connect, id }) => {
   const classes = useStyles()
   const onClick = () => {
     connect(parseInt(id))
   }
-
-  const text = !connected ? 'connect' : 're-try connect'
+  const classToApply = connected === undefined ? 'connect' : 'retryConnect'
 
   if (!connected || connected === 'failed') {
     return (
-      <Button 
-        onClick={onClick}
-        className={classes.connectButton}>
-        {text}
+      <Button  variant="contained" onClick={onClick} className={classes[`${classToApply}Button`]}>
+        <SettingsEthernetIcon />
       </Button>
     )
   } else {
-
     return (
-      <Typography 
-        className={classes[`${connected}Text`]}>
-        {connected}
-      </Typography>
+      <RadioButtonCheckedIcon className={classes[`${connected}Text`]} />
     )
   }
 }
@@ -45,14 +40,14 @@ ScriptConnecter.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   id: getCurrentScriptId(state),
-  connected: getCurrentScriptIdFieldByFieldname(state, { ...ownProps, field: 'connected'})
+  connected: getCurrentScriptIdFieldByFieldname(state, {
+    ...ownProps,
+    field: 'connected'
+  })
 })
 
 const mapDispatchToProps = (dispatch) => ({
   connect: (id) => dispatch(connectScript({ id }))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ScriptConnecter)
+export default connect(mapStateToProps, mapDispatchToProps)(ScriptConnecter)
