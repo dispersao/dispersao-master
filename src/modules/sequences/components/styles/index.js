@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme) => ({
   item: {
     width: 160,
     height: 120,
-    padding: 2
+    padding: 2,
+    listStyleType: 'none'
   },
   image: {
     width: 160,

@@ -17,10 +17,9 @@ import {
 const SequenceBucketItem = React.memo(
   ({
     id,
-    index,
     inCurrentScript = false,
     filtered = false,
-    loading = false
+    style
   }) => {
     const classname = filtered ? 'enabled' : 'disabled'
     const classes = useStyles()
@@ -29,6 +28,7 @@ const SequenceBucketItem = React.memo(
       <Sequence
         id={id}
         classNames={classes[classname]}
+        style={style}
       >
         {inCurrentScript && <PlayedIcon className={classes.playedIcon} />}
       </Sequence>

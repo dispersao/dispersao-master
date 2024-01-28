@@ -11,7 +11,7 @@ const Progressbar = React.memo(({ value, direction, enabled }) => {
     return (
       <div
         className={classes[className]}
-        style={{ width: `${value}%`, height: '100%' }}
+        style={{ width: `${value}%` }}
       />
     )
   } else return (

@@ -19,10 +19,8 @@ import {
   Typography
 } from '@material-ui/core'
 
-import Sortable from '../../../utils/dnd/Sortable.jsx'
-
 import SequenceBucketItem from './SequenceBucketItem.jsx'
-import WithContextProps from '../../../utils/dnd/HOC/WithContextProps.jsx'
+import DraggableContainer from '../../../utils/dnd/DraggableContainer.jsx'
 
 const Sequences = React.memo(({ sequences }) => {
   const classes = useStyles()
@@ -40,20 +38,11 @@ const Sequences = React.memo(({ sequences }) => {
         <AccordionDetails>
           <Grid className={classes.sequencesContent}>
             <SequencesFilter />
-            <SequencesSortable
-              id="sequences"
-              tag={GridList}
-              list={sequences}
-              ghostClass={classes.ghostDrag}
-              setList={(list) => {}}
-              groupName="shared"
-              sort={false}
-              clone={true}
-            >
+            <DraggableContainer target="timeline" type="sequence">
               {sequences.map((seq, idx) => (
                 <SequenceBucketItem key={seq} id={seq} index={idx} />
               ))}
-            </SequencesSortable>
+            </DraggableContainer>
           </Grid>
         </AccordionDetails>
       </Accordion>
@@ -74,7 +63,3 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 export default connect(mapStateToProps, null)(toJS(Sequences))
-
-const SequencesSortable = WithContextProps(Sortable, {
-  onEnd: 'onDropSequence'
-})

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 import { IconButton } from '@material-ui/core'
-import WithContextProps from '../../../utils/dnd/HOC/WithContextProps.jsx'
 
 const DeleteScriptsequence = React.memo(({ id, onDelete }) => {
   const classes = useStyles()
@@ -25,6 +24,4 @@ DeleteScriptsequence.propTypes = {
   onDelete: PropTypes.func
 }
 
-export default WithContextProps(DeleteScriptsequence, {
-  onDelete: 'onScriptsequenceRemoved'
-})
+export default DeleteScriptsequence

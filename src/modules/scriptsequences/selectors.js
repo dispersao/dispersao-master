@@ -7,6 +7,8 @@ const getState = (state) => state.scriptsequences
 const getId = (state, props) => props.id
 const getCurrentScriptId = (state, props) => state.scripts.get('current')
 export const getLoading = (state) => state.scriptsequences.get('loading')
+export const getCurrentScriptPlaceholderScriptSequence =  (state) => state.scriptsequences.get('placeholderScriptsequence')
+
 const getField = (state, props) => props.field
 
 export const getScriptsequences = createSelector([getState], (state) => {
@@ -67,14 +69,31 @@ export const getCurrentScriptCreditsScriptsequenceByPosition = createSelector(
 )
 
 export const getCurrentScriptScriptsequencesIds = createArraySelector(
-  [getCurrentScriptScriptsequences],
-  (scriptSequences) => {
+  [getCurrentScriptScriptsequences, getCurrentScriptPlaceholderScriptSequence],
+  (scriptSequences, placeholder) => {
     if (!scriptSequences) {
       return
     } else {
-      return scriptSequences.map((ss) => ss.get('id'))
+      let orderedList = scriptSequences.sortBy((ss) => ss.get('index'))
+      if(placeholder){
+        orderedList =  orderedList.toList().splice(placeholder.get('index'), 0, placeholder)
+      }
+      return orderedList.map((el) => el.get('id'))
     }
   }
+)
+export const getCurrentScripScriptSequencesSentToPlayer = createArraySelector(
+  [getCurrentScriptScriptsequences],
+  (scriptsequences) => {
+    if (!scriptsequences) {
+      return
+    } else {
+      return scriptsequences
+        .filter((el) => el.get('sentToPlayer'))
+        .map((el) => el.get('id'))
+        .valueSeq()
+      }
+    }
 )
 export const getHighestIndexSentToPlay = createSelector(
   [getCurrentScriptScriptsequences],
@@ -123,3 +142,4 @@ export const getScriptsequenceFieldByFieldName = createCachedSelector(
     return scriptsequence.get(field)
   }
 )(getId)
+

@@ -31,6 +31,7 @@ export const UPDATE_PROGRESS_SCRIPTSEQUENCE = 'UPDATE_PROGRESS_SCRIPTSEQUENCE'
 
 export const UPDATE_SCRIPTSEQUENCE_LOCAL_STATE = 'UPDATE_SCRIPTSEQUENCE_LOCAL_STATE'
 
+export const ADD_PLACEHOLDER_SCRIPTSEQUENCE = 'ADD_PLACEHOLDER_SCRIPTSEQUENCE'
 
 export const fetchScriptsequencesSuccess = (scriptsequences) => ({
   type: FETCH_SCRIPTSEQUENCES_SUCCESS,
@@ -180,6 +181,13 @@ export const updateProgressScriptsequence = (scriptsequence) => ({
 
 export const updateScriptsequenceLocalState = (scriptsequence) => ({
   type: UPDATE_SCRIPTSEQUENCE_LOCAL_STATE,
+  payload: {
+    scriptsequence
+  }
+})
+
+export const addPlaceholderScriptsequence = (scriptsequence) => ({
+  type: ADD_PLACEHOLDER_SCRIPTSEQUENCE,
   payload: {
     scriptsequence
   }

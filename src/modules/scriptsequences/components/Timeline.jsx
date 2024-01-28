@@ -6,56 +6,54 @@ import { toJS } from '../../../utils/immutableToJs.jsx'
 
 import useStyles from './styles'
 
-import { GridList, Typography, CircularProgress } from '@material-ui/core'
-import { getCurrentScriptScriptsequencesIds, getLoading } from '../selectors.js'
+import { Typography, CircularProgress } from '@material-ui/core'
+import {
+  getCurrentScripScriptSequencesSentToPlayer,
+  getCurrentScriptScriptsequencesIds,
+  getLoading
+} from '../selectors.js'
+import SortableContainer from '../../../utils/dnd/SortableContainer.jsx'
 
-import Sortable from '../../../utils/dnd/Sortable.jsx'
-import WithContextProps from '../../../utils/dnd/HOC/WithContextProps.jsx'
-
-const Timeline = React.memo(({ scriptsequences, loading = false }) => {
-  const classes = useStyles()
-  const getSequencesComps = () =>
-    scriptsequences.map((scriptseq, idx) => {
-      return <Scriptsequence key={scriptseq} id={scriptseq} index={idx} />
-    })
-  return (
-    <div>
-      <Typography variant="h4" component="h2">
-        Timeline
-      </Typography>
-      <div className={classes.root}>
-        {!loading && (
-          <ScriptSequenceSortable
-            id="timeline"
-            tag={GridList}
-            list={scriptsequences}
-            setList={(list) => {}}
-            ghostClass={classes.ghostDrag}
-            groupName="shared"
-            sort={true}
-            clone={false}
-            className={classes.timeline}
-          >
-            {getSequencesComps()}
-          </ScriptSequenceSortable>
-        )}
-        {(loading && <CircularProgress className={classes.loading} />) || null}
+const Timeline = React.memo(
+  ({ scriptsequences, sentToPlayScriptSequences, loading = false }) => {
+    const classes = useStyles()
+    const getSequencesComps = () =>
+      scriptsequences.map((scriptseq, idx) => {
+        return <Scriptsequence key={scriptseq} id={scriptseq} index={idx} />
+      })
+    return (
+      <div>
+        <Typography variant="h4" component="h2">
+          Timeline
+        </Typography>
+        <div className={classes.root}>
+          {!loading && (
+            <SortableContainer
+              id="timeline"
+              data={scriptsequences}
+              disabled={sentToPlayScriptSequences}
+              type="scriptsequence"
+            >
+              {getSequencesComps()}
+            </SortableContainer>
+          )}
+          {(loading && <CircularProgress className={classes.loading} />) ||
+            null}
+        </div>
       </div>
-    </div>
-  )
-})
+    )
+  }
+)
 
 Timeline.propTypes = {
-  scriptsequences: PropTypes.array.isRequired
+  scriptsequences: PropTypes.array.isRequired,
+  sentToPlayScriptSequences: PropTypes.array
 }
 
 const mapStateToProps = (state) => ({
   loading: getLoading(state),
-  scriptsequences: getCurrentScriptScriptsequencesIds(state)
+  scriptsequences: getCurrentScriptScriptsequencesIds(state),
+  sentToPlayScriptSequences: getCurrentScripScriptSequencesSentToPlayer(state)
 })
 
 export default connect(mapStateToProps, null)(toJS(Timeline))
-
-const ScriptSequenceSortable = WithContextProps(Sortable, {
-  onEnd: 'onDropScriptsequence'
-})

@@ -12,7 +12,8 @@ import {
   CREATE_UPDATE_DELETE_SCRIPTSEQUENCES_ERROR,
   SEND_SCRIPTSEQUENCE,
   CREATE_RANDOM_SCRIPTSEQUENCE,
-  CREATE_SCRIPTSEQUENCE
+  CREATE_SCRIPTSEQUENCE,
+  ADD_PLACEHOLDER_SCRIPTSEQUENCE
 } from './actions'
 
 import { UPDATE_SCRIPT_SUCCESS } from '../scripts/actions'
@@ -23,7 +24,8 @@ const reducer = (
   state = fromJS({
     data: {},
     error: null,
-    loading: false
+    loading: false,
+    placeholderScriptsequence: null
   }),
   action
 ) => {
@@ -98,9 +100,10 @@ const reducer = (
       return state
 
     case DELETE_SCRIPTSEQUENCE_SUCCESS:
+      console.log()
       return state.deleteIn([
         'data',
-        Object.keys(action.payload.scriptsequence)[0]
+        Object.keys(action.payload.scriptsequence)[0].toString()
       ])
 
     case UPDATE_SCRIPT_SUCCESS:
@@ -122,6 +125,15 @@ const reducer = (
       progress = action.payload.scriptsequence.progress
       //return state
       return state.setIn(['data', id.toString(), 'progress'], progress)
+
+    case ADD_PLACEHOLDER_SCRIPTSEQUENCE:
+      const placeholderScriptsequence = action.payload.scriptsequence
+       
+      return state.mergeDeep(
+        fromJS({
+          placeholderScriptsequence
+        })
+      )
 
     default:
       return state
