@@ -81,7 +81,10 @@ const useStyles = makeStyles((theme) => {
     },
     republisherContainer: {
       textAlign: 'right'
-    }
+    },
+    tabsRoot: {
+      flexGrow: 1,
+    },
   }
 })
 
