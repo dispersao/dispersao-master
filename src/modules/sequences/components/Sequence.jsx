@@ -29,7 +29,8 @@ const SequenceGridItem = ({
   component = 'li',
   classNames = '',
   onSetPlayingSequence,
-  onVideoChange = () => {}
+  onVideoChange = () => {},
+  allowVideoRender = true
 }) => {
   const classes = useStyles()
   const { sceneNumber } = sequence
@@ -57,7 +58,7 @@ const SequenceGridItem = ({
     let fileName = padStart(sceneNumber, padCount, '0')
 
   const onDescriptionHovered = (hovered) => {
-    if (displayVideo) {
+    if (displayVideo && allowVideoRender) {
       return
     } else if (hovered) {
       setTileSize('L')
@@ -81,7 +82,7 @@ const SequenceGridItem = ({
     hoverPlayTimer.current = null
   }
 
-  const infoRender = displayVideo ? (
+  const infoRender = displayVideo && allowVideoRender ? (
     <video
       muted
       src={`/videos/compressed/${fileName}.mov`}

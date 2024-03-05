@@ -7,7 +7,7 @@ import { getScriptsequenceSequenceIdById } from '../../modules/scriptsequences/s
 const DNDOverlay = ({ sequence }) => {
   return (
     <DragOverlay dropAnimation={null}>
-      {sequence ? <Sequence id={sequence} /> : null}
+      {sequence ? <Sequence id={sequence} allowVideoRender={false} /> : null}
     </DragOverlay>
   )
 }

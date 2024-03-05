@@ -129,7 +129,7 @@ const DNDManager = ({
   }
 
   const removeScriptsequence = (scriptSequenceToRemove) => {
-    const index = sortableList[scriptSequenceToRemove]
+    const index = sortableList.indexOf(scriptSequenceToRemove)
 
     let reordered = sortableList.slice(index + 1).map((id) => ({
       id,
